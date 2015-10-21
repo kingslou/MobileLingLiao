@@ -68,23 +68,18 @@
                     android:hint="@string/hint_password" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button android:id="@+id/btn_signup"
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btn_signup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_sign_up"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="40dp"
-                android:textColor="@android:color/white"/>
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BootstrapButton"
-                app:bootstrapBrand="success"
+                android:text="登 陆"
+                app:bootstrapBrand="primary"
                 app:bootstrapSize="lg"
                 app:buttonMode="regular"
                 app:showOutline="false"
                 app:roundedCorners="true"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/white"
                 />
 
         </LinearLayout>
