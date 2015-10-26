@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">MobileLingLiao</string>
+    <string name="app_name">领料系统</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">系统设置</string>
 
     <string name="hint_name">用户名</string>
     <string name="hint_email">Email</string>
@@ -11,7 +11,7 @@
     <string name="err_msg_name">请输入用户名</string>
     <string name="err_msg_password">请输入密码</string>
 
-    <color name="colorPrimary">#125688</color>
+    <color name="colorPrimary">#0275d8</color>
     <color name="colorPrimaryDark">#125688</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
