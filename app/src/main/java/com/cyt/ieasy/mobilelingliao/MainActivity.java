@@ -1,15 +1,77 @@
 package com.cyt.ieasy.mobilelingliao;
-
+import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.cyt.ieasy.widget.MyGridLayout;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
 
+    @Bind(R.id.mygrildlist) MyGridLayout grildlayout;
+    @Bind(R.id.toolbar) Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        initToolbar(toolbar);
+        initMenu();
+        setTitle("手机领料");
+    }
+    void initMenu(){
+        grildlayout = (MyGridLayout)findViewById(R.id.mygrildlist);
+        Resources res = getResources() ;
+        final String [] menuItems = res.getStringArray(R.array.MenuItem);
+        TypedArray ar = res.obtainTypedArray(R.array.Itemicon);
+        int len = ar.length();
+        final int[] resIds = new int[len];
+        for(int i=0;i<resIds.length;i++){
+            resIds[i]=ar.getResourceId(i,0);
+        }
+        grildlayout.setGridAdapter(new MyGridLayout.GridAdatper() {
+            @Override
+            public View getView(int index) {
+                View view = getLayoutInflater().inflate(R.layout.menu_item, null);
+                TextView title = (TextView) view.findViewById(R.id.tv);
+                ImageView image = (ImageView) view.findViewById(R.id.iv);
+                title.setText(menuItems[index]);
+                image.setImageResource(resIds[index]);
+                return view;
+            }
+
+            @Override
+            public int getCount() {
+                return menuItems.length;
+            }
+        });
+        grildlayout.setOnItemClickListener(new MyGridLayout.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int index) {
+                Intent intent = new Intent();
+                switch (index){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -28,9 +90,11 @@ public class MainActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //// TODO: 2015.10.28 要求输入密码才能进去程序设置
             return true;
+        }else{
+            // TODO: 2015.10.28  弹出框提示是否退出程序
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

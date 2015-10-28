@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyGridLayout">
+        <attr name="numColumns" format="integer" />
+        <attr name="itemMargin" format="integer" />
+    </declare-styleable>
+
+    <!--
+        使用方法
+        Resources res = getResources () ;
+        String [] planets = res . getStringArray ( R . array . planets_array );
+    -->
+
+    <string-array name="MenuItem">
+        <item>领 料</item>
+        <item>仓库配置</item>
+        <item>历史记录</item>
+        <item>注销登录</item>
+    </string-array>
+
+    <!--
+        使用方法
+        TypedArray ar = context.getResources().obtainTypedArray(R.array.actions_images);
+        int len = ar.length();
+        int[] resIds = new int[len];
+     -->
+
+    <string-array name="Itemicon">
+        <item>@mipmap/icon_lingliaoy</item>
+        <item>@mipmap/icon_settingy</item>
+        <item>@mipmap/icon_hisy</item>
+        <item>@mipmap/icon_mm</item>
+    </string-array>
+</resources>

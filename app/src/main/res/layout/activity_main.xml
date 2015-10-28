@@ -1,13 +1,12 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/aapp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -16,83 +15,16 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <com.cyt.ieasy.widget.MyGridLayout
+        android:id="@+id/mygrildlist"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:background="@android:color/darker_gray"
         android:orientation="vertical"
-        android:id="@+id/lin">
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="60dp">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/input_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="@string/hint_name" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/hint_password" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button android:id="@+id/btn_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_sign_up"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingTop="40dp"
-        android:paddingBottom="10dp"
-        android:layout_gravity="center_horizontal|bottom"
-        >
-        <ImageView
-
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@mipmap/share_weibo"
-            android:padding="10dp"
-            android:layout_gravity="bottom"
-            android:id="@+id/weibo" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@mipmap/share_weixin"
-            android:padding="10dp"
-            android:id="@+id/weixin"
-            android:layout_gravity="bottom"
-            />
-
-    </LinearLayout>
-    </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+        app:itemMargin="1"
+        app:numColumns="2"
+        android:layout_below="@+id/aapp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </com.cyt.ieasy.widget.MyGridLayout>
+</RelativeLayout>

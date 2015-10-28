@@ -1,5 +1,6 @@
 package com.cyt.ieasy.mobilelingliao;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -56,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void initToobar(){
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try{
-                Thread.sleep(15000);
+                Thread.sleep(5000);
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -181,6 +181,9 @@ public class LoginActivity extends AppCompatActivity {
         if(event.Message.equals(Const.Success)){
             rotateLoading.stop();
             loginbtn.setEnabled(true);
+            Intent intent = new Intent();
+            intent.setClass(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
         }
     }
 
