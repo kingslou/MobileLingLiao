@@ -1,4 +1,6 @@
 package com.cyt.ieasy.mobilelingliao;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.cyt.ieasy.widget.MyGridLayout;
 
 import butterknife.Bind;
@@ -19,6 +22,7 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.mygrildlist) MyGridLayout grildlayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,15 +32,16 @@ public class MainActivity extends BaseActivity {
         initMenu();
         setTitle("手机领料");
     }
-    void initMenu(){
-        grildlayout = (MyGridLayout)findViewById(R.id.mygrildlist);
-        Resources res = getResources() ;
-        final String [] menuItems = res.getStringArray(R.array.MenuItem);
+
+    void initMenu() {
+        grildlayout = (MyGridLayout) findViewById(R.id.mygrildlist);
+        Resources res = getResources();
+        final String[] menuItems = res.getStringArray(R.array.MenuItem);
         TypedArray ar = res.obtainTypedArray(R.array.Itemicon);
         int len = ar.length();
         final int[] resIds = new int[len];
-        for(int i=0;i<resIds.length;i++){
-            resIds[i]=ar.getResourceId(i,0);
+        for (int i = 0; i < resIds.length; i++) {
+            resIds[i] = ar.getResourceId(i, 0);
         }
         grildlayout.setGridAdapter(new MyGridLayout.GridAdatper() {
             @Override
@@ -58,7 +63,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(View v, int index) {
                 Intent intent = new Intent();
-                switch (index){
+                switch (index) {
                     case 0:
                         break;
                     case 1:
@@ -92,8 +97,17 @@ public class MainActivity extends BaseActivity {
         if (id == R.id.action_settings) {
             //// TODO: 2015.10.28 要求输入密码才能进去程序设置
             return true;
-        }else{
-            // TODO: 2015.10.28  弹出框提示是否退出程序
+        } else {
+            new AlertDialogWrapper.Builder(this)
+                    .setTitle("退出")
+                    .setMessage("确定退出吗")
+                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }).show();
         }
         return super.onOptionsItemSelected(item);
     }

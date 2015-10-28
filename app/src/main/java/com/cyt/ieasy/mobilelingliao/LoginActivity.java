@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,7 +34,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by jin on 2015.10.10.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.rotateloading) RotateLoading rotateLoading;
@@ -98,8 +97,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            rotateLoading.setBackgroundColor(droidGreen);
-            rotateLoading.start();
+//            rotateLoading.setBackgroundColor(droidGreen);
+//            rotateLoading.start();
+            showIndeterminateProgressDialog(true);
             loginbtn.setEnabled(false);
         }
 
@@ -179,7 +179,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onEvent(MessageEvent event){
         if(event.Message.equals(Const.Success)){
-            rotateLoading.stop();
+//            rotateLoading.stop();
+            dismiss();
             loginbtn.setEnabled(true);
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
