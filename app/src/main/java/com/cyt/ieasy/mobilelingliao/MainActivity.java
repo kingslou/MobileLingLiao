@@ -1,5 +1,4 @@
 package com.cyt.ieasy.mobilelingliao;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -11,8 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.cyt.ieasy.widget.MyGridLayout;
 
 import butterknife.Bind;
@@ -22,6 +22,8 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.mygrildlist) MyGridLayout grildlayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
+    private TextDrawable.IBuilder mDrawableBuilder;
+    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +45,19 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < resIds.length; i++) {
             resIds[i] = ar.getResourceId(i, 0);
         }
+        mDrawableBuilder = TextDrawable.builder().roundRect(10);
+
         grildlayout.setGridAdapter(new MyGridLayout.GridAdatper() {
             @Override
             public View getView(int index) {
                 View view = getLayoutInflater().inflate(R.layout.menu_item, null);
+
+                TextDrawable drawable = mDrawableBuilder.build(String.valueOf(menuItems[index].charAt(0)), mColorGenerator.getColor(menuItems[index]));
                 TextView title = (TextView) view.findViewById(R.id.tv);
                 ImageView image = (ImageView) view.findViewById(R.id.iv);
                 title.setText(menuItems[index]);
-                image.setImageResource(resIds[index]);
+//                image.setImageResource(resIds[index]);
+                image.setImageDrawable(drawable);
                 return view;
             }
 

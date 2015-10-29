@@ -11,6 +11,17 @@
     <string name="err_msg_name">请输入用户名</string>
     <string name="err_msg_password">请输入密码</string>
 
+
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">程序发生未知错误已经关闭，为您带来不便深感歉意</string>
+    <string name="customactivityoncrash_error_activity_unknown_exception">Unknown exception</string>
+    <string name="customactivityoncrash_error_activity_restart_app">重启程序</string>
+    <string name="customactivityoncrash_error_activity_close_app">关闭程序</string>
+    <string name="customactivityoncrash_error_activity_error_details">错误详情</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">错误</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">关闭</string>
+
+
+
     <color name="colorPrimary">#0275d8</color>
     <color name="colorPrimaryDark">#125688</color>
     <color name="textColorPrimary">#FFFFFF</color>

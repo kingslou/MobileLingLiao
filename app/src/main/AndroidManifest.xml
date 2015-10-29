@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.cyt.ieasy.setting.SettingActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

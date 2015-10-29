@@ -25,13 +25,28 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //事件总线
     compile 'de.greenrobot:eventbus:2.4.0'
+    //bootsrrap样式按钮
     compile 'com.beardedhen:androidbootstrap:2.0.0'
+    //注解View
     compile 'com.jakewharton:butterknife:7.0.1'
+    //自定义LoadView
     compile 'com.victor:lib:1.0.1'
+    //系统依赖库
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
+    //自定义textdrawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    //记录更新记录的库
+    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.0.0'
+    //material样式弹出框
     compile('com.afollestad.material-dialogs:core:0.8.4.2@aar') {
         transitive = true
     }
+    //CustomActivityOnCrash检测app异常crash时候友好提示
+    compile 'cat.ereza:customactivityoncrash:1.1.0'
+    //material风格的设置界面
+    //compile 'com.github.kenumir:MaterialSettings:v.1.2.2'
+    compile project(':library')
 }

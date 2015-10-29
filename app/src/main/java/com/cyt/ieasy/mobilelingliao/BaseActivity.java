@@ -1,5 +1,8 @@
 package com.cyt.ieasy.mobilelingliao;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +16,12 @@ import com.cyt.ieasy.tools.MyLogger;
  */
 public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
+    Context context;
+    protected final int REQUEST_CODE_DEFAULT = 1234;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         MyLogger.DEBUG = true;
     }
 
@@ -33,10 +39,10 @@ public class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(title);
     }
 
-    public void showIndeterminateProgressDialog(boolean horizontal) {
+    public void showIndeterminateProgressDialog(boolean horizontal,String content) {
          dialog =  new MaterialDialog.Builder(this)
                 .title("加载中····")
-                .content("请稍后····")
+                .content(content)
                 .progress(true, 0)
                 .progressIndeterminateStyle(horizontal)
                 .show();
@@ -44,6 +50,32 @@ public class BaseActivity extends AppCompatActivity {
     public void dismiss(){
         if(null!=dialog){
             dialog.dismiss();
+        }
+    }
+
+    public void startActivityByName(String actName) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        ComponentName cn = new ComponentName(this.getClass().getPackage().getName(), actName);
+        intent.setComponent(cn);
+        startActivity(intent);
+    }
+
+    protected void startActivityNoHistory(Class clazz) {
+        Intent intent = new Intent(context, clazz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+    }
+
+    protected void startActivityWithoutTrace(Class clazz) {
+        Intent intent = new Intent(context, clazz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+    protected void startActivity(Class clazz, boolean forResult) {
+        if (forResult) {
+            startActivityForResult(new Intent(context, clazz), REQUEST_CODE_DEFAULT);
+        } else {
+            startActivity(new Intent(context, clazz));
         }
     }
 }

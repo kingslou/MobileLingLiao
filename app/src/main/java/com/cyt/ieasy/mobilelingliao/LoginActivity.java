@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.setting.SettingActivity;
 import com.cyt.ieasy.tools.Const;
 import com.cyt.ieasy.tools.SystemUtils;
 import com.victor.loading.rotate.RotateLoading;
@@ -99,7 +100,7 @@ public class LoginActivity extends BaseActivity {
             super.onPreExecute();
 //            rotateLoading.setBackgroundColor(droidGreen);
 //            rotateLoading.start();
-            showIndeterminateProgressDialog(true);
+            showIndeterminateProgressDialog(false,"登陆中····");
             loginbtn.setEnabled(false);
         }
 
@@ -221,6 +222,8 @@ public class LoginActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.action_settings){
             Toast.makeText(this,"测试",Toast.LENGTH_SHORT).show();
+            //// TODO: 2015.10.29 弹出框，提示请输入密码 默认为215000
+            startActivity(SettingActivity.class,false);
         }else{
             finish();
         }
