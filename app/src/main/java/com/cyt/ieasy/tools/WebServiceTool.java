@@ -433,8 +433,6 @@ public class WebServiceTool {
         public void success() {
         }
 
-        ;
-
         /**
          * WS执行成功
          *
@@ -443,23 +441,17 @@ public class WebServiceTool {
         public void success(Object data) {
         }
 
-        ;
-
         /**
          * WS执行失败
          */
         public void fail() {
         }
 
-        ;
-
         /**
          * WS执行失败
          */
         public void fail(Object ret) {
         }
-
-        ;
 
         /**
          * 完成后调用，传递完成结�?
@@ -481,7 +473,6 @@ public class WebServiceTool {
         public void onUIUpdate(boolean isSuccess) {
         }
 
-        ;
     }
 
 

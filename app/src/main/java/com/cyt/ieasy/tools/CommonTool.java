@@ -95,7 +95,7 @@ public class CommonTool {
     public static List extractFromEntityList(List list, String propName) {
         List result = new ArrayList();
         for (Iterator it = list.iterator(); it.hasNext();) {
-            Object ent = (Object) it.next();
+            Object ent = it.next();
             try {
                 Field f = ent.getClass().getDeclaredField(propName);
                 result.add(f.get(ent));

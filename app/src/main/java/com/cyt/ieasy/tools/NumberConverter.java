@@ -73,7 +73,7 @@ public class NumberConverter {
 		return CONVERTERS.get(clazz).convert(str);
 	}
 
-	public static interface Converter<T> {
-		public T convert(Object value);
+	public interface Converter<T> {
+		T convert(Object value);
 	}
 }

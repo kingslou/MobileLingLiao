@@ -223,8 +223,11 @@ public class LoginActivity extends BaseActivity {
         if(item.getItemId()==R.id.action_settings){
             Toast.makeText(this,"测试",Toast.LENGTH_SHORT).show();
             //// TODO: 2015.10.29 弹出框，提示请输入密码 默认为215000
-            startActivity(SettingActivity.class,false);
-        }else{
+            startActivity(SettingActivity.class, false);
+        }else if(item.getItemId()==R.id.updatelog){
+            //// TODO: 2015.10.29 版本更新记录
+        }
+        else{
             finish();
         }
         return super.onOptionsItemSelected(item);

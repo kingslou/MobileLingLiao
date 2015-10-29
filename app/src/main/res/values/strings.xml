@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">系统设置</string>
+    <string name="updatelog">版本记录</string>
 
     <string name="hint_name">用户名</string>
     <string name="hint_email">Email</string>
