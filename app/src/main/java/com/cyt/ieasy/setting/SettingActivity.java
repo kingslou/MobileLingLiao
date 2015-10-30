@@ -1,8 +1,11 @@
 package com.cyt.ieasy.setting;
+
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.cyt.ieasy.mobilelingliao.R;
 import com.kenumir.materialsettings.MaterialSettingsActivity;
 import com.kenumir.materialsettings.items.CheckboxItem;
@@ -18,8 +21,13 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        addItem(new HeaderItem(getFragment()).setTitle("Sample title 1"));
+        setTitle("系统设置");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+        addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
         addItem(new CheckboxItem(getFragment(), "key1").setTitle("Checkbox item 1").setSubtitle("Subtitle text 1").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(CheckboxItem cbi, boolean isChecked) {
@@ -41,7 +49,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                 Toast.makeText(SettingActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
             }
         }));
-        addItem(new HeaderItem(getFragment()).setTitle("Sample title 2"));
+        addItem(new HeaderItem(getFragment()).setTitle("其他设置"));
         addItem(new TextItem(getFragment(), "key4").setTitle("Simple text item 2").setSubtitle("Subtitle of simple text item 2").setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
@@ -77,11 +85,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
+        finish();
         return super.onOptionsItemSelected(item);
     }
 

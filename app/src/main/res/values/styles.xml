@@ -17,4 +17,25 @@
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="MaterialSettings.Red" parent="MaterialSettingsTheme">
+        <item name="msColorPrimary">@color/colorPrimary</item>
+        <item name="msColorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="msColorAccent">@color/colorPrimaryDark</item>
+        <item name="msColorHeader">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="MaterialSettings.Dark" parent="MaterialSettingsThemeDark">
+        <!--
+        <item name="msToolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="msToolbarThemePopup">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="msColorPrimary">@color/darkPrimary</item>
+        <item name="msColorPrimaryDark">@color/darkPrimaryDark</item>
+        <item name="msColorAccent">@color/darkAccent</item>
+        <item name="msWindowBg">@color/darkBg</item>
+        <item name="msColorHeader">@color/darkText</item>
+        <item name="msColorTextTitle">@color/darkText</item>
+        <item name="msColorTextSubTitle">@color/darkText</item>
+        -->
+    </style>
+
 </resources>
