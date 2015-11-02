@@ -19,6 +19,8 @@
     <string name="input_content">如果忘记,请联系软件供应商</string>
     <string name="input_hint">请输入密码</string>
     <string name="input_init">""</string>
+    <string name="save">保存</string>
+    <string name="ipsetting">服务器地址配置</string>
 
 
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">程序发生未知错误已经关闭，为您带来不便深感歉意</string>

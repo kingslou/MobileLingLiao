@@ -33,6 +33,7 @@ dependencies {
     //自定义LoadView
     compile 'com.victor:lib:1.0.1'
     //系统依赖库
+    compile 'com.android.support:support-v4:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
     //自定义textdrawable
@@ -48,5 +49,8 @@ dependencies {
     //material风格的设置界面
     //compile 'com.github.kenumir:MaterialSettings:v.1.2.2'
     compile project(':library')
-    compile 'com.android.support:support-v4:23.1.0'
+    //仿iOS的PickerView控件，有时间选择和选项选择并支持一二三级联动效果
+    //TimePopupWindow 时间选择器，支持年月日时分，年月日，年月，时分等格式
+    //OptionsPopupWindow 选项选择器，支持一，二，三级选项选择，并且可以设置是否联动
+    compile 'com.bigkoo:pickerview:1.0.3'
 }

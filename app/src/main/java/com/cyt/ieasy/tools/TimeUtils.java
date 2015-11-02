@@ -38,6 +38,12 @@ public class TimeUtils {
         return getTime(timeInMillis, DEFAULT_DATE_FORMAT);
     }
 
+    /** 获取时间--如：2012-11-06 */
+    public static String getDateStr(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
+    }
+
     /**
      * get current time in milliseconds
      * 

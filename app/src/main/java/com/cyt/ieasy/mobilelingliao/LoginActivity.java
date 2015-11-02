@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -245,18 +244,19 @@ public class LoginActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.action_settings){
-            Toast.makeText(this, "测试", Toast.LENGTH_SHORT).show();
             //// TODO: 2015.10.29 弹出框，提示请输入密码 默认为215000
             new MaterialDialog.Builder(this)
                     .title(R.string.input)
                     .content(R.string.input_content)
                     .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                    .negativeText("取消")
+                    .cancelable(false)
                     .input(R.string.input_hint, R.string.input_init, new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
                             // Do something
-                            if(null!=input){
-                                if(input.toString().equals(Const.SettingPwd)){
+                            if (null != input) {
+                                if (input.toString().equals(Const.SettingPwd)) {
                                     startActivity(SettingActivity.class, false);
                                     dialog.dismiss();
                                 }
@@ -265,7 +265,6 @@ public class LoginActivity extends BaseActivity {
                     }).show();
 
         }else if(item.getItemId()==R.id.updatelog){
-            //// TODO: 2015.10.29 版本更新记录
             openDialogFragment(new ChangeLogDialog());
         }
         else{

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +19,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bigkoo.pickerview.TimePopupWindow;
+import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.MyToast;
 import com.cyt.ieasy.widget.MyGridLayout;
+
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +37,7 @@ public class MainActivity extends BaseActivity {
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private static boolean isExit = false;
     private final static int MESSAGE_EXIT = 0x00001;
+    private TimePopupWindow pwTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         initToolbar(toolbar);
         initMenu();
+        initTime();
         setTitle("手机领料");
     }
 
@@ -80,6 +87,7 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent();
                 switch (index) {
                     case 0:
+                        pwTime.showAtLocation(v, Gravity.BOTTOM, 0, 0, new Date());
                         break;
                     case 1:
                         break;
@@ -90,6 +98,19 @@ public class MainActivity extends BaseActivity {
                     default:
                         break;
                 }
+            }
+        });
+    }
+
+    void initTime(){
+        pwTime = new TimePopupWindow(this, TimePopupWindow.Type.YEAR_MONTH_DAY);
+        pwTime.setTime(new Date());
+        //时间选择后回调
+        pwTime.setOnTimeSelectListener(new TimePopupWindow.OnTimeSelectListener() {
+
+            @Override
+            public void onTimeSelect(Date date) {
+                MyLogger.showLogWithLineNum(5,"data"+date);
             }
         });
     }
@@ -143,7 +164,6 @@ public class MainActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //// TODO: 2015.10.28 要求输入密码才能进去程序设置
             return true;
         } else {
             new AlertDialogWrapper.Builder(this)

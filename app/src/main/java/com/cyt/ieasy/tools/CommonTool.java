@@ -1,4 +1,5 @@
 package com.cyt.ieasy.tools;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
+
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jin on 2015.10.26.
@@ -260,5 +264,18 @@ public class CommonTool {
             arrayOfByte[(j / 2)] = (byte) (0xFF & m + (k << 4));
         }
         return arrayOfByte;
+    }
+
+    public static boolean isIpv4(String ipAddress) {
+
+        String ip = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                +"(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+
+        Pattern pattern = Pattern.compile(ip);
+        Matcher matcher = pattern.matcher(ipAddress);
+        return matcher.matches();
+
     }
 }
