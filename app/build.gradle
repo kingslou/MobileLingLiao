@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion '22.0.0'
-
     defaultConfig {
         applicationId "com.cyt.ieasy.mobilelingliao"
         minSdkVersion 11
@@ -49,4 +48,5 @@ dependencies {
     //material风格的设置界面
     //compile 'com.github.kenumir:MaterialSettings:v.1.2.2'
     compile project(':library')
+    compile 'com.android.support:support-v4:23.1.0'
 }

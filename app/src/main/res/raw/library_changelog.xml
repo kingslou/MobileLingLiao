@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog bulletedList="true">
+    <changelogversion versionName="1.0" changeDate="01/11/2015">
+        <changelogtext>第一版</changelogtext>
+    </changelogversion>
+</changelog>

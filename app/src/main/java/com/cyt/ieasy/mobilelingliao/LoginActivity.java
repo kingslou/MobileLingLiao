@@ -6,6 +6,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.setting.ChangeLogDialog;
 import com.cyt.ieasy.setting.SettingActivity;
 import com.cyt.ieasy.tools.Const;
 import com.cyt.ieasy.tools.SystemUtils;
@@ -211,6 +216,24 @@ public class LoginActivity extends BaseActivity {
         super.onResume();
     }
 
+    /**
+     * Opens the dialog
+     *
+     * @param dialogStandardFragment
+     */
+    private void openDialogFragment(DialogFragment dialogStandardFragment) {
+        if (dialogStandardFragment != null) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            Fragment prev = fm.findFragmentByTag("changelogdemo_dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            dialogStandardFragment.show(ft, "changelogdemo_dialog");
+        }
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
          super.onCreateOptionsMenu(menu);
@@ -226,6 +249,7 @@ public class LoginActivity extends BaseActivity {
             startActivity(SettingActivity.class, false);
         }else if(item.getItemId()==R.id.updatelog){
             //// TODO: 2015.10.29 版本更新记录
+            openDialogFragment(new ChangeLogDialog());
         }
         else{
             finish();

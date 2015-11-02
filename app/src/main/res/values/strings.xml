@@ -12,6 +12,9 @@
     <string name="err_msg_name">请输入用户名</string>
     <string name="err_msg_password">请输入密码</string>
 
+    <string name="update_title">更新说明</string>
+    <string name="update_btnclose">关闭</string>
+
 
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">程序发生未知错误已经关闭，为您带来不便深感歉意</string>
     <string name="customactivityoncrash_error_activity_unknown_exception">Unknown exception</string>
@@ -29,5 +32,6 @@
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#125688</color>
     <color name="colorAccent">#c8e8ff</color>
+    <color name="primary_text">#212121</color>
 
 </resources>

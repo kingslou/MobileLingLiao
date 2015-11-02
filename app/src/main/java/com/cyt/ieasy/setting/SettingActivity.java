@@ -5,7 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.cyt.ieasy.mobilelingliao.R;
 import com.kenumir.materialsettings.MaterialSettingsActivity;
 import com.kenumir.materialsettings.items.CheckboxItem;
@@ -17,7 +16,7 @@ import com.kenumir.materialsettings.storage.PreferencesStorageInterface;
 import com.kenumir.materialsettings.storage.StorageInterface;
 
 public class SettingActivity extends MaterialSettingsActivity implements SampleDialog.OnDialogOkClick {
-
+    public static final String editBm = "editbm";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,20 +27,16 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             actionBar.setHomeButtonEnabled(true);
         }
         addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
-        addItem(new CheckboxItem(getFragment(), "key1").setTitle("Checkbox item 1").setSubtitle("Subtitle text 1").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
+        addItem(new CheckboxItem(getFragment(), "key1").setTitle("设置1").setSubtitle("Subtitle text 1").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(CheckboxItem cbi, boolean isChecked) {
-                Toast.makeText(SettingActivity.this, "CHECKED: " + isChecked, Toast.LENGTH_SHORT).show();
+                getStorageInterface().save("key1",isChecked+"");
             }
         }));
         addItem(new DividerItem(getFragment()));
-        addItem(new SwitcherItem(getFragment(), "key1a").setTitle("Switcher item 3 - no subtitle"));
         addItem(new DividerItem(getFragment()));
-        addItem(new SwitcherItem(getFragment(), "key1b").setTitle("Switcher item 3").setSubtitle("With subtitle"));
-        addItem(new DividerItem(getFragment()));
+        addItem(new SwitcherItem(getFragment(), editBm).setTitle("是否允许选择部门仓库").setSubtitle("否"));
         addItem(new CheckboxItem(getFragment(), "key2").setTitle("Checkbox item 2").setSubtitle("Subtitle text 2 with long text and more txt and more and more ;-)").setDefaultValue(true));
-        addItem(new DividerItem(getFragment()));
-        addItem(new CheckboxItem(getFragment(), "key1c").setTitle("Checkbox item 3 - no subtitle"));
         addItem(new DividerItem(getFragment()));
         addItem(new TextItem(getFragment(), "key3").setTitle("Simple text item 1").setSubtitle("Subtitle of simple text item 1").setOnclick(new TextItem.OnClickListener() {
             @Override
@@ -59,16 +54,13 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         addItem(new DividerItem(getFragment()));
         addItem(new TextItem(getFragment(), "key5").setTitle("Simple text item 3 - no subtitle"));
         addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), "key5a").setTitle("Simple text item with icon - no subtitle").setIcon(R.drawable.ic_check_circle_grey600_24dp));
-        addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), "key5b").setTitle("Simple text item with icon - no subtitle").setSubtitle("Subtitle of item with icon").setIcon(R.drawable.ic_check_circle_grey600_24dp));
         addItem(new HeaderItem(getFragment()).setTitle("Same usage with dialogs"));
-        addItem(new TextItem(getFragment(), "key6").setTitle("Simple message dialog").setSubtitle("Clck to show message and change subtext").setOnclick(new TextItem.OnClickListener() {
-            @Override
-            public void onClick(TextItem item) {
-                SampleDialog.newInstance().show(getSupportFragmentManager(), "dialog1");
-            }
-        }));
+        addItem(new TextItem(getFragment(), "key6").setTitle("基础数据更新").setSubtitle("Clck to show message and change subtext").setOnclick(new TextItem.OnClickListener() {
+                @Override
+                public void onClick(TextItem item) {
+
+                }
+            }));
     }
 
     @Override
@@ -93,5 +85,11 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     public void onOkClick() {
         ((TextItem)getItem("key6")).updateSubTitle("Updated");
         getStorageInterface().save("key6", true);
+    }
+
+    void loadSetting(){
+        if(null!=getStorageInterface().load("key1","")){
+        }
+
     }
 }
