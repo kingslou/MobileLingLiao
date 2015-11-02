@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +19,15 @@ public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
     Context context;
     protected final int REQUEST_CODE_DEFAULT = 1234;
+    PowerManager powerManager = null;
+    PowerManager.WakeLock wakeLock = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         MyLogger.DEBUG = true;
+        powerManager = (PowerManager)this.getSystemService(this.POWER_SERVICE);
+        wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
     }
 
     public void initToolbar(Toolbar toolbar){
@@ -44,6 +49,7 @@ public class BaseActivity extends AppCompatActivity {
                 .title("加载中····")
                 .content(content)
                 .progress(true, 0)
+                 .cancelable(false)
                 .progressIndeterminateStyle(horizontal)
                 .show();
     }
@@ -77,5 +83,17 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             startActivity(new Intent(context, clazz));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        wakeLock.acquire();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wakeLock.release();
     }
 }

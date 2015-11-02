@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.setting.ChangeLogDialog;
@@ -106,7 +108,6 @@ public class LoginActivity extends BaseActivity {
 //            rotateLoading.setBackgroundColor(droidGreen);
 //            rotateLoading.start();
             showIndeterminateProgressDialog(false,"登陆中····");
-            loginbtn.setEnabled(false);
         }
 
         @Override
@@ -187,7 +188,6 @@ public class LoginActivity extends BaseActivity {
         if(event.Message.equals(Const.Success)){
 //            rotateLoading.stop();
             dismiss();
-            loginbtn.setEnabled(true);
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
             startActivity(intent);
@@ -244,9 +244,25 @@ public class LoginActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.action_settings){
-            Toast.makeText(this,"测试",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "测试", Toast.LENGTH_SHORT).show();
             //// TODO: 2015.10.29 弹出框，提示请输入密码 默认为215000
-            startActivity(SettingActivity.class, false);
+            new MaterialDialog.Builder(this)
+                    .title(R.string.input)
+                    .content(R.string.input_content)
+                    .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                    .input(R.string.input_hint, R.string.input_init, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // Do something
+                            if(null!=input){
+                                if(input.toString().equals(Const.SettingPwd)){
+                                    startActivity(SettingActivity.class, false);
+                                    dialog.dismiss();
+                                }
+                            }
+                        }
+                    }).show();
+
         }else if(item.getItemId()==R.id.updatelog){
             //// TODO: 2015.10.29 版本更新记录
             openDialogFragment(new ChangeLogDialog());

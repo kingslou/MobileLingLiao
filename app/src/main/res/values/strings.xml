@@ -15,6 +15,11 @@
     <string name="update_title">更新说明</string>
     <string name="update_btnclose">关闭</string>
 
+    <string name="input">请输入密码</string>
+    <string name="input_content">如果忘记,请联系软件供应商</string>
+    <string name="input_hint">请输入密码</string>
+    <string name="input_init">""</string>
+
 
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">程序发生未知错误已经关闭，为您带来不便深感歉意</string>
     <string name="customactivityoncrash_error_activity_unknown_exception">Unknown exception</string>

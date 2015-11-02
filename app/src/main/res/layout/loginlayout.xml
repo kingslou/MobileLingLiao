@@ -1,6 +1,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -68,6 +69,15 @@
                     android:hint="@string/hint_password" />
             </android.support.design.widget.TextInputLayout>
 
+            <CheckBox
+                android:id="@+id/showPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="记住密码"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/btn_signup"
                 android:layout_width="fill_parent"
@@ -90,31 +100,21 @@
             android:layout_gravity="center"
             app:loading_width="5dp" />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingTop="40dp"
             android:paddingBottom="10dp"
-            android:layout_gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
             >
-            <ImageView
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@mipmap/share_weibo"
-                android:padding="10dp"
-                android:layout_gravity="bottom"
-                android:id="@+id/weibo" />
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@mipmap/share_weixin"
-                android:padding="10dp"
-                android:id="@+id/weixin"
-                android:layout_gravity="bottom"
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                style="@style/wrapping_fa_text"
+                android:textSize="15dp"
+                android:layout_gravity="bottom|center_horizontal"
+                app:bootstrapBrand="primary"
+                app:bootstrapText="苏州知行易信息科技有限公司{fa_thumbs_o_up}"
+                tools:ignore="SpUsage"
                 />
         </LinearLayout>
-
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
