@@ -1,18 +1,24 @@
 package com.cyt.ieasy.mobilelingliao;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.cyt.ieasy.tools.MyToast;
 import com.cyt.ieasy.widget.MyGridLayout;
 
 import butterknife.Bind;
@@ -24,6 +30,8 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private static boolean isExit = false;
+    private final static int MESSAGE_EXIT = 0x00001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +94,43 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    // 创建Handler对象，用来处理消息
+    static Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {// 处理消息
+            super.handleMessage(msg);
+            if (msg.what == MESSAGE_EXIT)
+                isExit = false;
+        }
+    };
+
+    private void ToQuitTheApp() {
+        if (isExit) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+            System.exit(0);// 使虚拟机停止运行并退出程序
+        } else {
+            isExit = true;
+            MyToast.tostpic(MainActivity.this, "再按一次返回键退出程序");
+            mHandler.sendEmptyMessageDelayed(MESSAGE_EXIT, 3000);// 3秒后发送消息
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        boolean result = false;
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            ToQuitTheApp();
+            result = true;
+        }
+        return result;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -108,6 +149,12 @@ public class MainActivity extends BaseActivity {
             new AlertDialogWrapper.Builder(this)
                     .setTitle("退出")
                     .setMessage("确定退出吗")
+                    .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

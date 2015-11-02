@@ -94,7 +94,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try{
-                Thread.sleep(5000);
+                Thread.sleep(3000);
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -191,6 +191,7 @@ public class LoginActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
