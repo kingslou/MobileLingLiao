@@ -31,6 +31,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     public static final String editBm = "editbm";
     public static final String ipconfig = "ipconfig";
     public static final String portconfig = "portconfig";
+    public static final String updatedata = "updatedata";
     private EditText IpStr=null;
     private EditText PortStr=null;
     private CheckboxItem itemDept;
@@ -53,9 +54,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             }
         }));
         if(!StringUtils.isBlank(getStorageInterface().load(ipconfig,""))){
-            if(getStorageInterface().load(ipconfig,"").equals("true")){
-
-            }
+            ipConfigItem.updateSubTitle(getStorageInterface().load(ipconfig,"")+":"+getStorageInterface().load(portconfig,""));
         }
         itemDept = new CheckboxItem(getFragment(), editBm);
         addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
@@ -81,21 +80,21 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             }
         }
         addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), "key3").setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
+        addItem(new TextItem(getFragment(), updatedata).setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
                 Toast.makeText(SettingActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
             }
         }));
-        addItem(new HeaderItem(getFragment()).setTitle("其他设置"));
-        addItem(new TextItem(getFragment(), "key4").setTitle("Simple text item 2").setSubtitle("Subtitle of simple text item 2").setOnclick(new TextItem.OnClickListener() {
+        addItem(new HeaderItem(getFragment()).setTitle("其他"));
+        addItem(new DividerItem(getFragment()));
+        addItem(new TextItem(getFragment(), "finish").setTitle("退出设置").setOnclick(new TextItem.OnClickListener(){
             @Override
-            public void onClick(TextItem v) {
-                Toast.makeText(SettingActivity.this, "Clicked 2", Toast.LENGTH_SHORT).show();
+            public void onClick(TextItem item) {
+                finish();
             }
         }));
         addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), "key5").setTitle("Simple text item 3 - no subtitle"));
 
     }
 
@@ -144,7 +143,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                         if(CommonTool.isIpv4(Ip)){
                             getStorageInterface().save(ipconfig,Ip);
                             getStorageInterface().save(portconfig,Port);
-                            ((TextItem) getItem("ipconfig")).updateSubTitle(Ip + ":" + Port);
+                            ((TextItem) getItem(ipconfig)).updateSubTitle(Ip + ":" + Port);
                         }
                     }
                 }).build();
@@ -153,6 +152,12 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         //noinspection ConstantConditions
         IpStr = (EditText) dialog.getCustomView().findViewById(R.id.ip);
         PortStr = (EditText) dialog.getCustomView().findViewById(R.id.port);
+        if(!StringUtils.isBlank(getStorageInterface().load(ipconfig,""))){
+            IpStr.setText(getStorageInterface().load(ipconfig,""));
+        }
+        if(!StringUtils.isBlank(getStorageInterface().load(portconfig,""))){
+            PortStr.setText(getStorageInterface().load(portconfig,""));
+        }
         IpStr.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

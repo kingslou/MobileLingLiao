@@ -53,4 +53,6 @@ dependencies {
     //TimePopupWindow 时间选择器，支持年月日时分，年月日，年月，时分等格式
     //OptionsPopupWindow 选项选择器，支持一，二，三级选项选择，并且可以设置是否联动
     compile 'com.bigkoo:pickerview:1.0.3'
+    //orm数据库
+    compile 'de.greenrobot:greendao:2.0.0'
 }
