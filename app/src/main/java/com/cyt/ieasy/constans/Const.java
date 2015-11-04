@@ -17,5 +17,6 @@ public class Const {
     public static final String savepwd = "savepwd";
     public static final String cachuser = "cachuser";
     public static final String cachpwd = "cachpwd";
+    public static final String updatetime = "updatetime";
 
 }

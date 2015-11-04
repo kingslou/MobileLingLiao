@@ -9,12 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.entity.UpdateStatus;
+import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
@@ -28,12 +30,17 @@ import com.kenumir.materialsettings.items.TextItem;
 import com.kenumir.materialsettings.storage.PreferencesStorageInterface;
 import com.kenumir.materialsettings.storage.StorageInterface;
 
+import de.greenrobot.event.EventBus;
+
 public class SettingActivity extends MaterialSettingsActivity implements SampleDialog.OnDialogOkClick {
 
     private EditText IpStr=null;
     private EditText PortStr=null;
     private CheckboxItem itemDept;
     private TextItem ipConfigItem;
+    private MaterialDialog dialog;
+    private String Message="";
+    private int step=0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +88,35 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         addItem(new TextItem(getFragment(), Const.updatedata).setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
-                Toast.makeText(SettingActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
+                if(!CommonTool.isWifiOK(SettingActivity.this)){
+                    new MaterialDialog.Builder(SettingActivity.this)
+                            .title("网络异常")
+                            .content("请检查网络")
+                            .positiveText(R.string.agree)
+                            .theme(Theme.LIGHT)
+                            .show();
+                    return;
+                }
+                Message="";
+                step = 0;
+                showProgress();
+                DownLoadActivity.getInstance(new Callback<UpdateStatus>() {
+                    @Override
+                    public void invoke() {
+
+                    }
+                    @Override
+                    public void invole(UpdateStatus arg) {
+                        dismissProgress();
+                        if(arg.getSuccess()){
+                            //更新成功
+
+                        }else{
+                            //更新失败
+                            MyLogger.showLogWithLineNum(5,"失败原因"+arg.getMessage());
+                        }
+                    }
+                }).loadData();
             }
         }));
         addItem(new HeaderItem(getFragment()).setTitle("其他"));
@@ -94,6 +129,21 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         }));
         addItem(new DividerItem(getFragment()));
 
+    }
+
+    public void showProgress(){
+        dialog =  new MaterialDialog.Builder(this)
+                .title("加载中····")
+                .content("更新基础数据")
+                .progress(false, 100)
+                .cancelable(true)
+                //.progressIndeterminateStyle(true)
+                .show();
+    }
+    public void dismissProgress(){
+        if(null!=dialog){
+            dialog.dismiss();
+        }
     }
 
     @Override
@@ -178,8 +228,38 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
 
             }
         });
-
         dialog.show();
         positiveAction.setEnabled(false); // disabled by default
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(SettingActivity.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(SettingActivity.this);
+    }
+
+    public void onEvent(MessageEvent event){
+        Message +=event.Message+"\n";
+        step+=event.step;
+        if(step==5){
+            Message+="数据更新完毕"+"\n";
+            dialog.setContent(Message);
+            dialog.setProgress(100);
+            dialog.setActionButton(DialogAction.POSITIVE,"关闭");
+        }else{
+            setproValue(0, 20);
+            dialog.setContent(Message+step);
+        }
+    }
+    void setproValue(int min,int max){
+        for(int i=min;i<max;i++){
+            dialog.incrementProgress(1);
+        }
     }
 }

@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bigkoo.pickerview.TimePopupWindow;
@@ -94,6 +96,29 @@ public class MainActivity extends BaseActivity {
                     case 2:
                         break;
                     case 3:
+                        new MaterialDialog.Builder(context)
+                                .title("注销登录")
+                                .content("确定注销登录吗?")
+                                .positiveText(R.string.agree)
+                                .negativeText(R.string.disagree)
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                        materialDialog.dismiss();
+                                    }
+                                })
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                        Intent intent = new Intent();
+                                        intent.setClass(MainActivity.this, LoginActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                        materialDialog.dismiss();
+                                        finish();
+                                    }
+                                })
+                                .show();
                         break;
                     default:
                         break;
@@ -178,7 +203,6 @@ public class MainActivity extends BaseActivity {
                     .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
                             finish();
                         }
                     }).show();

@@ -6,9 +6,15 @@ package com.cyt.ieasy.event;
 public class MessageEvent {
 
     public final String Message;
+    public  int step = 0 ;
 
     public MessageEvent(String message){
         this.Message = message;
+    }
+
+    public MessageEvent(String message,int step){
+        this.Message = message;
+        this.step = step;
     }
 
 }

@@ -18,6 +18,7 @@ import com.kenumir.materialsettings.storage.StorageInterface;
  */
 public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
+    MaterialDialog.Builder materialbuilder;
     Context context;
     protected final int REQUEST_CODE_DEFAULT = 1234;
     private PowerManager powerManager = null;

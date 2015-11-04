@@ -32,6 +32,7 @@ import com.cyt.ieasy.setting.SettingActivity;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.SystemUtils;
+import com.cyt.ieasy.tools.WebServiceTool;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.util.concurrent.Executor;
@@ -65,6 +66,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.loginlayout);
         ButterKnife.bind(this);
         initView();
+        WebServiceTool.init();
     }
 
     void initView(){
@@ -78,7 +80,7 @@ public class LoginActivity extends BaseActivity {
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPwd.addTextChangedListener(new MyTextWatcher(inputPwd));
         String signpwd = CommonTool.getGlobalSetting(context,Const.savepwd);
-        if(StringUtils.isBlank(signpwd)){
+        if(!StringUtils.isBlank(signpwd)){
             if(Boolean.parseBoolean(signpwd)){
                 checkbox.setChecked(true);
                 readInputUser();
@@ -208,7 +210,11 @@ public class LoginActivity extends BaseActivity {
     public void onEvent(MessageEvent event){
         if(event.Message.equals(Const.Success)){
 //            rotateLoading.stop();
-            saveInputUser();
+            if(checkbox.isChecked()){
+                saveInputUser();
+            }else{
+                clearCachUser();
+            }
             dismiss();
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
@@ -225,12 +231,17 @@ public class LoginActivity extends BaseActivity {
     public void readInputUser(){
         String cachuser = CommonTool.getGlobalSetting(context,Const.cachuser);
         String cachpwd  = CommonTool.getGlobalSetting(context,Const.cachpwd);
-        if(StringUtils.isBlank(cachuser)){
+        if(!StringUtils.isBlank(cachuser)){
             inputName.setText(cachuser);
         }
-        if(StringUtils.isBlank(cachpwd)){
+        if(!StringUtils.isBlank(cachpwd)){
             inputPwd.setText(cachpwd);
         }
+    }
+
+    public void clearCachUser(){
+        CommonTool.removeGlobalSetting(context,Const.cachuser);
+        CommonTool.removeGlobalSetting(context,Const.cachpwd);
     }
 
     @Override
