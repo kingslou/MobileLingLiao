@@ -2,6 +2,9 @@ package com.cyt.ieasy.tools;
 import android.os.Handler;
 import android.util.Log;
 import android.util.Xml;
+
+import com.cyt.ieasy.constans.Const;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;

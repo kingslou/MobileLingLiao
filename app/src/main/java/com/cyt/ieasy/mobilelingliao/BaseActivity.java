@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.tools.MyLogger;
+import com.kenumir.materialsettings.storage.StorageInterface;
 
 /**
  * Created by jin on 2015.10.10.
@@ -19,8 +20,9 @@ public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
     Context context;
     protected final int REQUEST_CODE_DEFAULT = 1234;
-    PowerManager powerManager = null;
-    PowerManager.WakeLock wakeLock = null;
+    private PowerManager powerManager = null;
+    private PowerManager.WakeLock wakeLock = null;
+    private StorageInterface mStorageInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +85,10 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             startActivity(new Intent(context, clazz));
         }
+    }
+
+    public StorageInterface initStorageInterface(){
+       return null;
     }
 
     @Override

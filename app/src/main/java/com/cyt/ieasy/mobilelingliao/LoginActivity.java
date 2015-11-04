@@ -19,14 +19,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.setting.ChangeLogDialog;
 import com.cyt.ieasy.setting.SettingActivity;
-import com.cyt.ieasy.tools.Const;
+import com.cyt.ieasy.tools.CommonTool;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.SystemUtils;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -50,6 +54,7 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.input_layout_password) TextInputLayout inputPwdlayout;
     @Bind(R.id.input_name) EditText inputName;
     @Bind(R.id.input_password) EditText inputPwd;
+    @Bind(R.id.savePassword) CheckBox checkbox;
     private final int droidGreen = Color.parseColor("#0275d8");
     public static final Executor THREAD_POOL_EXECUTOR = Executors
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);
@@ -59,10 +64,10 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginlayout);
         ButterKnife.bind(this);
-        initToobar();
+        initView();
     }
 
-    void initToobar(){
+    void initView(){
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -72,6 +77,23 @@ public class LoginActivity extends BaseActivity {
         getSupportActionBar().setTitle("");
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPwd.addTextChangedListener(new MyTextWatcher(inputPwd));
+        String signpwd = CommonTool.getGlobalSetting(context,Const.savepwd);
+        if(StringUtils.isBlank(signpwd)){
+            if(Boolean.parseBoolean(signpwd)){
+                checkbox.setChecked(true);
+                readInputUser();
+            }
+        }
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    CommonTool.saveGlobalSetting(context,Const.savepwd,true);
+                }else{
+                    CommonTool.saveGlobalSetting(context,Const.savepwd,false);
+                }
+            }
+        });
     }
     @OnClick(R.id.btn_signup)
     public void signOnClick(){
@@ -186,11 +208,28 @@ public class LoginActivity extends BaseActivity {
     public void onEvent(MessageEvent event){
         if(event.Message.equals(Const.Success)){
 //            rotateLoading.stop();
+            saveInputUser();
             dismiss();
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    public void saveInputUser(){
+        CommonTool.saveGlobalSetting(context,Const.cachuser,inputName.getText().toString());
+        CommonTool.saveGlobalSetting(context,Const.cachpwd,inputPwd.getText().toString());
+    }
+
+    public void readInputUser(){
+        String cachuser = CommonTool.getGlobalSetting(context,Const.cachuser);
+        String cachpwd  = CommonTool.getGlobalSetting(context,Const.cachpwd);
+        if(StringUtils.isBlank(cachuser)){
+            inputName.setText(cachuser);
+        }
+        if(StringUtils.isBlank(cachpwd)){
+            inputPwd.setText(cachpwd);
         }
     }
 

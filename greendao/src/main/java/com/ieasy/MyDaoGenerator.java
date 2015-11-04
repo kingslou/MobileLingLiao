@@ -17,6 +17,8 @@ public class MyDaoGenerator {
     public static final String TAB_WUZI = "WuZi_Table";
     //物料类别表
     public static final String TAB_WUZI_CATALOG = "WUZI_CATALOG";
+    //仓库表
+    public static final String TAB_WUZI_STOCK = "WUZI_STOCK";
 
     public static void main(String[] args){
 
@@ -24,8 +26,37 @@ public class MyDaoGenerator {
         creatDeptTable(schema);
         creatWuZiTable(schema);
         creatWuZiCatalog(schema);
+        creatWuZiStock(schema);
     }
 
+    public static void creatWuZiStock(Schema schema){
+        Entity entity = schema.addEntity(TAB_WUZI_STOCK);
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("CK_ID");
+        entity.addStringProperty("CK_CODE");
+        entity.addStringProperty("CK_NAME");
+        entity.addStringProperty("CK_MANAGER");
+        entity.addStringProperty("CK_REMARK");
+        entity.addStringProperty("CK_DISP_ORDER");
+        entity.addIntProperty("CK_STATUS");
+        entity.addIntProperty("CK_IF_ZONGCANG");
+        entity.addIntProperty("CK_DEL_FLAG");
+        entity.addIntProperty("CK_VERSION");
+        entity.addStringProperty("CK_MD_ID");
+        entity.addDateProperty("CK_CRE_TIME");
+        entity.addStringProperty("CK_CRE_ID");
+        entity.addDateProperty("CK_MOD_TIME");
+        entity.addStringProperty("CK_BAK1");
+        entity.addStringProperty("CK_BAK2");
+        entity.addStringProperty("CK_BAK3");
+        entity.addStringProperty("CK_BAK4");
+        entity.addStringProperty("CK_BAK5");
+        try{
+            new DaoGenerator().generateAll(schema,DAO_PATH);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public static void creatWuZiCatalog(Schema schema){
         Entity entity = schema.addEntity(TAB_WUZI_CATALOG);
         entity.addIdProperty().primaryKey().autoincrement();

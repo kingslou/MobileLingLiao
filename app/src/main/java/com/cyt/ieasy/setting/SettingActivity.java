@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
@@ -28,10 +29,7 @@ import com.kenumir.materialsettings.storage.PreferencesStorageInterface;
 import com.kenumir.materialsettings.storage.StorageInterface;
 
 public class SettingActivity extends MaterialSettingsActivity implements SampleDialog.OnDialogOkClick {
-    public static final String editBm = "editbm";
-    public static final String ipconfig = "ipconfig";
-    public static final String portconfig = "portconfig";
-    public static final String updatedata = "updatedata";
+
     private EditText IpStr=null;
     private EditText PortStr=null;
     private CheckboxItem itemDept;
@@ -45,7 +43,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
-        ipConfigItem =new TextItem(getFragment(), ipconfig);
+        ipConfigItem =new TextItem(getFragment(), Const.ipconfig);
         addItem(new HeaderItem(getFragment()).setTitle("服务器地址配置"));
         addItem(ipConfigItem.setTitle("IP地址").setSubtitle("未设置IP地址").setOnclick(new TextItem.OnClickListener() {
             @Override
@@ -53,15 +51,15 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                 showCustomView();
             }
         }));
-        if(!StringUtils.isBlank(getStorageInterface().load(ipconfig,""))){
-            ipConfigItem.updateSubTitle(getStorageInterface().load(ipconfig,"")+":"+getStorageInterface().load(portconfig,""));
+        if(!StringUtils.isBlank(getStorageInterface().load(Const.ipconfig,""))){
+            ipConfigItem.updateSubTitle(getStorageInterface().load(Const.ipconfig,"")+":"+getStorageInterface().load(Const.portconfig,""));
         }
-        itemDept = new CheckboxItem(getFragment(), editBm);
+        itemDept = new CheckboxItem(getFragment(), Const.editBm);
         addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
         addItem(itemDept.setTitle("是否允许选择部门仓库").setSubtitle("否").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(CheckboxItem cbi, boolean isChecked) {
-                getStorageInterface().save(editBm, isChecked + "");
+                getStorageInterface().save(Const.editBm, isChecked + "");
                 if(isChecked){
                     itemDept.updateSubTitle("是");
                 }else{
@@ -69,9 +67,9 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                 }
             }
         }));
-        if(null!=getStorageInterface().load(editBm,"")){
-            MyLogger.showLogWithLineNum(5, "测试" + getStorageInterface().load(editBm, ""));
-            if(getStorageInterface().load(editBm,"").toString().equals("true")){
+        if(null!=getStorageInterface().load(Const.editBm,"")){
+            MyLogger.showLogWithLineNum(5, "测试" + getStorageInterface().load(Const.editBm, ""));
+            if(getStorageInterface().load(Const.editBm,"").toString().equals("true")){
                 itemDept.updateChecked(true);
                 itemDept.updateSubTitle("是");
             }else{
@@ -80,7 +78,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             }
         }
         addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), updatedata).setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
+        addItem(new TextItem(getFragment(), Const.updatedata).setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
                 Toast.makeText(SettingActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
@@ -141,9 +139,9 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                         String Ip = IpStr.getText().toString();
                         String Port = PortStr.getText().toString();
                         if(CommonTool.isIpv4(Ip)){
-                            getStorageInterface().save(ipconfig,Ip);
-                            getStorageInterface().save(portconfig,Port);
-                            ((TextItem) getItem(ipconfig)).updateSubTitle(Ip + ":" + Port);
+                            getStorageInterface().save(Const.ipconfig,Ip);
+                            getStorageInterface().save(Const.portconfig,Port);
+                            ((TextItem) getItem(Const.ipconfig)).updateSubTitle(Ip + ":" + Port);
                         }
                     }
                 }).build();
@@ -152,11 +150,11 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         //noinspection ConstantConditions
         IpStr = (EditText) dialog.getCustomView().findViewById(R.id.ip);
         PortStr = (EditText) dialog.getCustomView().findViewById(R.id.port);
-        if(!StringUtils.isBlank(getStorageInterface().load(ipconfig,""))){
-            IpStr.setText(getStorageInterface().load(ipconfig,""));
+        if(!StringUtils.isBlank(getStorageInterface().load(Const.ipconfig,""))){
+            IpStr.setText(getStorageInterface().load(Const.ipconfig,""));
         }
-        if(!StringUtils.isBlank(getStorageInterface().load(portconfig,""))){
-            PortStr.setText(getStorageInterface().load(portconfig,""));
+        if(!StringUtils.isBlank(getStorageInterface().load(Const.portconfig,""))){
+            PortStr.setText(getStorageInterface().load(Const.portconfig,""));
         }
         IpStr.addTextChangedListener(new TextWatcher() {
             @Override
