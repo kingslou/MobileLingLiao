@@ -5,16 +5,18 @@ package com.cyt.ieasy.event;
  */
 public class MessageEvent {
 
-    public final String Message;
+    public final String message;
+    public  String error="";
     public  int step = 0 ;
 
     public MessageEvent(String message){
-        this.Message = message;
+        this.message = message;
     }
 
-    public MessageEvent(String message,int step){
-        this.Message = message;
+    public MessageEvent(String message,String error,int step){
+        this.message = message;
         this.step = step;
+        this.error = error;
     }
 
 }

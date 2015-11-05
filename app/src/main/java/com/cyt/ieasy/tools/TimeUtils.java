@@ -1,5 +1,6 @@
 package com.cyt.ieasy.tools;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -69,5 +70,32 @@ public class TimeUtils {
      */
     public static String getCurrentTimeInString(SimpleDateFormat dateFormat) {
         return getTime(getCurrentTimeInLong(), dateFormat);
+    }
+
+    public static Date getDate(String time, String format) {
+        Date date = null;
+        try {
+            if(StringUtils.isBlank(format)){
+                format = "yyyy-MM-dd HH:mm";
+            }
+            SimpleDateFormat df = new SimpleDateFormat(format);
+            df.setLenient(false);
+            date = df.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return date;
+    }
+
+    public static String convertDateTime(String time){
+        Date date;
+        String result = "";
+        String aa = time.replace("/Date(", "").replace(")/", "");
+        long millisecond = Long.parseLong(aa);
+        Date d= new Date(millisecond);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        result = formatter.format(d);
+        return result;
     }
 }

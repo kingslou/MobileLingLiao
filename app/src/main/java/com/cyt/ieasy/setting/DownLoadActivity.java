@@ -2,15 +2,23 @@ package com.cyt.ieasy.setting;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.PowerManager;
+
 import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.db.DeptTableUtil;
+import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
+import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.entity.UpdateStatus;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.SystemUtils;
+import com.cyt.ieasy.tools.TimeUtils;
 import com.cyt.ieasy.tools.WebServiceTool;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -28,6 +36,8 @@ public class DownLoadActivity {
     private String  Scm_Service;
     private String  IP_Config;
     private String  ErrorMessage;
+    private PowerManager powerManager = null;
+    private PowerManager.WakeLock wakeLock = null;
     public static final Executor THREAD_POOL_EXECUTOR = Executors
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);
 
@@ -36,6 +46,8 @@ public class DownLoadActivity {
                 +":"+CommonTool.getGlobalSetting(MyApplication.getContext(),Const.portconfig);
         Base_Service = IP_Config + "/webserver/WebService/BaseService.asmx";
         Scm_Service  = IP_Config+"/webserver/WebService/ScmService.asmx";
+        powerManager = (PowerManager)MyApplication.getContext().getSystemService(MyApplication.getContext().POWER_SERVICE);
+        wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
     }
     public static DownLoadActivity getInstance(Callback<UpdateStatus> callback){
         if(null==instance){
@@ -49,6 +61,7 @@ public class DownLoadActivity {
     }
 
     public void loadData(){
+        ErrorMessage = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             new SynServerTime().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_WuZi().executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -72,6 +85,9 @@ public class DownLoadActivity {
                 Object serverTime =
                         WebServiceTool.callWebservice(Base_Service, "GetServerTimeForPad", new String[] {},
                                 new Object[] {});
+                if(isCancelled()){
+                    return null;
+                }
                 if(null!=serverTime){
                     MyLogger.showLogWithLineNum(5,serverTime.toString());
                     CommonTool.saveGlobalSetting(MyApplication.getContext(),Const.updatetime,serverTime.toString().trim());
@@ -88,12 +104,16 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().post(new MessageEvent("时间更新完毕",1));
+            if(isCancelled()){
+                return;
+            }
+            EventBus.getDefault().post(new MessageEvent("时间更新完毕","",1));
         }
 
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
+            EventBus.getDefault().post(new MessageEvent("取消时间更新",ErrorMessage ,1));
         }
     }
 
@@ -106,8 +126,16 @@ public class DownLoadActivity {
                         WebServiceTool
                                 .callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {"typeName",
                                         "condition", "columns"}, new Object[] {"SCM_WUZI", " WZ_STATUS=1 ", ""});
+                if(isCancelled()){
+                    ErrorMessage = "取消物料更新";
+                    return null;
+                }
                 if(null!=op){
-                    MyLogger.showLogWithLineNum(5,op.toString());
+                    //MyLogger.showLogWithLineNum(5,op.toString());
+                    WuZiTableUtil.getWuZiTableUtil().clearTable();
+                    MyLogger.showLogWithLineNum(5, "物料更新时间" + TimeUtils.getCurrentTimeInString());
+                    WuZiTableUtil.getWuZiTableUtil().addData(op);
+                    MyLogger.showLogWithLineNum(5, "物料更新结束时间" + TimeUtils.getCurrentTimeInString());
                 }else{
                     ErrorMessage+="获取物质失败";
                 }
@@ -125,7 +153,11 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().postSticky(new MessageEvent("物料更新完毕", 1));
+            if(StringUtils.isBlank(ErrorMessage)){
+                EventBus.getDefault().postSticky(new MessageEvent("物料更新完毕","",1));
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("物料更新",ErrorMessage,1));
+            }
         }
 
         @Override
@@ -141,8 +173,15 @@ public class DownLoadActivity {
                 Object op =
                         WebServiceTool.callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {
                                 "typeName", "condition", "columns"}, new Object[] {"SCM_WUZI_CATALOG", "WC_STATUS=1", ""});
+                if(isCancelled()){
+                    ErrorMessage += "取消更新物料类别";
+                    return null;
+                }
                 if(null!=op){
-                    MyLogger.showLogWithLineNum(5,op.toString());
+                   // MyLogger.showLogWithLineNum(5,op.toString());
+                    WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().addData(op);
+                }else{
+                    ErrorMessage += "物料更新失败";
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -153,7 +192,11 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().postSticky(new MessageEvent("物料类别更新完毕",1));
+            if(StringUtils.isBlank(ErrorMessage)){
+                EventBus.getDefault().postSticky(new MessageEvent("物料类别更新完毕","",1));
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("物料类别更新",ErrorMessage,0));
+            }
         }
 
         @Override
@@ -169,8 +212,16 @@ public class DownLoadActivity {
                 Object op =
                         WebServiceTool.callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {
                                 "typeName", "condition", "columns"}, new Object[] {"HR_B_DEPT", "", ""});
+                if(isCancelled()){
+                    ErrorMessage += "部门取消更新";
+                    return null;
+                }
                 if(null!=op){
-                    MyLogger.showLogWithLineNum(5,op.toString());
+                    //MyLogger.showLogWithLineNum(5,op.toString());
+                    DeptTableUtil.getDeptTableUtil().clearTable();
+                    DeptTableUtil.getDeptTableUtil().addData(op);
+                }else{
+                    ErrorMessage+="部门更新失败";
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -186,7 +237,12 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().postSticky(new MessageEvent("部门更新完毕",1));
+            if(StringUtils.isBlank(ErrorMessage)){
+                EventBus.getDefault().postSticky(new MessageEvent("部门更新完毕","",1));
+                MyLogger.showLogWithLineNum(5,"部门数量"+DeptTableUtil.getDeptTableUtil().getAlldata().size());
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("部门更新",ErrorMessage,1));
+            }
         }
     }
 
@@ -197,8 +253,14 @@ public class DownLoadActivity {
                 Object op =
                         WebServiceTool.callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {
                                 "typeName", "condition", "columns"}, new Object[] {"WL_STOCK", "CK_STATSU=1", ""});
-                if(null!=op){
-                    MyLogger.showLogWithLineNum(5,op.toString());
+                if(isCancelled()){
+                    ErrorMessage +="仓库取消更新";
+                    return null;
+                }
+                if(null!=op&&!op.equals("anyType{}")){
+                    //MyLogger.showLogWithLineNum(5,op.toString());
+                }else{
+                    ErrorMessage+="仓库更新失败";
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -209,7 +271,11 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().postSticky(new MessageEvent("仓库更新完毕",1));
+            if(StringUtils.isBlank(ErrorMessage)){
+                EventBus.getDefault().postSticky(new MessageEvent("仓库更新完毕","",1));
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("仓库更新",ErrorMessage,1));
+            }
         }
 
         @Override

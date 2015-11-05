@@ -40,7 +40,8 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     private TextItem ipConfigItem;
     private TextItem updataItem;
     private MaterialDialog dialog;
-    private String Message="";
+    private String Message;
+    private String error;
     private int step=0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,37 +91,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         addItem(updataItem.setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
-                if (!CommonTool.isWifiOK(SettingActivity.this)) {
-                    new MaterialDialog.Builder(SettingActivity.this)
-                            .title("网络异常")
-                            .content("请检查网络")
-                            .positiveText(R.string.agree)
-                            .theme(Theme.LIGHT)
-                            .show();
-                    return;
-                }
-                Message = "";
-                step = 0;
-                showProgress();
-                //常规做法
-                DownLoadActivity.getInstance(new Callback<UpdateStatus>() {
-                    @Override
-                    public void invoke() {
-
-                    }
-
-                    @Override
-                    public void invole(UpdateStatus arg) {
-                        dismissProgress();
-                        if (arg.getSuccess()) {
-                            //更新成功
-
-                        } else {
-                            //更新失败
-                            MyLogger.showLogWithLineNum(5, "失败原因" + arg.getMessage());
-                        }
-                    }
-                }).loadData();
+                updata();
             }
         }));
         if(null!=getStorageInterface().load(Const.updatedata,"")){
@@ -145,7 +116,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                 .title("加载中····")
                 .content("更新基础数据")
                 .progress(false, 100)
-                .cancelable(true)
+                .cancelable(false)
                 //.progressIndeterminateStyle(true)
                 .show();
     }
@@ -153,6 +124,38 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         if(null!=dialog){
             dialog.dismiss();
         }
+    }
+
+    public void updata(){
+        if (!CommonTool.isWifiOK(SettingActivity.this)) {
+            new MaterialDialog.Builder(SettingActivity.this)
+                    .title("网络异常")
+                    .content("请检查网络")
+                    .positiveText(R.string.agree)
+                    .theme(Theme.LIGHT)
+                    .show();
+            return;
+        }
+        Message = "";
+        step = 0;
+        error = "";
+        showProgress();
+        //常规做法
+        DownLoadActivity.getInstance(new Callback<UpdateStatus>() {
+            @Override
+            public void invoke() {
+            }
+            @Override
+            public void invole(UpdateStatus arg) {
+                dismissProgress();
+                if (arg.getSuccess()) {
+                    //更新成功
+                } else {
+                    //更新失败
+                    MyLogger.showLogWithLineNum(5, "失败原因" + arg.getMessage());
+                }
+            }
+        }).loadData();
     }
 
     @Override
@@ -253,18 +256,27 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     }
 
     public void onEvent(MessageEvent event){
-        Message +=event.Message+"\n";
+        Message +=event.message+"\n";
+        error +=event.error+"\n";
         step+=event.step;
-        if(step==5){
-            Message+="数据更新完毕"+"\n";
-            dialog.setContent(Message);
-            dialog.setProgress(100);
-            dialog.setActionButton(DialogAction.POSITIVE, "关闭");
-            getStorageInterface().save(Const.updatedata, TimeUtils.getCurrentTimeInString());
-            updataItem.updateSubTitle("上次更新时间"+TimeUtils.getCurrentTimeInString());
+        if(StringUtils.isBlank(event.error)){
+            if(step==5){
+                Message+="数据更新完毕"+"\n";
+                dialog.setContent(Message);
+                dialog.setProgress(100);
+                dialog.setActionButton(DialogAction.POSITIVE, "关闭");
+                getStorageInterface().save(Const.updatedata, TimeUtils.getCurrentTimeInString());
+                updataItem.updateSubTitle("上次更新时间"+TimeUtils.getCurrentTimeInString());
+            }else{
+                setproValue(0, 20);
+                dialog.setContent(Message+step);
+            }
         }else{
-            setproValue(0, 20);
-            dialog.setContent(Message+step);
+            Message+="数据更新失败"+"\n";
+            dialog.setContent(error);
+            dialog.setProgress(100);
+            dialog.setActionButton(DialogAction.NEUTRAL, "重试");
+            dialog.setActionButton(DialogAction.POSITIVE, "关闭");
         }
     }
     void setproValue(int min,int max){

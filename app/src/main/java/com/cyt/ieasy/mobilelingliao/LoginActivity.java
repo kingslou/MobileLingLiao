@@ -219,7 +219,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onEvent(MessageEvent event){
-        if(event.Message.equals(Const.Success)){
+        if(event.message.equals(Const.Success)){
 //            rotateLoading.stop();
             if(checkbox.isChecked()){
                 saveInputUser();

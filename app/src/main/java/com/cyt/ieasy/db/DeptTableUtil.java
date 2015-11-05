@@ -1,12 +1,16 @@
 package com.cyt.ieasy.db;
 
-import com.cyt.ieasy.entity.HR_B_DEPT;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
+import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.Dept_Table;
 import com.ieasy.dao.Dept_TableDao;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 部门表处理工具类
@@ -36,24 +40,44 @@ public class DeptTableUtil extends BaseTableUtil {
 
     @Override
     public void clearTable() {
-
+        deptTableDao.deleteAll();
     }
 
     @Override
     public void addData(Object object) {
         try{
-            JSONObject item = new JSONObject(object.toString());
-            Dept_Table dept_table = new Dept_Table();
-            dept_table.setINNERID(item.getString(""));
-            dept_table.setDEPTCODE(item.getString(""));
-            deptTableDao.insert(dept_table);
+            JSONArray items = new JSONArray(object.toString());
+            MyLogger.showLogWithLineNum(5,"执行时间"+TimeUtils.getCurrentTimeInString());
+            for(int i=0;i<items.length();i++){
+                JSONObject item = items.getJSONObject(i);
+                Dept_Table dept_table = new Dept_Table();
+                dept_table.setINNERID(item.getString("INNERID"));
+                dept_table.setDEPTCODE(item.getString("DEPTCODE"));
+                dept_table.setDEPT_IF_CUNCHUN(item.getString("DEPT_IF_CUNCHUN"));
+                dept_table.setADDIP(item.getString("ADDIP"));
+                dept_table.setADDTIME(TimeUtils.getDate(TimeUtils.convertDateTime(item.getString("ADDTIME")), ""));
+                dept_table.setUPDATETIME(TimeUtils.getDate(TimeUtils.convertDateTime(item.getString("UPDATETIME")), ""));
+                dept_table.setADDUSERID(item.getString("ADDUSERID"));
+                dept_table.setDEPTNAME(item.getString("DEPTNAME"));
+                dept_table.setDESCRIPTION(item.getString("DESCRIPTION"));
+                dept_table.setLEVELCODE(item.getString("LEVELCODE"));
+                dept_table.setUPDATEUSERID(item.getString("UPDATEUSERID"));
+                dept_table.setNOTES(item.getString("NOTES"));
+                dept_table.setPARENTID(item.getString("PARENTID"));
+                dept_table.setPREFIX(item.getString("PREFIX"));
+                deptTableDao.insert(dept_table);
+            }
+            MyLogger.showLogWithLineNum(5,"结束时间"+TimeUtils.getCurrentTimeInString());
+
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
     @Override
-    public ArrayList<HR_B_DEPT> getAlldata() {
-        return null;
+    public ArrayList<Dept_Table> getAlldata() {
+        List<Dept_Table> list = new ArrayList<>();
+        list = deptTableDao.queryBuilder().list();
+        return (ArrayList<Dept_Table>) list;
     }
 }
