@@ -18,5 +18,6 @@ public class Const {
     public static final String cachuser = "cachuser";
     public static final String cachpwd = "cachpwd";
     public static final String updatetime = "updatetime";
+    public static final String DB_NAME = "ZXY_CYT";
 
 }

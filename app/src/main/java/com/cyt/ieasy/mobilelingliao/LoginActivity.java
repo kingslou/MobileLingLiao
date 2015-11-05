@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -48,14 +49,24 @@ import de.greenrobot.event.EventBus;
  */
 public class LoginActivity extends BaseActivity {
 
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.rotateloading) RotateLoading rotateLoading;
-    @Bind(R.id.btn_signup) BootstrapButton loginbtn;
-    @Bind(R.id.input_layout_name) TextInputLayout inputNamelayout;
-    @Bind(R.id.input_layout_password) TextInputLayout inputPwdlayout;
-    @Bind(R.id.input_name) EditText inputName;
-    @Bind(R.id.input_password) EditText inputPwd;
-    @Bind(R.id.savePassword) CheckBox checkbox;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.rotateloading)
+    RotateLoading rotateLoading;
+    @Bind(R.id.btn_signup)
+    BootstrapButton loginbtn;
+    @Bind(R.id.input_layout_name)
+    TextInputLayout inputNamelayout;
+    @Bind(R.id.input_layout_password)
+    TextInputLayout inputPwdlayout;
+    @Bind(R.id.input_name)
+    EditText inputName;
+    @Bind(R.id.input_password)
+    EditText inputPwd;
+    @Bind(R.id.savePassword)
+    CheckBox checkbox;
+    @Bind(R.id.coordinatorlayout)
+    CoordinatorLayout coordinatorLayout;
     private final int droidGreen = Color.parseColor("#0275d8");
     public static final Executor THREAD_POOL_EXECUTOR = Executors
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);

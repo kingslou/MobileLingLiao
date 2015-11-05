@@ -27,11 +27,16 @@ public class MyDaoGenerator {
         creatWuZiTable(schema);
         creatWuZiCatalog(schema);
         creatWuZiStock(schema);
+        try{
+            new DaoGenerator().generateAll(schema,DAO_PATH);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void creatWuZiStock(Schema schema){
         Entity entity = schema.addEntity(TAB_WUZI_STOCK);
-        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addIdProperty().primaryKey();
         entity.addStringProperty("CK_ID");
         entity.addStringProperty("CK_CODE");
         entity.addStringProperty("CK_NAME");
@@ -51,11 +56,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("CK_BAK3");
         entity.addStringProperty("CK_BAK4");
         entity.addStringProperty("CK_BAK5");
-        try{
-            new DaoGenerator().generateAll(schema,DAO_PATH);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+
     }
     public static void creatWuZiCatalog(Schema schema){
         Entity entity = schema.addEntity(TAB_WUZI_CATALOG);
@@ -81,12 +82,6 @@ public class MyDaoGenerator {
         entity.addStringProperty("WC_BAK3");
         entity.addStringProperty("WC_BAK4");
         entity.addStringProperty("WC_BAK5");
-        try{
-            new DaoGenerator().generateAll(schema,DAO_PATH);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
     }
 
     public static void creatWuZiTable(Schema schema){
@@ -131,12 +126,6 @@ public class MyDaoGenerator {
         entity.addStringProperty("WZ_BAK5");
         entity.addStringProperty("WZ_CG_UNIT_NAME");
         entity.addStringProperty("WZ_CG_UNIT_ID");
-        try{
-            new DaoGenerator().generateAll(schema,DAO_PATH);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
     }
     public static void creatDeptTable(Schema schema){
         Entity entity = schema.addEntity(TAB_DEPT);
@@ -157,10 +146,5 @@ public class MyDaoGenerator {
         entity.addStringProperty("UPDATEUSERID");
         entity.addStringProperty("UPDATEIP");
         entity.addStringProperty("DEPT_IF_CUNCHUN");
-        try{
-            new DaoGenerator().generateAll(schema,DAO_PATH);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 }

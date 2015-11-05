@@ -3,27 +3,28 @@ package com.cyt.ieasy.mobilelingliao;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.tools.MyLogger;
-import com.kenumir.materialsettings.storage.StorageInterface;
 
 /**
  * Created by jin on 2015.10.10.
  */
 public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
-    MaterialDialog.Builder materialbuilder;
     Context context;
     protected final int REQUEST_CODE_DEFAULT = 1234;
     private PowerManager powerManager = null;
     private PowerManager.WakeLock wakeLock = null;
-    private StorageInterface mStorageInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +89,19 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public StorageInterface initStorageInterface(){
-       return null;
+    protected  void showSnackBar(View view){
+        final Snackbar snackbar = Snackbar.make(view,"欢迎使用",Snackbar.LENGTH_LONG).setAction("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        snackbar.setActionTextColor(Color.RED);
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+        snackbar.show();
     }
 
     @Override

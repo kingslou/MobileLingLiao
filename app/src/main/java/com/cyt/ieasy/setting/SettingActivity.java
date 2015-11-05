@@ -38,6 +38,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
     private EditText PortStr=null;
     private CheckboxItem itemDept;
     private TextItem ipConfigItem;
+    private TextItem updataItem;
     private MaterialDialog dialog;
     private String Message="";
     private int step=0;
@@ -59,7 +60,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             }
         }));
         if(!StringUtils.isBlank(getStorageInterface().load(Const.ipconfig,""))){
-            ipConfigItem.updateSubTitle(getStorageInterface().load(Const.ipconfig,"")+":"+getStorageInterface().load(Const.portconfig,""));
+            ipConfigItem.updateSubTitle(getStorageInterface().load(Const.ipconfig, "") + ":" + getStorageInterface().load(Const.portconfig, ""));
         }
         itemDept = new CheckboxItem(getFragment(), Const.editBm);
         addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
@@ -85,10 +86,11 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             }
         }
         addItem(new DividerItem(getFragment()));
-        addItem(new TextItem(getFragment(), Const.updatedata).setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
+        updataItem = new TextItem(getFragment(), Const.updatedata);
+        addItem(updataItem.setTitle("更新基础数据").setSubtitle("上次更新时间"+ TimeUtils.getCurrentTimeInString()).setOnclick(new TextItem.OnClickListener() {
             @Override
             public void onClick(TextItem v) {
-                if(!CommonTool.isWifiOK(SettingActivity.this)){
+                if (!CommonTool.isWifiOK(SettingActivity.this)) {
                     new MaterialDialog.Builder(SettingActivity.this)
                             .title("网络异常")
                             .content("请检查网络")
@@ -97,28 +99,35 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                             .show();
                     return;
                 }
-                Message="";
+                Message = "";
                 step = 0;
                 showProgress();
+                //常规做法
                 DownLoadActivity.getInstance(new Callback<UpdateStatus>() {
                     @Override
                     public void invoke() {
 
                     }
+
                     @Override
                     public void invole(UpdateStatus arg) {
                         dismissProgress();
-                        if(arg.getSuccess()){
+                        if (arg.getSuccess()) {
                             //更新成功
 
-                        }else{
+                        } else {
                             //更新失败
-                            MyLogger.showLogWithLineNum(5,"失败原因"+arg.getMessage());
+                            MyLogger.showLogWithLineNum(5, "失败原因" + arg.getMessage());
                         }
                     }
                 }).loadData();
             }
         }));
+        if(null!=getStorageInterface().load(Const.updatedata,"")){
+            updataItem.updateSubTitle("上次更新时间"+getStorageInterface().load(Const.updatedata,""));
+        }else{
+            updataItem.updateSubTitle("未更新基础数据");
+        }
         addItem(new HeaderItem(getFragment()).setTitle("其他"));
         addItem(new DividerItem(getFragment()));
         addItem(new TextItem(getFragment(), "finish").setTitle("退出设置").setOnclick(new TextItem.OnClickListener(){
@@ -166,8 +175,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
 
     @Override
     public void onOkClick() {
-        ((TextItem)getItem("key6")).updateSubTitle("Updated");
-        getStorageInterface().save("key6", true);
+
     }
 
     void loadSetting(){
@@ -251,7 +259,9 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
             Message+="数据更新完毕"+"\n";
             dialog.setContent(Message);
             dialog.setProgress(100);
-            dialog.setActionButton(DialogAction.POSITIVE,"关闭");
+            dialog.setActionButton(DialogAction.POSITIVE, "关闭");
+            getStorageInterface().save(Const.updatedata, TimeUtils.getCurrentTimeInString());
+            updataItem.updateSubTitle("上次更新时间"+TimeUtils.getCurrentTimeInString());
         }else{
             setproValue(0, 20);
             dialog.setContent(Message+step);
