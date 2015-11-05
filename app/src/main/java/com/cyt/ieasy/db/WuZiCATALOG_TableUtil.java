@@ -1,12 +1,11 @@
 package com.cyt.ieasy.db;
-
 import com.cyt.ieasy.mobilelingliao.MyApplication;
-import com.cyt.ieasy.tools.MyLogger;
-import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.WUZI_CATALOG;
 import com.ieasy.dao.WUZI_CATALOGDao;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jin on 2015.11.05.
@@ -40,27 +39,36 @@ public class WuZiCATALOG_TableUtil extends BaseTableUtil {
     }
 
     @Override
-    public ArrayList getAlldata() {
-        return null;
+    public ArrayList<WUZI_CATALOG> getAlldata() {
+        List<WUZI_CATALOG> wuzi_catalogs = new ArrayList<>();
+        wuzi_catalogs = wuzi_catalogDao.queryBuilder().list();
+        return (ArrayList<WUZI_CATALOG>) wuzi_catalogs;
     }
 
     @Override
     public void addData(Object object) {
         try{
-//            JSONArray Items = new JSONArray(object.toString());
-//            for(int i=0;i<Items.length();i++){
-//                WUZI_CATALOG wuzi_catalog = new WUZI_CATALOG();
-//                wuzi_catalogDao.insert(wuzi_catalog);
-//            }
-            MyLogger.showLogWithLineNum(5,"测试5000开始时间"+ TimeUtils.getCurrentTimeInString());
-            WUZI_CATALOG[] wuzi_catalogs = new WUZI_CATALOG[5000];
-            for(int i=0;i<5000;i++){
+            JSONArray Items = new JSONArray(object.toString());
+            WUZI_CATALOG[] wuzi_catalogs = new WUZI_CATALOG[Items.length()];
+            for(int i=0;i<Items.length();i++){
+                JSONObject item = Items.getJSONObject(i);
                 WUZI_CATALOG wuzi_catalog = new WUZI_CATALOG();
-                wuzi_catalog.setWC_BAK1("test");
+                wuzi_catalog.setWC_ID(item.getString("WC_ID"));
+                wuzi_catalog.setWC_NAME(item.getString("WC_NAME"));
+                wuzi_catalog.setWC_CODE(item.getString("WC_CODE"));
+                wuzi_catalog.setWC_CRE_ID(item.getString("WC_CRE_ID"));
+                wuzi_catalog.setWC_DEL_FLAG(item.getString("WC_DEL_FLAG"));
+                wuzi_catalog.setWC_DISP_ORDER(item.getString("WC_DISP_ORDER"));
+                wuzi_catalog.setWC_IDS(item.getString("WC_IDS"));
+                wuzi_catalog.setWC_MOD_ID(item.getString("WC_MOD_ID"));
+                wuzi_catalog.setWC_REMARK(item.getString("WC_REMARK"));
+                wuzi_catalog.setWC_PARENT_ID(item.getString("WC_PARENT_ID"));
+                wuzi_catalog.setWC_STATUS(item.getString("WC_STATUS"));
+                wuzi_catalog.setWC_ZB_ID(item.getString("WC_ZB_ID"));
+                wuzi_catalog.setWC_BAK1(item.getString("WC_BAK1"));
                 wuzi_catalogs[i] = wuzi_catalog;
             }
             wuzi_catalogDao.insertInTx(wuzi_catalogs);
-            MyLogger.showLogWithLineNum(5,"测试5000结束时间"+ TimeUtils.getCurrentTimeInString());
         }catch(Exception e){
             e.printStackTrace();
         }
