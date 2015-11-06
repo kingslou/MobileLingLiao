@@ -68,7 +68,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public View getView(int index) {
                 View view = getLayoutInflater().inflate(R.layout.menu_item, null);
-
                 TextDrawable drawable = mDrawableBuilder.build(String.valueOf(menuItems[index].charAt(0)), mColorGenerator.getColor(menuItems[index]));
                 TextView title = (TextView) view.findViewById(R.id.tv);
                 ImageView image = (ImageView) view.findViewById(R.id.iv);

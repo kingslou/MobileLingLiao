@@ -2,6 +2,7 @@
 <changelog bulletedList="true">
     <changelogversion versionName="1.0" changeDate="01/11/2015">
         <changelogtext>第一版</changelogtext>
+        <changelogtext>数据下载测试</changelogtext>
         <changelogtext>研发测试</changelogtext>
     </changelogversion>
 </changelog>
