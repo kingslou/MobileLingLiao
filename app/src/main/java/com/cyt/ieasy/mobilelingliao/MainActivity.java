@@ -24,6 +24,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bigkoo.pickerview.TimePopupWindow;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.MyToast;
+import com.cyt.ieasy.tools.TimeUtils;
 import com.cyt.ieasy.widget.MyGridLayout;
 
 import java.util.Date;
@@ -91,6 +92,7 @@ public class MainActivity extends BaseActivity {
                         pwTime.showAtLocation(v, Gravity.BOTTOM, 0, 0, new Date());
                         break;
                     case 1:
+                        startActivity(SelectDept_Stock.class,false);
                         break;
                     case 2:
                         break;
@@ -134,9 +136,13 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onTimeSelect(Date date) {
-                MyLogger.showLogWithLineNum(5,"data"+date);
+                MyLogger.showLogWithLineNum(5,"data"+date+"格式化后"+ TimeUtils.getDateStr(date));
             }
         });
+    }
+
+    void selectDept(){
+
     }
 
     // 创建Handler对象，用来处理消息

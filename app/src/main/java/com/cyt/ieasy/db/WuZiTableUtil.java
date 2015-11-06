@@ -54,8 +54,7 @@ public class WuZiTableUtil extends BaseTableUtil {
     public void addData(Object object) {
         try{
             JSONArray Items = new JSONArray(object.toString());
-             MyLogger.showLogWithLineNum(5,"共计"+Items.length()+"条");
-             MyLogger.showLogWithLineNum(5, "循环执行时间" + TimeUtils.getCurrentTimeInString());
+            MyLogger.showLogWithLineNum(5, "插入物料执行时间" + TimeUtils.getCurrentTimeInString());
             WuZi_Table[] wuZi_tables = new WuZi_Table[Items.length()];
             for(int i=0;i<Items.length();i++){
                 JSONObject item = Items.getJSONObject(i);
@@ -95,7 +94,7 @@ public class WuZiTableUtil extends BaseTableUtil {
             }
              //批量插入 性能大大的提升
              wuZi_tableDao.insertInTx(wuZi_tables);
-             MyLogger.showLogWithLineNum(5, "循环结束时间" + TimeUtils.getCurrentTimeInString());
+             MyLogger.showLogWithLineNum(5, "插入物料结束时间" + TimeUtils.getCurrentTimeInString());
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -19,7 +19,7 @@ public class StockTableUtil extends BaseTableUtil {
 
     }
 
-    public StockTableUtil getStockTableUtil(){
+    public static StockTableUtil getStockTableUtil(){
         if(stockTableUtil==null){
             synchronized (StockTableUtil.class){
                 if(stockTableUtil==null){

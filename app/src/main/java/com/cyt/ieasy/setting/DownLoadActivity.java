@@ -6,6 +6,7 @@ import android.os.PowerManager;
 
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.DeptTableUtil;
+import com.cyt.ieasy.db.StockTableUtil;
 import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.entity.UpdateStatus;
@@ -42,12 +43,7 @@ public class DownLoadActivity {
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);
 
     private DownLoadActivity(Callback<UpdateStatus> callback){
-        IP_Config = "http://"+ CommonTool.getGlobalSetting(MyApplication.getContext(), Const.ipconfig)
-                +":"+CommonTool.getGlobalSetting(MyApplication.getContext(),Const.portconfig);
-        Base_Service = IP_Config + "/webserver/WebService/BaseService.asmx";
-        Scm_Service  = IP_Config+"/webserver/WebService/ScmService.asmx";
-        powerManager = (PowerManager)MyApplication.getContext().getSystemService(MyApplication.getContext().POWER_SERVICE);
-        wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
+
     }
     public static DownLoadActivity getInstance(Callback<UpdateStatus> callback){
         if(null==instance){
@@ -56,11 +52,20 @@ public class DownLoadActivity {
         return instance;
     }
 
+    private void loadIpConfig(){
+        IP_Config = "http://"+ CommonTool.getGlobalSetting(MyApplication.getContext(), Const.ipconfig)
+                +":"+CommonTool.getGlobalSetting(MyApplication.getContext(),Const.portconfig);
+        Base_Service = IP_Config + "/webserver/WebService/BaseService.asmx";
+        Scm_Service  = IP_Config+"/webserver/WebService/ScmService.asmx";
+        powerManager = (PowerManager)MyApplication.getContext().getSystemService(MyApplication.getContext().POWER_SERVICE);
+        wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
+    }
     public void cancleTask(){
 
     }
 
     public void loadData(){
+        loadIpConfig();
         ErrorMessage = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             new SynServerTime().executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -155,6 +160,7 @@ public class DownLoadActivity {
             super.onPostExecute(aVoid);
             if(StringUtils.isBlank(ErrorMessage)){
                 EventBus.getDefault().postSticky(new MessageEvent("物料更新完毕","",1));
+                MyLogger.showLogWithLineNum(5,"物料共"+WuZiTableUtil.getWuZiTableUtil().getAlldata().size());
             }else{
                 EventBus.getDefault().postSticky(new MessageEvent("物料更新",ErrorMessage,1));
             }
@@ -179,9 +185,10 @@ public class DownLoadActivity {
                 }
                 if(null!=op){
                    // MyLogger.showLogWithLineNum(5,op.toString());
+                    WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().clearTable();
                     WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().addData(op);
                 }else{
-                    ErrorMessage += "物料更新失败";
+                    ErrorMessage += "物料类别更新失败";
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -194,6 +201,7 @@ public class DownLoadActivity {
             super.onPostExecute(aVoid);
             if(StringUtils.isBlank(ErrorMessage)){
                 EventBus.getDefault().postSticky(new MessageEvent("物料类别更新完毕","",1));
+                MyLogger.showLogWithLineNum(5, "物料类别数据共" + WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().getAlldata().size());
             }else{
                 EventBus.getDefault().postSticky(new MessageEvent("物料类别更新",ErrorMessage,0));
             }
@@ -252,13 +260,14 @@ public class DownLoadActivity {
             try{
                 Object op =
                         WebServiceTool.callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {
-                                "typeName", "condition", "columns"}, new Object[] {"WL_STOCK", "CK_STATSU=1", ""});
+                                "typeName", "condition", "columns"}, new Object[] {"WL_STOCK", "", ""});
                 if(isCancelled()){
                     ErrorMessage +="仓库取消更新";
                     return null;
                 }
                 if(null!=op&&!op.equals("anyType{}")){
-                    //MyLogger.showLogWithLineNum(5,op.toString());
+                    StockTableUtil.getStockTableUtil().clearTable();
+                    StockTableUtil.getStockTableUtil().addData(op);
                 }else{
                     ErrorMessage+="仓库更新失败";
                 }
@@ -273,6 +282,7 @@ public class DownLoadActivity {
             super.onPostExecute(aVoid);
             if(StringUtils.isBlank(ErrorMessage)){
                 EventBus.getDefault().postSticky(new MessageEvent("仓库更新完毕","",1));
+                MyLogger.showLogWithLineNum(5,"仓库共"+ StockTableUtil.getStockTableUtil().getAlldata().size());
             }else{
                 EventBus.getDefault().postSticky(new MessageEvent("仓库更新",ErrorMessage,1));
             }

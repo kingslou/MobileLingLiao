@@ -56,4 +56,11 @@
         <item name="android:textSize" tools:ignore="SpUsage">50dp</item>
     </style>
 
+    <!--this properties set for Toolbar-->
+    <!--setting overlay theme and secondaryColor of Toolbar-->
+    <style name="myThemeForToolbar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorSecondary">#fff</item>
+
+    </style>
+
 </resources>
