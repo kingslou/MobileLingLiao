@@ -1,6 +1,7 @@
 package com.cyt.ieasy.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -86,6 +87,7 @@ public class TabView extends LinearLayout {
 
     public void setText(CharSequence text, int ico) {
         mTextView.setText(text);
+        mTextView.setTextColor(Color.WHITE);
         mTextView.setCompoundDrawablesWithIntrinsicBounds(ico, 0, 0, 0);
     }
 

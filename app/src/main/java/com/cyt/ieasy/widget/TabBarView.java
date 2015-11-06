@@ -243,7 +243,8 @@ public class TabBarView extends LinearLayout {
         if (i == 0) {
             tabView1 = new TabView(getContext());
 
-            tabView1.setIcon(pageIconResId);
+//            tabView1.setIcon(pageIconResId);
+            tabView1.setText(string,pageIconResId);
             tabView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
