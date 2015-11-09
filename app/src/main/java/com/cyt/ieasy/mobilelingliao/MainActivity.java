@@ -21,13 +21,23 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bigkoo.pickerview.OptionsPopupWindow;
 import com.bigkoo.pickerview.TimePopupWindow;
+import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.db.DeptTableUtil;
+import com.cyt.ieasy.db.StockTableUtil;
+import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.MyToast;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.TimeUtils;
 import com.cyt.ieasy.widget.MyGridLayout;
+import com.ieasy.dao.Dept_Table;
+import com.ieasy.dao.WUZI_STOCK;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,7 +51,11 @@ public class MainActivity extends BaseActivity {
     private static boolean isExit = false;
     private final static int MESSAGE_EXIT = 0x00001;
     private TimePopupWindow pwTime;
-
+    private OptionsPopupWindow optionsPopupWindow;
+    private List<Dept_Table> dept_tableList;
+    private List<WUZI_STOCK> stockList;
+    private List<String> deptlist;
+    private View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +103,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(View v, int index) {
                 Intent intent = new Intent();
+                view = v;
                 switch (index) {
                     case 0:
                         pwTime.showAtLocation(v, Gravity.BOTTOM, 0, 0, new Date());
                         break;
                     case 1:
-                        startActivity(SelectDept_Stock.class,false);
+                        startActivity(SelectDept_Stock.class, false);
                         break;
                     case 2:
                         break;
@@ -138,13 +153,89 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onTimeSelect(Date date) {
-                MyLogger.showLogWithLineNum(5,"data"+date+"格式化后"+ TimeUtils.getDateStr(date));
+                MyLogger.showLogWithLineNum(5, "data" + date + "格式化后" + TimeUtils.getDateStr(date));
+                String deptConfig = CommonTool.getGlobalSetting(MainActivity.this, Const.editBm);
+                if (!StringUtils.isBlank(deptConfig)) {
+                    initDept();
+                } else {
+                    initStock();
+                }
+                optionsPopupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
             }
         });
     }
 
-    void selectDept(){
+    void initDept(){
+        dept_tableList = DeptTableUtil.getDeptTableUtil().getAlldata();
+        optionsPopupWindow = new OptionsPopupWindow(MainActivity.this);
+        final ArrayList<String> nameList = new ArrayList<>();
+        String deptConfig = CommonTool.getGlobalSetting(MainActivity.this,Const.editBm);
+        if(!StringUtils.isBlank(deptConfig)){
+            String deptstr = CommonTool.getGlobalSetting(MainActivity.this, Const.dept_filter);
+            if(!StringUtils.isBlank(deptstr)){
+                List<Dept_Table> filteDeptList = new ArrayList<>();
+                String [] depts = deptstr.split(",");
+                for(String s:depts){
+                    for(Dept_Table deptTable : dept_tableList){
+                        if(s.equals(deptTable.getINNERID())){
+                            filteDeptList.add(deptTable);
+                            nameList.add(deptTable.getDEPTNAME());
+                        }
+                    }
+                }
+            }else{
+                for(Dept_Table deptTable : dept_tableList){
+                    nameList.add(deptTable.getDEPTNAME());
+                }
+            }
+        }else{
+            for(Dept_Table deptTable : dept_tableList){
+                nameList.add(deptTable.getDEPTNAME());
+            }
+        }
+        optionsPopupWindow.setPicker(nameList);
+        optionsPopupWindow.setSelectOptions(0);
+        optionsPopupWindow.setOnoptionsSelectListener(new OptionsPopupWindow.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int i, int i1, int i2) {
+                MyLogger.showLogWithLineNum(5, nameList.get(i) + "打印");
+                optionsPopupWindow=null;
+                initStock();
+                optionsPopupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+            }
+        });
+    }
 
+    void initStock(){
+        stockList = StockTableUtil.getStockTableUtil().getAlldata();
+        optionsPopupWindow = new OptionsPopupWindow(MainActivity.this);
+        final ArrayList<String> nameList = new ArrayList<>();
+        String stockstr = CommonTool.getGlobalSetting(MainActivity.this, Const.stock_filter);
+        if(!StringUtils.isBlank(stockstr)){
+            List<WUZI_STOCK> filteDeptList = new ArrayList<>();
+            String [] depts = stockstr.split(",");
+            for(String s:depts){
+                for(WUZI_STOCK wuzi_stock : stockList){
+                    if(s.equals(wuzi_stock.getCK_ID())){
+                        filteDeptList.add(wuzi_stock);
+                        nameList.add(wuzi_stock.getCK_NAME());
+                    }
+                }
+            }
+        }else{
+            for(WUZI_STOCK wuzi_stock : stockList){
+                nameList.add(wuzi_stock.getCK_NAME());
+            }
+        }
+        optionsPopupWindow.setPicker(nameList);
+        optionsPopupWindow.setSelectOptions(0);
+        optionsPopupWindow.setOnoptionsSelectListener(new OptionsPopupWindow.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int i, int i1, int i2) {
+                String selectName = nameList.get(i);
+                startActivity(AddWuZiActivity.class,false);
+            }
+        });
     }
 
     // 创建Handler对象，用来处理消息

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by jin on 2015.11.09.
  */
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private static final int corePoolSize = 15;
     private static final int maximumPoolSize = 30;
@@ -38,6 +38,7 @@ public class BaseFragment extends Fragment {
     public ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     public int deptType = 0;
     public int stockType = 1;
+    protected boolean isVisible;
 
     @Nullable
     @Override
@@ -60,10 +61,10 @@ public class BaseFragment extends Fragment {
         if(!StringUtils.isBlank(deptstr)){
             String[] depts = deptstr.split(",");
             for(String s :depts){
-                    resultlist.add(s);
+                resultlist.add(s);
             }
         }
-        MyLogger.showLogWithLineNum(5,resultlist.size()+"type");
+        MyLogger.showLogWithLineNum(5, resultlist.size() + "dept");
         return resultlist;
     }
 
@@ -76,7 +77,7 @@ public class BaseFragment extends Fragment {
                 resultlist.add(s);
             }
         }
-        MyLogger.showLogWithLineNum(5,resultlist.size()+"type");
+        MyLogger.showLogWithLineNum(5,resultlist.size()+"stock");
         return resultlist;
     }
 
@@ -91,7 +92,31 @@ public class BaseFragment extends Fragment {
             }else if(type==stockType){
                 CommonTool.saveGlobalSetting(MyApplication.getContext(), Const.stock_filter,result);
             }
+        }else{
+            if(type==deptType){
+                CommonTool.saveGlobalSetting(MyApplication.getContext(), Const.dept_filter,"");
+            }else{
+                CommonTool.saveGlobalSetting(MyApplication.getContext(),Const.stock_filter,"");
+            }
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getUserVisibleHint()){
+            isVisible  = true;
+            onVisible();
+        }else{
+            isVisible  = false;
+            onInvisible();
+        }
+    }
+
+    protected void onVisible(){
+        lazyLoad();
+    }
+    protected abstract void lazyLoad();
+
+    protected void onInvisible(){}
 }

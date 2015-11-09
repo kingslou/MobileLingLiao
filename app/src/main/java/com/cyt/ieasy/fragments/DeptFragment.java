@@ -1,4 +1,5 @@
 package com.cyt.ieasy.fragments;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,13 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.cyt.ieasy.db.DeptTableUtil;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.FlowLayout;
 import com.ieasy.dao.Dept_Table;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -31,19 +36,22 @@ public class DeptFragment extends BaseFragment {
     private List<Dept_Table> dept_tableList;
     private DeptAdapter deptAdapter;
     private List<String> stringList = new ArrayList<>();
-    private ScrollView mScrollViewFilter;
-    private FlowLayout mFlowLayoutFilter ;
+    @Bind(R.id.edit_tag)
+    ScrollView mScrollViewFilter;
+    @Bind(R.id.flowLayout)
+    FlowLayout mFlowLayoutFilter ;
+    @Bind(R.id.listViewDept)
     ListView listView;
+    private boolean isPrepared;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview==null){
             rootview = inflater.inflate(R.layout.fragment_dept, container, false);
-            ButterKnife.bind(getActivity());
-            listView = (ListView)rootview.findViewById(R.id.listViewDept);
-            mScrollViewFilter = (ScrollView)rootview.findViewById(R.id.edit_tag);
-            mFlowLayoutFilter = (FlowLayout)rootview.findViewById(R.id.flowLayout);
+            ButterKnife.bind(this,rootview);
             mDrawableBuilder = TextDrawable.builder().round();
+            isPrepared = true;
+            lazyLoad();
         }
         Log.i(TAG, "DeptonCreateView");
         ViewGroup parent = (ViewGroup)rootview.getParent();
@@ -56,7 +64,6 @@ public class DeptFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initAdapter();
     }
 
     private void initAdapter(){
@@ -120,10 +127,11 @@ public class DeptFragment extends BaseFragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+    protected void lazyLoad() {
+        if(!isPrepared||!isVisible){
+            return;
         }
+        initAdapter();
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.ieasy.dao.WUZI_STOCK;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -31,19 +32,22 @@ public class StockFragment extends BaseFragment {
     private List<WUZI_STOCK> stock_tableList;
     private StockAdapter stockAdapter;
     private List<String> stringList = new ArrayList<>();
-    private ScrollView mScrollViewFilter;
-    private FlowLayout mFlowLayoutFilter ;
+    @Bind(R.id.edit_tag)
+    ScrollView mScrollViewFilter;
+    @Bind(R.id.flowLayout)
+    FlowLayout mFlowLayoutFilter ;
+    @Bind(R.id.listViewStock)
     ListView listView;
+    private boolean isPrepared;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview==null){
             rootview = inflater.inflate(R.layout.fragment_stock, container, false);
-            ButterKnife.bind(getActivity());
-            listView = (ListView)rootview.findViewById(R.id.listViewStock);
-            mScrollViewFilter = (ScrollView)rootview.findViewById(R.id.edit_tag);
-            mFlowLayoutFilter = (FlowLayout)rootview.findViewById(R.id.flowLayout);
+            ButterKnife.bind(this,rootview);
             mDrawableBuilder = TextDrawable.builder().round();
+            isPrepared = true;
+            lazyLoad();
         }
         Log.i(TAG, "DeptonCreateView");
         ViewGroup parent = (ViewGroup)rootview.getParent();
@@ -65,11 +69,9 @@ public class StockFragment extends BaseFragment {
         listView.setAdapter(stockAdapter);
     }
 
-    //相当于Activity的OnResum
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+    protected void lazyLoad() {
+        if(!isPrepared||isVisible){
             initAdapter();
         }
     }
@@ -140,8 +142,6 @@ public class StockFragment extends BaseFragment {
                     }else{
                         stringList.add(stock_table.getCK_ID());
                     }
-//                    mScrollViewFilter.setVisibility(View.VISIBLE);
-//                    addFilterTag();
                     notifyDataSetChanged();
                     saveSelectList(stringList,stockType);
                 }

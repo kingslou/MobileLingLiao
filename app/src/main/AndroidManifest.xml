@@ -27,6 +27,7 @@
         <activity android:name="com.cyt.ieasy.setting.SettingActivity"
                   android:theme="@style/MaterialSettingsTheme"></activity>
         <activity android:name=".SelectDept_Stock"></activity>
+        <activity android:name=".AddWuZiActivity"></activity>
     </application>
 
 </manifest>
