@@ -56,7 +56,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("CK_BAK3");
         entity.addStringProperty("CK_BAK4");
         entity.addStringProperty("CK_BAK5");
-
+        entity.addBooleanProperty("SELECTED");
     }
     public static void creatWuZiCatalog(Schema schema){
         Entity entity = schema.addEntity(TAB_WUZI_CATALOG);
@@ -146,5 +146,6 @@ public class MyDaoGenerator {
         entity.addStringProperty("UPDATEUSERID");
         entity.addStringProperty("UPDATEIP");
         entity.addStringProperty("DEPT_IF_CUNCHUN");
+        entity.addBooleanProperty("SELECTED");
     }
 }

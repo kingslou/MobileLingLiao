@@ -3,11 +3,12 @@ package com.cyt.ieasy.widget;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 /**
  * Created by Aradh Pillai on 09/10/15.
  * <p/>
+ * 如果Tabbar下面还是可以滑动的 那么就禁止这边可以滑动，重写onInterceptTouchEvent，onTouchEvent等事件
+ * 返回false
  * <p/>
  * this class is created to avoid the swipe gesture from ViewPager
  * this is customized ViewPager class to override the specific methods of ViewPager to avoid swipe feature.
@@ -30,19 +31,19 @@ public class CustomViewPager extends ViewPager {
     *  invoke and it will return "false" it means it won't work so using this method we can avoid this feather from ViewPager
     *
     */
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
-        return false;
-    }
-
-    /* even user will touch viewPager scope then this method will invoke and it will return false value ...
-    *  so using this method we can avoid touch event of ViewPager.
-    */
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
-        return false;
-    }
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent event) {
+//        // Never allow swiping to switch between pages
+//        return false;
+//    }
+//
+//    /* even user will touch viewPager scope then this method will invoke and it will return false value ...
+//    *  so using this method we can avoid touch event of ViewPager.
+//    */
+//
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        // Never allow swiping to switch between pages
+//        return false;
+//    }
 }

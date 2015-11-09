@@ -1,15 +1,39 @@
 <!--this layout will contains the design of chat view -->
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp" />
-</RelativeLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <ScrollView
+        android:id="@+id/edit_tag"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.cyt.ieasy.tools.FlowLayout
+                android:id="@+id/flowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|top"
+                android:minHeight="50dp"></com.cyt.ieasy.tools.FlowLayout>
+        </LinearLayout>
+    </ScrollView>
+    <ListView
+        android:id="@+id/listViewDept"
+        android:layout_weight="4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:divider="#c0c0c0"
+        android:dividerHeight="1px"
+        android:paddingLeft="15dip"
+        android:paddingRight="25dip"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:background="@android:color/transparent"
+        android:listSelector="@android:color/transparent" />
+</LinearLayout>

@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.tools.MyLogger;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by jin on 2015.10.10.
  */
@@ -25,6 +33,13 @@ public class BaseActivity extends AppCompatActivity {
     protected final int REQUEST_CODE_DEFAULT = 1234;
     private PowerManager powerManager = null;
     private PowerManager.WakeLock wakeLock = null;
+    private static final int corePoolSize = 15;
+    private static final int maximumPoolSize = 30;
+    private static final int keepAliveTime = 10;
+
+    private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(maximumPoolSize);
+    private static final Executor threadPoolExecutor = new ThreadPoolExecutor(
+            corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +117,15 @@ public class BaseActivity extends AppCompatActivity {
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.YELLOW);
         snackbar.show();
+    }
+
+    //使用AsynTask自定义线程池
+    public void addTaskInPool(AsyncTask asyncTask) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            asyncTask.executeOnExecutor(threadPoolExecutor);
+        }else{
+            asyncTask.execute();
+        }
     }
 
     @Override

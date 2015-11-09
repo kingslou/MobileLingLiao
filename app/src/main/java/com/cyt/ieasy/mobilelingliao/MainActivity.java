@@ -63,8 +63,10 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < resIds.length; i++) {
             resIds[i] = ar.getResourceId(i, 0);
         }
-        mDrawableBuilder = TextDrawable.builder().roundRect(10);
-
+        //方形
+        //mDrawableBuilder = TextDrawable.builder().roundRect(10);
+        //圆形
+        mDrawableBuilder = TextDrawable.builder().round();
         grildlayout.setGridAdapter(new MyGridLayout.GridAdatper() {
             @Override
             public View getView(int index) {

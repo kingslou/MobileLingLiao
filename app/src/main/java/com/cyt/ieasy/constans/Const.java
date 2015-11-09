@@ -20,4 +20,7 @@ public class Const {
     public static final String updatetime = "updatetime";
     public static final String DB_NAME = "ZXY_CYT";
 
+    public static final String dept_filter = "dept_filter";//部门勾选
+    public static final String stock_filter = "stock_filter";//仓库勾选
+
 }

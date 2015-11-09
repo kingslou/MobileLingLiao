@@ -242,27 +242,24 @@ public class TabBarView extends LinearLayout {
 
         if (i == 0) {
             tabView1 = new TabView(getContext());
-
 //            tabView1.setIcon(pageIconResId);
             tabView1.setText(string,pageIconResId);
             tabView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     pager.setCurrentItem(i);
-
-
                 }
             });
             CheatSheet.setup(tabView1, string);
             this.addView(tabView1);
         } else if (i == 1) {
             tabView2 = new TabView(getContext());
-            tabView2.setIcon(pageIconResId);
+//            tabView2.setIcon(pageIconResId);
+            tabView2.setText(string,pageIconResId);
             tabView2.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     pager.setCurrentItem(i);
-
                 }
             });
             CheatSheet.setup(tabView2, string);

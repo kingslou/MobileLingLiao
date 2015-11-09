@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="60dp"
+    >
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/deptName"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@mipmap/bg"
+        />
+    <TextView
+        android:id="@+id/stockName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium Text"
+        android:gravity="center_vertical"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/select_dept_text"
+        android:textColor="@color/ms_gray_dark"
+        android:layout_marginLeft="61dp"
+        android:layout_alignTop="@+id/deptSelected"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+
+    <TextView
+        android:id="@+id/stockSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="\u2713"
+        android:layout_centerVertical="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/accent_dark" />
+</RelativeLayout>

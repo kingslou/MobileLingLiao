@@ -1,7 +1,6 @@
 package com.cyt.ieasy.db;
 
 import com.ieasy.dao.DaoSession;
-
 import java.util.ArrayList;
 
 /**

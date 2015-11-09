@@ -68,6 +68,7 @@ public class SelectDept_Stock extends BaseActivity {
         mMainScreenPagerAdapter = new MainScreenPagerAdapter(getSupportFragmentManager());
         mViewPager = (CustomViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mMainScreenPagerAdapter);
+        mViewPager.setOffscreenPageLimit(0);
         //Setting the CustomizedViewPager into Toolbar for tabOption
         mTabBarView.setViewPager(mViewPager);
     }
@@ -135,9 +136,9 @@ public class SelectDept_Stock extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "部门";
+                    return "设置部门";
                 case 1:
-                    return "仓库";
+                    return "设置仓库";
             }
             return null;
         }
