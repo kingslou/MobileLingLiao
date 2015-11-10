@@ -7,6 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <FrameLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -14,5 +18,26 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            />
+        </FrameLayout>
     </android.support.design.widget.AppBarLayout>
+    <ListView
+        android:id="@+id/listViewuzi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:divider="#c0c0c0"
+        android:dividerHeight="1px"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:background="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:layout_below="@+id/aapp" />
 </RelativeLayout>

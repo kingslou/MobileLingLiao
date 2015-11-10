@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="afterDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp" >
+
+    <LinearLayout
+        android:id="@+id/linertest"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="@color/bootstrap_thumbnail_background"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/txtsort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="A"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/wzName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1.5"
+            android:text="物料名"
+            android:textColor="#333"
+            android:textSize="17sp" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_num"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
+        <EditText
+            android:id="@+id/editnum"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            android:text="0"
+            android:textColor="@color/bootstrap_brand_danger" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/unitname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:clickable="false"
+            android:gravity="center"
+            android:text="单位"
+            android:textColor="@color/bootstrap_brand_danger"
+            android:textSize="16sp" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_tzs"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
+        <EditText
+            android:id="@+id/edittzs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:text="0"
+            android:textColor="@color/bootstrap_brand_danger" />
+        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:id="@+id/txtguige"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1.5"
+            android:text="规格"
+            android:textColor="#333"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+</LinearLayout>

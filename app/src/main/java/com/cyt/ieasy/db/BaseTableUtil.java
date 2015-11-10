@@ -15,4 +15,5 @@ public abstract class BaseTableUtil<T> {
     public abstract ArrayList<T> getAlldata();
 
     public abstract void addData(Object object);
+
 }

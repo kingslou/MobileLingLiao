@@ -32,4 +32,12 @@
         <item>@mipmap/icon_hisy</item>
         <item>@mipmap/icon_mm</item>
     </string-array>
+
+    <string-array name="query_suggestions">
+        <item>Android</item>
+        <item>iOS</item>
+        <item>SCALA</item>
+        <item>Ruby</item>
+        <item>JavaScript</item>
+    </string-array>
 </resources>

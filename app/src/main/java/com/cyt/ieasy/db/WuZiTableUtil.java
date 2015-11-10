@@ -1,7 +1,7 @@
 package com.cyt.ieasy.db;
-
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.WuZi_Table;
 import com.ieasy.dao.WuZi_TableDao;
@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * 物料表处理
@@ -46,6 +47,18 @@ public class WuZiTableUtil extends BaseTableUtil {
         List<WuZi_Table> list = new ArrayList<>();
         list = wuZi_tableDao.queryBuilder().list();
         return (ArrayList<WuZi_Table>) list;
+    }
+
+    public List<WuZi_Table> queryBystr(String text,int returnCount){
+        QueryBuilder.LOG_SQL = true;
+        QueryBuilder.LOG_VALUES = true;
+        List<WuZi_Table> list = new ArrayList<>();
+        if(StringUtils.isBlank(text)){
+            return list;
+        }
+        list = wuZi_tableDao.queryBuilder().whereOr(WuZi_TableDao.Properties.WZ_NAME.like("%"+text+"%")
+        ,WuZi_TableDao.Properties.WZ_QUICK_CODE.like("%"+text+"%")).limit(returnCount).list();
+        return list;
     }
 
     @Override

@@ -19,6 +19,8 @@ public class MyDaoGenerator {
     public static final String TAB_WUZI_CATALOG = "WUZI_CATALOG";
     //仓库表
     public static final String TAB_WUZI_STOCK = "WUZI_STOCK";
+    //领料表
+    public static final String Tab_LING_WUZI = "LING_WUZI";
 
     public static void main(String[] args){
 
@@ -27,11 +29,24 @@ public class MyDaoGenerator {
         creatWuZiTable(schema);
         creatWuZiCatalog(schema);
         creatWuZiStock(schema);
+        creatWuZiLingLiao(schema);
         try{
             new DaoGenerator().generateAll(schema,DAO_PATH);
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void creatWuZiLingLiao(Schema schema){
+        Entity entity = schema.addEntity(Tab_LING_WUZI);
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("LL_CODE");
+        entity.addStringProperty("LL_NAME");
+        entity.addDoubleProperty("LL_NUMBER");
+        entity.addDoubleProperty("LL_TZS");
+        entity.addStringProperty("LL_GUID");
+        entity.addStringProperty("LL_DEPT");
+        entity.addStringProperty("LL_STOCK");
     }
 
     public static void creatWuZiStock(Schema schema){
