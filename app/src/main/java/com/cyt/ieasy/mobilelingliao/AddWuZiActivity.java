@@ -2,10 +2,15 @@ package com.cyt.ieasy.mobilelingliao;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListView;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.adapter.WuZiAdapter;
@@ -13,7 +18,9 @@ import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.tools.MyLogger;
 import com.ieasy.dao.WuZi_Table;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -29,6 +36,7 @@ public class AddWuZiActivity extends BaseActivity {
     @Bind(R.id.listViewuzi)
     ListView listView;
     private WuZiAdapter wuZiAdapter;
+    private EditText currentFouce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,29 @@ public class AddWuZiActivity extends BaseActivity {
         initToolbar(toolbar);
         setTitle("添加物料");
         initsearch();
+
         new LoadTask().execute();
+    }
+
+    void initView(){
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               wuZiAdapter.readMaps();
+            }
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                wuZiAdapter.clearEdFouce();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
     class LoadTask extends AsyncTask<Void,Void,Void>{
@@ -62,6 +92,7 @@ public class AddWuZiActivity extends BaseActivity {
     void initAdapter(List<WuZi_Table> wuZi_tableList){
         wuZiAdapter = new WuZiAdapter(AddWuZiActivity.this,wuZi_tableList);
         listView.setAdapter(wuZiAdapter);
+        initView();
     }
 
     void initsearch(){
@@ -114,29 +145,54 @@ public class AddWuZiActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        new MaterialDialog.Builder(context)
+            .title("退出")
+            .content("确定退出添加吗?")
+            .positiveText(R.string.agree)
+            .negativeText(R.string.disagree)
+            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                    materialDialog.dismiss();
+                }
+            })
+            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                    materialDialog.dismiss();
+                    finish();
+                }
+            })
+            .show();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
         } else {
             new MaterialDialog.Builder(context)
-                    .title("退出")
-                    .content("确定退出添加吗?")
-                    .positiveText(R.string.agree)
-                    .negativeText(R.string.disagree)
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            materialDialog.dismiss();
-                        }
-                    })
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            materialDialog.dismiss();
-                            finish();
-                        }
-                    })
-                    .show();
+                .title("退出")
+                .content("确定退出添加吗?")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        finish();
+                    }
+                })
+                .show();
         }
     }
 }

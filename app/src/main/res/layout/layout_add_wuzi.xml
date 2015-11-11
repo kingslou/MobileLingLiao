@@ -21,8 +21,7 @@
         <com.miguelcatalan.materialsearchview.MaterialSearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="5dp"
+            android:layout_height="?attr/actionBarSize"
             />
         </FrameLayout>
     </android.support.design.widget.AppBarLayout>
@@ -40,4 +39,17 @@
         android:background="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:layout_below="@+id/aapp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_dialog_email"
+        android:layout_marginRight="63dp"
+        android:layout_marginBottom="51dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="63dp" />
 </RelativeLayout>

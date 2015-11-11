@@ -15,16 +15,15 @@
         android:background="@color/bootstrap_thumbnail_background"
         android:orientation="horizontal" >
 
-        <TextView
+        <ImageView
             android:id="@+id/txtsort"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:padding="5dp"
-            android:text="A"
-            android:textSize="17sp" />
+            android:src="@mipmap/ic_error_red_24dp"
+            android:padding="5dp" />
 
         <TextView
             android:id="@+id/wzName"
@@ -35,7 +34,7 @@
             android:layout_weight="1.5"
             android:text="物料名"
             android:textColor="#333"
-            android:textSize="17sp" />
+            android:textSize="@dimen/text_size_20" />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_num"
             android:layout_width="0dp"
