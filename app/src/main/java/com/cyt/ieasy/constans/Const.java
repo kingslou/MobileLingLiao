@@ -9,6 +9,7 @@ public class Const {
     public static final int TIME_OUT = 30;
     public static final String Success = "完成";
     public static final String Cancle  = "取消";
+    public static final String Failue = "失败";
     public static final String SettingPwd = "215000";
     public static final String editBm = "editbm";
     public static final String ipconfig = "ipconfig";

@@ -21,6 +21,8 @@ public class MyDaoGenerator {
     public static final String TAB_WUZI_STOCK = "WUZI_STOCK";
     //领料表
     public static final String Tab_LING_WUZI = "LING_WUZI";
+    //领料物质详细表
+    public static final String Tab_LING_WUZIDETIAL = "LING_WUZIDETIAL";
 
     public static void main(String[] args){
 
@@ -30,6 +32,7 @@ public class MyDaoGenerator {
         creatWuZiCatalog(schema);
         creatWuZiStock(schema);
         creatWuZiLingLiao(schema);
+        creatWuZiLingLiaoDetial(schema);
         try{
             new DaoGenerator().generateAll(schema,DAO_PATH);
         }catch(Exception e){
@@ -37,16 +40,39 @@ public class MyDaoGenerator {
         }
     }
 
+    public static void creatWuZiLingLiaoDetial(Schema schema){
+        Entity entity = schema.addEntity(Tab_LING_WUZIDETIAL);
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("LL_CODE").notNull();//跟主表关联Code
+        entity.addDoubleProperty("LL_NUM");//领料数量
+        entity.addIntProperty("LL_TZS");//领料条只数
+        entity.addStringProperty("LL_WZ_NAME");//物料Name
+        entity.addStringProperty("LL_WZ_ID"); //物料ID
+        entity.addStringProperty("LL_WZ_CATEGORY");//分类
+        entity.addStringProperty("LL_WZ_CATEGORY_ID");//分类ID
+        entity.addStringProperty("LL_WZ_GUIGE");//物料规格
+        entity.addStringProperty("LL_WZ_QUICKCODE");//速查码
+        entity.addStringProperty("BAK");//备用字段
+        entity.addStringProperty("BAK1");
+        entity.addStringProperty("BAK2");
+    }
+
     public static void creatWuZiLingLiao(Schema schema){
         Entity entity = schema.addEntity(Tab_LING_WUZI);
         entity.addIdProperty().primaryKey().autoincrement();
-        entity.addStringProperty("LL_CODE");
-        entity.addStringProperty("LL_NAME");
-        entity.addDoubleProperty("LL_NUMBER");
-        entity.addDoubleProperty("LL_TZS");
-        entity.addStringProperty("LL_GUID");
-        entity.addStringProperty("LL_DEPT");
-        entity.addStringProperty("LL_STOCK");
+        entity.addStringProperty("LL_CODE").notNull();//主表唯一Code
+        entity.addStringProperty("LL_NAME").notNull();//名称 由部门+时间构成
+        entity.addDateProperty("ADDTIME");
+        entity.addDateProperty("UPDATETIME");//上传时间
+        entity.addDoubleProperty("LL_OPERATOR");//操作人
+        entity.addStringProperty("LL_OPERATOR_ID");
+        entity.addStringProperty("LL_DEPT");//部门
+        entity.addStringProperty("LL_DEPT_ID");
+        entity.addStringProperty("LL_STOCK");//仓库
+        entity.addStringProperty("LL_STOCK_ID");
+        entity.addStringProperty("BAK");//备用字段
+        entity.addStringProperty("BAK1");
+        entity.addStringProperty("BAK2");
     }
 
     public static void creatWuZiStock(Schema schema){

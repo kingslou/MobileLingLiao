@@ -14,7 +14,9 @@ import android.widget.ListView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.adapter.WuZiAdapter;
+import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.WuZiTableUtil;
+import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.tools.MyLogger;
 import com.ieasy.dao.WuZi_Table;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by jin on 2015.11.09.
@@ -37,7 +40,7 @@ public class AddWuZiActivity extends BaseActivity {
     ListView listView;
     private WuZiAdapter wuZiAdapter;
     private EditText currentFouce;
-
+    private List<WuZi_Table> wuZiTableList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,20 +75,37 @@ public class AddWuZiActivity extends BaseActivity {
     }
 
     class LoadTask extends AsyncTask<Void,Void,Void>{
-        List<WuZi_Table> wuZiTableList;
         @Override
         protected Void doInBackground(Void... params) {
             wuZiTableList = WuZiTableUtil.getWuZiTableUtil().getAlldata();
-            for(WuZi_Table wuZi_table : wuZiTableList){
-                MyLogger.showLogWithLineNum(5,"速查码"+wuZi_table.getWZ_QUICK_CODE()+""+wuZi_table.getWZ_NAME());
-            }
             return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showIndeterminateProgressDialog(false, "加载物料中····");
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if(!wuZiTableList.isEmpty()){
+                EventBus.getDefault().post(new MessageEvent(Const.Success));
+            }else{
+                EventBus.getDefault().post(new MessageEvent(Const.Failue));
+            }
+        }
+    }
+
+    @Override
+    public void onEvent(MessageEvent event) {
+        super.onEvent(event);
+        dismiss();
+        if(event.message.equals(Const.Success)){
             initAdapter(wuZiTableList);
+        }else{
+            //// TODO: 2015.11.12  显示自定义加载失败view,可以点击加载重试
         }
     }
 
@@ -111,7 +131,7 @@ public class AddWuZiActivity extends BaseActivity {
                 for(WuZi_Table wuZiTable : wuZi_tableList){
                     MyLogger.showLogWithLineNum(5,"结果"+wuZiTable.getWZ_QUICK_CODE()+"名称"+wuZiTable.getWZ_NAME());
                 }
-                initAdapter(wuZi_tableList);
+                wuZiAdapter.updateListView(wuZi_tableList);
                 return false;
             }
         });
@@ -125,9 +145,12 @@ public class AddWuZiActivity extends BaseActivity {
             @Override
             public void onSearchViewClosed() {
                 //Do some magic
+                initAdapter(wuZiTableList);
             }
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

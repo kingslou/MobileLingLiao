@@ -49,7 +49,9 @@ public class WuZiTableUtil extends BaseTableUtil {
     @Override
     public ArrayList<WuZi_Table> getAlldata() {
         List<WuZi_Table> list = new ArrayList<>();
-        list = wuZi_tableDao.queryBuilder().list();
+        QueryBuilder queryBuilder = wuZi_tableDao.queryBuilder();
+        queryBuilder.orderAsc(WuZi_TableDao.Properties.WZ_NAME);
+        list = queryBuilder.list();
         return (ArrayList<WuZi_Table>) list;
     }
 

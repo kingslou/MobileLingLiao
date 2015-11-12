@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.MyLogger;
 import com.ieasy.dao.WuZi_Table;
@@ -22,6 +25,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.grantland.widget.AutofitTextView;
 
 /**
  * Created by jin on 2015.11.10.
@@ -33,17 +37,23 @@ public class WuZiAdapter extends BaseAdapter {
     private List<WuZi_Table> wuZi_tables = new ArrayList<>();
     private HashMap<String,String> numberMap;
     private HashMap<String,String> tzsMap;
-    private String[] numberArray;
-    private String[] tzsArray;
     private LayoutInflater layoutInflater;
     private EditText currentFouce;
+    private TextDrawable.IBuilder mDrawableBuilder;
+    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     public WuZiAdapter(Context context,List<WuZi_Table> wuZi_tableList){
         this.context = context;
         currentFouce = new EditText(context);
         this.wuZi_tableList = wuZi_tableList;
         numberMap = new HashMap<String,String>();
         tzsMap = new HashMap<String,String>();
+        mDrawableBuilder = TextDrawable.builder().round();
         layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void updateListView(List<WuZi_Table> wuZi_tableList){
+        this.wuZi_tableList = wuZi_tableList;
+        notifyDataSetChanged();
     }
 
     public void clearEdFouce(){
@@ -88,8 +98,19 @@ public class WuZiAdapter extends BaseAdapter {
         viewHolder.wzName.setText(wuZi_table.getWZ_NAME());
         String numbertext = numberMap.get(wuZi_table.getWZ_ID());
         String tzstext = tzsMap.get(wuZi_table.getWZ_ID());
-        viewHolder.editNum.setText(numbertext==null?"0":numbertext);
-        viewHolder.editTzs.setText(tzstext==null?"0":tzstext);
+        viewHolder.editNum.setText(numbertext==null?"":numbertext);
+        viewHolder.editTzs.setText(tzstext==null?"":tzstext);
+        viewHolder.guige.setText(wuZi_table.getWZ_SPECIFICATION());
+        viewHolder.unitName.setText(wuZi_table.getWZ_UNIT_NAME());
+        String charat;
+        try{
+            charat = wuZi_table.getWZ_QUICK_CODE().substring(0,1);
+        }catch(Exception e){
+            charat="#";
+            e.printStackTrace();
+        }
+        TextDrawable drawable = mDrawableBuilder.build(charat,mColorGenerator.getColor(charat));
+        viewHolder.image.setImageDrawable(drawable);
         viewHolder.editNum.setOnFocusChangeListener(new MyFouceChange(viewHolder, myWatcher));
         viewHolder.editTzs.setOnFocusChangeListener(new MyFouceChange(viewHolder,myWatcher));
         return convertView;
@@ -108,6 +129,7 @@ public class WuZiAdapter extends BaseAdapter {
                 currentFouce = viewHolder.editNum;
                 viewHolder.editNum.addTextChangedListener(myWatcher);
                 viewHolder.editNum.setSelectAllOnFocus(true);
+                viewHolder.editNum.selectAll();
             }else{
                 viewHolder.editNum.clearFocus();
                 viewHolder.editNum.removeTextChangedListener(myWatcher);
@@ -116,8 +138,8 @@ public class WuZiAdapter extends BaseAdapter {
             if(viewHolder.editTzs.hasFocus()){
                 currentFouce = viewHolder.editTzs;
                 viewHolder.editTzs.addTextChangedListener(myWatcher);
-                viewHolder.editNum.setSelectAllOnFocus(true);
-                viewHolder.editTzs.setSelection(0,viewHolder.editTzs.getText().toString().trim().length());
+                viewHolder.editTzs.setSelectAllOnFocus(true);
+                viewHolder.editTzs.selectAll();
             }else{
                 viewHolder.editTzs.clearFocus();
                 viewHolder.editTzs.removeTextChangedListener(myWatcher);
@@ -169,16 +191,17 @@ public class WuZiAdapter extends BaseAdapter {
      class ViewHolder {
 
         @Bind(R.id.wzName)
-        TextView wzName;
+        AutofitTextView wzName;
         @Bind(R.id.unitname)
         TextView unitName;
         @Bind(R.id.txtguige)
-        TextView guige;
+        AutofitTextView guige;
         @Bind(R.id.editnum)
         EditText editNum;
         @Bind(R.id.edittzs)
         EditText editTzs;
-        int ref;
+        @Bind(R.id.txtsort)
+        ImageView image;
         public ViewHolder(View view){
             ButterKnife.bind(this,view);
         }

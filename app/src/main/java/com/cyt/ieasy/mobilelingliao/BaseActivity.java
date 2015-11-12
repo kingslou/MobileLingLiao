@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.tools.MyLogger;
 
 import java.util.concurrent.BlockingQueue;
@@ -23,6 +24,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by jin on 2015.10.10.
@@ -129,6 +132,18 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         wakeLock.acquire();
@@ -138,5 +153,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         wakeLock.release();
+    }
+
+    public void onEvent(MessageEvent event){
+
     }
 }

@@ -13,7 +13,36 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="right"
+                android:orientation="vertical"
+                android:paddingRight="5dp"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:id="@+id/loginName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="娄金"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="italic" />
+                <TextView
+                    android:id="@+id/loginDept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:text="开发部"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="italic" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
     <com.cyt.ieasy.widget.MyGridLayout
         android:id="@+id/mygrildlist"

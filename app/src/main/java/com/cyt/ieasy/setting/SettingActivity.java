@@ -65,7 +65,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         }
         itemDept = new CheckboxItem(getFragment(), Const.editBm);
         addItem(new HeaderItem(getFragment()).setTitle("基础设置"));
-        addItem(itemDept.setTitle("是否允许选择部门仓库").setSubtitle("否").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
+        addItem(itemDept.setTitle("是否允许选择部门").setSubtitle("否").setOnCheckedChangeListener(new CheckboxItem.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(CheckboxItem cbi, boolean isChecked) {
                 getStorageInterface().save(Const.editBm, isChecked + "");

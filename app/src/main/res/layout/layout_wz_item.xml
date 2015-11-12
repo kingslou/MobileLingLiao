@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:descendantFocusability="afterDescendants"
     android:orientation="horizontal"
     android:paddingBottom="5dp"
     android:paddingLeft="3dp"
-    android:paddingRight="3dp" >
+    android:paddingRight="3dp">
 
     <LinearLayout
         android:id="@+id/linertest"
@@ -18,14 +19,13 @@
         <ImageView
             android:id="@+id/txtsort"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:src="@mipmap/ic_error_red_24dp"
             android:padding="5dp" />
 
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/wzName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,6 +34,8 @@
             android:layout_weight="1.5"
             android:text="物料名"
             android:textColor="#333"
+            android:maxLines="2"
+            autofit:minTextSize="@dimen/text_size_12"
             android:textSize="@dimen/text_size_20" />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_num"
@@ -54,7 +56,7 @@
             android:gravity="center"
             android:inputType="numberDecimal"
             android:selectAllOnFocus="true"
-            android:text="0"
+            android:hint="数量"
             android:textColor="@color/bootstrap_brand_danger" />
         </android.support.design.widget.TextInputLayout>
 
@@ -63,12 +65,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.5"
+            android:layout_weight="0.8"
             android:clickable="false"
             android:gravity="center"
             android:text="单位"
             android:textColor="@color/bootstrap_brand_danger"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_size_18" />
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_tzs"
             android:layout_width="0dp"
@@ -89,19 +91,38 @@
             android:imeOptions="actionNext"
             android:inputType="number"
             android:selectAllOnFocus="true"
-            android:text="0"
+            android:hint="条只数"
             android:textColor="@color/bootstrap_brand_danger" />
         </android.support.design.widget.TextInputLayout>
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/txtguige"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:layout_marginLeft="5dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:text="规格"
             android:textColor="#333"
-            android:textSize="17sp" />
+            android:maxLines="2"
+            android:hint="规格"
+            autofit:minTextSize="@dimen/text_size_12"
+            android:textSize="@dimen/text_size_18" />
+
+        <TextView
+            android:id="@+id/wzSelected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:text="\u2713"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/bootstrap_brand_danger" />
     </LinearLayout>
 
 </LinearLayout>
