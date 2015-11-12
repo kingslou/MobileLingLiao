@@ -9,7 +9,7 @@ import com.cyt.ieasy.db.DeptTableUtil;
 import com.cyt.ieasy.db.StockTableUtil;
 import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
-import com.cyt.ieasy.entity.UpdateStatus;
+import com.cyt.ieasy.model.UpdateStatus;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.MyApplication;

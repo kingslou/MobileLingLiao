@@ -1,5 +1,7 @@
 package com.cyt.ieasy.db;
 
+import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
@@ -7,9 +9,11 @@ import com.ieasy.dao.LING_WUZIDETIALDao;
 import com.ieasy.dao.LING_WUZIDao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.event.EventBus;
 
 /**
  * 本地领料物质，历史记录处理工具类
@@ -72,8 +76,31 @@ public class LingLiaoTableUtil extends BaseTableUtil {
         queryBuilder.where(LING_WUZIDETIALDao.Properties.LL_CODE.eq(lingCode));
         return ling_wuzidetials;
     }
+
     @Override
     public void addData(Object object) {
 
+    }
+
+    public void insertWuZi(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
+        try{
+            ling_wuzi.setADDTIME(new Date());
+            ling_wuzi.setLL_NAME(new Date()+"领料");
+            LING_WUZIDETIAL[] ling_wuzidetials1 = new LING_WUZIDETIAL[ling_wuzidetials.size()];
+            for(int i=0;i<ling_wuzidetials.size();i++){
+                ling_wuzidetials1[i] = ling_wuzidetials.get(i);
+            }
+            ling_wuziDao.insert(ling_wuzi);
+            ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
+            EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
+        }catch(Exception e){
+            e.printStackTrace();
+            EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));
+        }
+    }
+
+    @Override
+    public LING_WUZI getEntity(String value) {
+        return null;
     }
 }

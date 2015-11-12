@@ -2,8 +2,10 @@ package com.cyt.ieasy.db;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.ieasy.dao.WUZI_CATALOG;
 import com.ieasy.dao.WUZI_CATALOGDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,11 @@ public class WuZiCATALOG_TableUtil extends BaseTableUtil {
         return wuZiCATALOG_tableUtil;
     }
 
+    @Override
+    public WUZI_CATALOG getEntity(String value) {
+
+        return null;
+    }
 
     @Override
     public void clearTable() {

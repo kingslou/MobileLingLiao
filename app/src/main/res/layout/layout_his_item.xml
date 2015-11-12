@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/space_15">
+
+        <TextView
+            android:id="@+id/histitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="@dimen/space_15"
+            android:text="Medium Text"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/histitle"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:id="@+id/operatprdept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="@dimen/space_15"
+            android:layout_toRightOf="@+id/icon"
+            android:text="chenchao" />
+
+        <TextView
+            android:id="@+id/operator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_marginBottom="1dp"
+            android:layout_toRightOf="@+id/operatprdept"
+            android:text="Small Text" />
+
+        <TextView
+            android:id="@+id/histime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/icon"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:text="12121212"
+            android:textColor="#ff4e90bf" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/divider_lin" />
+
+    <TextView
+        android:id="@+id/preView"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/space_15"
+        android:paddingRight="@dimen/space_15"
+        android:layout_gravity="center"
+        android:text="已同步" />
+
+    <include layout="@layout/divider_lin" />
+
+</LinearLayout>

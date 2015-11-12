@@ -14,7 +14,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.cyt.ieasy.constans.Const;
-import com.cyt.ieasy.entity.UpdateStatus;
+import com.cyt.ieasy.model.UpdateStatus;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.R;

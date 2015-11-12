@@ -16,4 +16,6 @@ public abstract class BaseTableUtil<T> {
 
     public abstract void addData(Object object);
 
+    public abstract T getEntity(String value);
+
 }

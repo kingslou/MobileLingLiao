@@ -1,4 +1,4 @@
-package com.cyt.ieasy.entity;
+package com.cyt.ieasy.model;
 
 import java.io.Serializable;
 

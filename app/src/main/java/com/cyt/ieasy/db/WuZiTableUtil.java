@@ -42,6 +42,18 @@ public class WuZiTableUtil extends BaseTableUtil {
     }
 
     @Override
+    public WuZi_Table getEntity(String id) {
+        List<WuZi_Table> list = new ArrayList<>();
+        QueryBuilder queryBuilder = wuZi_tableDao.queryBuilder();
+        queryBuilder.where(WuZi_TableDao.Properties.WZ_ID.eq(id));
+        list = queryBuilder.list();
+        if(list.isEmpty()){
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
     public void clearTable() {
         wuZi_tableDao.deleteAll();
     }

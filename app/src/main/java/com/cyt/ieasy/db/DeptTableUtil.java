@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+
 /**
  * 部门表处理工具类
  * Created by jin on 2015.11.05.
@@ -34,6 +36,18 @@ public class DeptTableUtil extends BaseTableUtil {
             }
         }
         return deptTableUtil;
+    }
+
+    @Override
+    public Dept_Table getEntity(String value) {
+        List<Dept_Table> list = new ArrayList<>();
+        QueryBuilder queryBuilder = deptTableDao.queryBuilder();
+        queryBuilder.where(Dept_TableDao.Properties.DEPTNAME.eq(value));
+        list = queryBuilder.list();
+        if(null!=list&&list.size()!=0){
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override

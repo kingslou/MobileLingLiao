@@ -1,4 +1,4 @@
-package com.cyt.ieasy.entity;
+package com.cyt.ieasy.model;
 
 /**
  * Created by jin on 2015.11.04.

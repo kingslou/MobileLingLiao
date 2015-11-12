@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +16,13 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.adapter.WuZiAdapter;
 import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.widget.EmportyUtils;
+import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.WuZi_Table;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -41,6 +46,9 @@ public class AddWuZiActivity extends BaseActivity {
     private WuZiAdapter wuZiAdapter;
     private EditText currentFouce;
     private List<WuZi_Table> wuZiTableList;
+    private String LL_CODE;
+    private String DEPT_NAME="测试";
+    private String STOCK_NAME="测试";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +57,13 @@ public class AddWuZiActivity extends BaseActivity {
         initToolbar(toolbar);
         setTitle("添加物料");
         initsearch();
-
-        new LoadTask().execute();
+        LL_CODE = CommonTool.NewGuid();
+        if(!CommonTool.isWifiOK(AddWuZiActivity.this)){
+            LayoutInflater inflater = getLayoutInflater();
+            EmportyUtils.netFailView(AddWuZiActivity.this);
+        }else{
+            new LoadTask().execute();
+        }
     }
 
     void initView(){
@@ -58,7 +71,12 @@ public class AddWuZiActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               wuZiAdapter.readMaps();
+                wuZiAdapter.readMaps();
+                LING_WUZI ling_wuzi = new LING_WUZI();
+                ling_wuzi.setLL_CODE(LL_CODE);
+                ling_wuzi.setLL_DEPT(DEPT_NAME);
+                ling_wuzi.setLL_STOCK(STOCK_NAME);
+                LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, wuZiAdapter.getLingWuZiDetial());
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -104,8 +122,32 @@ public class AddWuZiActivity extends BaseActivity {
         dismiss();
         if(event.message.equals(Const.Success)){
             initAdapter(wuZiTableList);
-        }else{
+        }else if(event.message.equals(Const.SaveSuccess)){
+            finish();
+        }else if(event.message.equals(Const.SaveFailue)){
+            new MaterialDialog.Builder(context)
+                    .title("保存")
+                    .content("保存失败")
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .show();
+        }
+        else{
             //// TODO: 2015.11.12  显示自定义加载失败view,可以点击加载重试
+            EmportyUtils.createFailView(AddWuZiActivity.this);
         }
     }
 
@@ -113,6 +155,7 @@ public class AddWuZiActivity extends BaseActivity {
         wuZiAdapter = new WuZiAdapter(AddWuZiActivity.this,wuZi_tableList);
         listView.setAdapter(wuZiAdapter);
         initView();
+        wuZiAdapter.setLL_Code(LL_CODE);
     }
 
     void initsearch(){
@@ -122,7 +165,6 @@ public class AddWuZiActivity extends BaseActivity {
                 //Do some magic
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic

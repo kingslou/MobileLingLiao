@@ -13,8 +13,11 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.tools.StringUtils;
+import com.ieasy.dao.LING_WUZIDETIAL;
 import com.ieasy.dao.WuZi_Table;
 
 import java.util.ArrayList;
@@ -37,18 +40,25 @@ public class WuZiAdapter extends BaseAdapter {
     private List<WuZi_Table> wuZi_tables = new ArrayList<>();
     private HashMap<String,String> numberMap;
     private HashMap<String,String> tzsMap;
+    private HashMap<String,String[]> testMap;
     private LayoutInflater layoutInflater;
     private EditText currentFouce;
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private String LL_Code;
     public WuZiAdapter(Context context,List<WuZi_Table> wuZi_tableList){
         this.context = context;
         currentFouce = new EditText(context);
         this.wuZi_tableList = wuZi_tableList;
         numberMap = new HashMap<String,String>();
         tzsMap = new HashMap<String,String>();
+        testMap = new HashMap<>();
         mDrawableBuilder = TextDrawable.builder().round();
         layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setLL_Code(String LL_Code){
+        this.LL_Code = LL_Code;
     }
 
     public void updateListView(List<WuZi_Table> wuZi_tableList){
@@ -62,6 +72,10 @@ public class WuZiAdapter extends BaseAdapter {
                 currentFouce.clearFocus();
             }
         }
+    }
+
+    public void removeTextChange(){
+
     }
 
     public void readMaps(){
@@ -151,6 +165,7 @@ public class WuZiAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         WuZi_Table wuZi_table;
         EditText editText;
+        String[] testArray = new String[2];
         public MyWatcher(ViewHolder viewHolder,WuZi_Table wuZi_table){
             this.viewHolder = viewHolder;
             this.wuZi_table = wuZi_table;
@@ -164,17 +179,67 @@ public class WuZiAdapter extends BaseAdapter {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             MyLogger.showLogWithLineNum(5,"滑动");
             if(viewHolder.editNum.hasFocus()){
-                MyLogger.showLogWithLineNum(5,"滑动监听");
-                numberMap.put(wuZi_table.getWZ_ID(),s.toString());
+                numberMap.put(wuZi_table.getWZ_ID(), s.toString());
+                testArray[0] = s.toString();
+                testArray[1] = viewHolder.editTzs.getText().toString();
+                testMap.put(wuZi_table.getWZ_ID(),testArray);
             }
             if(viewHolder.editTzs.hasFocus()){
                 tzsMap.put(wuZi_table.getWZ_ID(),s.toString());
+                testArray[0] = viewHolder.editNum.getText().toString();
+                testArray[1]=s.toString();
+                testMap.put(wuZi_table.getWZ_ID(),testArray);
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
+    }
+
+    public void saveLoacl(){
+        if(numberMap.size()!=0){
+
+        }
+    }
+
+    public List<LING_WUZIDETIAL> getLingWuZiDetial(){
+        List<LING_WUZIDETIAL> ling_wuzidetials = new ArrayList<>();
+        Iterator iterator = testMap.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry entry = (Map.Entry) iterator.next();
+            String mapkey = entry.getKey().toString();
+            String[] myArray = (String[])entry.getValue();
+            LING_WUZIDETIAL ling_wuzidetial = new LING_WUZIDETIAL();
+            ling_wuzidetial.setLL_CODE("111");
+            String num = myArray[0];
+            String tzs = myArray[1];
+            if(StringUtils.isBlank(num)&&StringUtils.isBlank(tzs)){
+                //不加入
+            }else{
+                if(StringUtils.isBlank(tzs)){
+                    ling_wuzidetial.setLL_TZS(0);
+                }else{
+                    ling_wuzidetial.setLL_TZS(Integer.parseInt(tzs));
+                }
+                if(StringUtils.isBlank(num)){
+                    ling_wuzidetial.setLL_NUM(0.0);
+                }else{
+                    ling_wuzidetial.setLL_NUM(Double.parseDouble(num));
+                }
+                WuZi_Table wuZi_table = WuZiTableUtil.getWuZiTableUtil().getEntity(mapkey);
+                ling_wuzidetial.setLL_CODE(LL_Code);
+                ling_wuzidetial.setLL_WZ_CATEGORY(wuZi_table.getWZ_CATEGORY());
+                ling_wuzidetial.setLL_WZ_ID(mapkey);
+                ling_wuzidetial.setLL_WZ_QUICKCODE(wuZi_table.getWZ_QUICK_CODE());
+                ling_wuzidetial.setLL_WZ_GUIGE(wuZi_table.getWZ_SPECIFICATION());
+                ling_wuzidetial.setLL_WZ_NAME(wuZi_table.getWZ_NAME());
+                ling_wuzidetial.setLL_WZ_CATEGORY_ID(wuZi_table.getWZ_SZ_ID());
+                ling_wuzidetials.add(ling_wuzidetial);
+            }
+            MyLogger.showLogWithLineNum(5,"测试"+mapkey+"记录"+myArray[0]+myArray[1]);
+        }
+        return  ling_wuzidetials;
     }
 
     void readMap(){
@@ -189,7 +254,6 @@ public class WuZiAdapter extends BaseAdapter {
     }
 
      class ViewHolder {
-
         @Bind(R.id.wzName)
         AutofitTextView wzName;
         @Bind(R.id.unitname)

@@ -2,10 +2,14 @@ package com.cyt.ieasy.db;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.ieasy.dao.WUZI_STOCK;
 import com.ieasy.dao.WUZI_STOCKDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Created by jin on 2015.11.06.
@@ -31,6 +35,19 @@ public class StockTableUtil extends BaseTableUtil {
         }
         return stockTableUtil;
     }
+
+    @Override
+    public WUZI_STOCK getEntity(String value) {
+        List<WUZI_STOCK> wuzi_stockList = new ArrayList<>();
+        QueryBuilder queryBuilder = wuzi_stockDao.queryBuilder();
+        queryBuilder.where(WUZI_STOCKDao.Properties.CK_NAME.eq(value));
+        wuzi_stockList = queryBuilder.list();
+        if(null!=wuzi_stockList&&wuzi_stockList.size()!=0){
+            return wuzi_stockList.get(0);
+        }
+        return null;
+    }
+
     @Override
     public void clearTable() {
         wuzi_stockDao.deleteAll();
