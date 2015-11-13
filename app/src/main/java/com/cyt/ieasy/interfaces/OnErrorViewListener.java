@@ -1,6 +1,6 @@
 package com.cyt.ieasy.interfaces;
 /*
-    错误页面回调接口
+    閿欒椤甸潰鍥炶皟鎺ュ彛
  */
 public interface OnErrorViewListener {
     public void onErrorViewClicked();
