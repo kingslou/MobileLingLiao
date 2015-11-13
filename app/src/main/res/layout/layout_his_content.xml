@@ -7,6 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <FrameLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -14,18 +18,38 @@
                 android:background="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+            <com.miguelcatalan.materialsearchview.MaterialSearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                />
+        </FrameLayout>
     </android.support.design.widget.AppBarLayout>
     <ListView
-        android:id="@+id/listhistory"
+        android:id="@+id/hiscontentlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:dividerHeight="5dp"
+        android:divider="#c0c0c0"
+        android:dividerHeight="1px"
         android:paddingLeft="5dip"
         android:paddingRight="5dip"
         android:fadingEdge="none"
         android:scrollbars="none"
+        android:background="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:layout_below="@+id/aapp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_menu_save"
+        android:layout_marginRight="63dp"
+        android:layout_marginBottom="51dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="63dp" />
 </RelativeLayout>

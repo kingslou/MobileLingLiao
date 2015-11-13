@@ -60,11 +60,12 @@ public class MyDaoGenerator {
     public static void creatWuZiLingLiao(Schema schema){
         Entity entity = schema.addEntity(Tab_LING_WUZI);
         entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("LL_RETURNCODE");//服务器返回的领料Code
         entity.addStringProperty("LL_CODE").notNull();//主表唯一Code
         entity.addStringProperty("LL_NAME").notNull();//名称 由部门+时间构成
         entity.addDateProperty("ADDTIME");
         entity.addDateProperty("UPDATETIME");//上传时间
-        entity.addDoubleProperty("LL_OPERATOR");//操作人
+        entity.addStringProperty("LL_OPERATOR");//操作人
         entity.addStringProperty("LL_OPERATOR_ID");
         entity.addStringProperty("LL_DEPT");//部门
         entity.addStringProperty("LL_DEPT_ID");

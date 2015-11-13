@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.widget.Switcher;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -25,21 +25,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by jin on 2015.10.10.
  */
 public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
     Context context;
+    Switcher switcher;
     protected final int REQUEST_CODE_DEFAULT = 1234;
     private PowerManager powerManager = null;
     private PowerManager.WakeLock wakeLock = null;
     private static final int corePoolSize = 15;
     private static final int maximumPoolSize = 30;
     private static final int keepAliveTime = 10;
-
     private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(maximumPoolSize);
     private static final Executor threadPoolExecutor = new ThreadPoolExecutor(
             corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue);
@@ -50,6 +48,14 @@ public class BaseActivity extends AppCompatActivity {
         MyLogger.DEBUG = true;
         powerManager = (PowerManager)this.getSystemService(this.POWER_SERVICE);
         wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
+//        switcher = new Switcher.Builder()
+//                .withContentView(findViewById(R.id.content)) //ViewGroup holding your main content
+//                .withErrorView(findViewById(R.id.error_view)) //ViewGroup holding your error view
+//                .withProgressView(findViewById(R.id.progress_view)) //ViewGroup holding your progress view
+//                .withErrorLabel((TextView) findViewById(R.id.error_label)) // TextView within your error ViewGroup that you want to change
+//                .withProgressLabel((TextView) findViewById(R.id.progress_label)) // TextView within your progress ViewGroup that you want to change
+//                .withEmptyView(findViewById(R.id.empty_view)) //SOme empty placeholder we display on lists for example if there are no results
+//                .build();
     }
 
     public void initToolbar(Toolbar toolbar){
@@ -134,13 +140,18 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+//      EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -155,7 +166,11 @@ public class BaseActivity extends AppCompatActivity {
         wakeLock.release();
     }
 
-    public void onEvent(MessageEvent event){
-
-    }
+//    public void onEvent(MessageEvent event){
+//
+//    }
+//
+//    public void onEvent(LL_Event event){
+//
+//    }
 }

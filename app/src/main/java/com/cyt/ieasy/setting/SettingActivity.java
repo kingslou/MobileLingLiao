@@ -274,8 +274,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         }else{
             Message+="数据更新失败"+"\n";
             dialog.setContent(error);
-            dialog.setProgress(100);
-            dialog.setActionButton(DialogAction.NEUTRAL, "重试");
+            dialog.setProgress(0);
             dialog.setActionButton(DialogAction.POSITIVE, "关闭");
         }
     }

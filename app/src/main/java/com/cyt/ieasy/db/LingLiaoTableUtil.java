@@ -3,6 +3,7 @@ package com.cyt.ieasy.db;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
+import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.ieasy.dao.LING_WUZIDETIALDao;
@@ -60,7 +61,7 @@ public class LingLiaoTableUtil extends BaseTableUtil {
     public List<LING_WUZI> getLingWuzi(int returnNum){
         List<LING_WUZI> ling_wuziList = new ArrayList<>();
         QueryBuilder queryBuilder = ling_wuziDao.queryBuilder();
-        queryBuilder.orderAsc(LING_WUZIDao.Properties.ADDTIME);
+        queryBuilder.orderDesc(LING_WUZIDao.Properties.ADDTIME);
         ling_wuziList = queryBuilder.list();
         return  ling_wuziList;
     }
@@ -85,7 +86,7 @@ public class LingLiaoTableUtil extends BaseTableUtil {
     public void insertWuZi(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
         try{
             ling_wuzi.setADDTIME(new Date());
-            ling_wuzi.setLL_NAME(new Date()+"领料");
+            ling_wuzi.setLL_NAME(TimeUtils.getCurrentTimeInString()+"领料");
             LING_WUZIDETIAL[] ling_wuzidetials1 = new LING_WUZIDETIAL[ling_wuzidetials.size()];
             for(int i=0;i<ling_wuzidetials.size();i++){
                 ling_wuzidetials1[i] = ling_wuzidetials.get(i);
@@ -93,6 +94,33 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             ling_wuziDao.insert(ling_wuzi);
             ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
             EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
+        }catch(Exception e){
+            e.printStackTrace();
+            EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));
+        }
+    }
+
+    /**
+     * 更新历史记录详细表中的物料数据
+     * @param ling_wuzi
+     * @param ling_wuzidetials
+     */
+    public void updateWuZi(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
+        try{
+            LING_WUZIDETIAL[] entitys = new LING_WUZIDETIAL[ling_wuzidetials.size()];
+            //首先得出该记录下所有的物料详细
+            List<LING_WUZIDETIAL> ling_wuzidetialList = getLingWuZiDetial(ling_wuzi.getLL_CODE());
+            //然后跟传递进来的进行差异比较更新
+            for(LING_WUZIDETIAL ling_wuzidetial : ling_wuzidetials){
+                for(int i=0;i<ling_wuzidetialList.size();i++){
+                    LING_WUZIDETIAL tempLing = ling_wuzidetials.get(i);
+                    if(tempLing.getLL_WZ_ID().equals(ling_wuzidetial.getLL_WZ_ID())){
+                        entitys[i] = tempLing;
+                        break;
+                    }
+                }
+            }
+            ling_wuzidetialDao.updateInTx(entitys);
         }catch(Exception e){
             e.printStackTrace();
             EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));

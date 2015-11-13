@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/clickitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/space_15">
@@ -27,6 +29,7 @@
             android:layout_below="@id/histitle"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="5dp"
+            android:src="@mipmap/icon_my"
             android:layout_marginTop="0dp" />
 
         <TextView
@@ -62,16 +65,37 @@
 
     <include layout="@layout/divider_lin" />
 
-    <TextView
-        android:id="@+id/preView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:gravity="center"
+        android:layout_height="66dp"
+        android:gravity="center_vertical"
         android:paddingLeft="@dimen/space_15"
-        android:paddingRight="@dimen/space_15"
-        android:layout_gravity="center"
-        android:text="已同步" />
+        android:paddingRight="12dp">
 
-    <include layout="@layout/divider_lin" />
+        <TextView
+            android:id="@+id/ll_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginRight="@dimen/space_10"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:showOutline="false"
+            app:roundedCorners="true"
+            android:gravity="center"
+            android:text="同步"
+            android:visibility="gone"
+            android:textColor="@color/ms_white"
+            />
+    </LinearLayout>
 </LinearLayout>

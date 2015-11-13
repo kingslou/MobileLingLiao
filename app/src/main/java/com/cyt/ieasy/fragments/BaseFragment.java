@@ -117,6 +117,5 @@ public abstract class BaseFragment extends Fragment {
         lazyLoad();
     }
     protected abstract void lazyLoad();
-
     protected void onInvisible(){}
 }

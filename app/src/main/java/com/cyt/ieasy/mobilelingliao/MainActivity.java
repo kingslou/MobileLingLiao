@@ -112,6 +112,7 @@ public class MainActivity extends BaseActivity {
                         startActivity(SelectDept_Stock.class, false);
                         break;
                     case 2:
+                        startActivity(HistoryActivity.class,false);
                         break;
                     case 3:
                         new MaterialDialog.Builder(context)

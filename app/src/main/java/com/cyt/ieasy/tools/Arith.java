@@ -129,6 +129,15 @@ public class Arith {
     }
   }
 
+  public static String getDecimalString(double value) {
+    try {
+      BigDecimal decimalValue = new BigDecimal(value);
+      return ReturnDecimal(decimalValue).toString();
+    } catch (Exception e) {
+      return value + "";
+    }
+  }
+
   /**
    * 保留指定小数位
    * @param scale 小数点后面保留几位
@@ -136,6 +145,12 @@ public class Arith {
    * @return
    */
   public static String getDecimalString(int scale, float value) {
+    BigDecimal decimalValue = new BigDecimal(value);
+    BigDecimal twodecimal = decimalValue.setScale(scale, BigDecimal.ROUND_HALF_UP);
+    return twodecimal.toString();
+  }
+
+  public static String getDecimalString(int scale, double value) {
     BigDecimal decimalValue = new BigDecimal(value);
     BigDecimal twodecimal = decimalValue.setScale(scale, BigDecimal.ROUND_HALF_UP);
     return twodecimal.toString();
