@@ -211,7 +211,6 @@ public class WuZiAdapter extends BaseAdapter {
             String mapkey = entry.getKey().toString();
             String[] myArray = (String[])entry.getValue();
             LING_WUZIDETIAL ling_wuzidetial = new LING_WUZIDETIAL();
-            ling_wuzidetial.setLL_CODE("111");
             String num = myArray[0];
             String tzs = myArray[1];
             if(StringUtils.isBlank(num)&&StringUtils.isBlank(tzs)){

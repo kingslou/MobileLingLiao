@@ -118,20 +118,26 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             List<LING_WUZIDETIAL> ling_wuzidetialList = getLingWuZiDetial(ling_wuzi.getLL_CODE());
             //然后跟传递进来的进行差异比较更新
             for(LING_WUZIDETIAL ling_wuzidetial : ling_wuzidetials){
+                MyLogger.showLogWithLineNum(5,"名称"+ling_wuzidetial.getLL_WZ_NAME()+"主键"+ling_wuzidetial.getId());
                 for(int i=0;i<ling_wuzidetialList.size();i++){
                     LING_WUZIDETIAL tempLing = ling_wuzidetialList.get(i);
+                    MyLogger.showLogWithLineNum(5,"从数据库中查的主键"+tempLing.getLL_WZ_NAME()+tempLing.getId());
                     if(tempLing.getLL_WZ_ID().equals(ling_wuzidetial.getLL_WZ_ID())){
-                        entitys[i] = ling_wuzidetial;
-                        MyLogger.showLogWithLineNum(5, "更新" + entitys[i].getLL_WZ_NAME() + "数量" +
-                                entitys[i].getLL_NUM());
-
+//                        entitys[i] = ling_wuzidetial;
+//                        entitys[i].setId(tempLing.getId());
+//                        MyLogger.showLogWithLineNum(5, "更新" + entitys[i].getLL_WZ_NAME() + "数量" +
+//                                entitys[i].getLL_NUM() + "主键" + entitys[i].getId());
+                        tempLing.setLL_NUM(ling_wuzidetial.getLL_NUM());
+                        ling_wuzidetialDao.update(tempLing);
                         break;
                     }
                 }
             }
 //            ling_wuzidetialDao.updateInTx(entitys);
+            EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
         }catch(Exception e){
             e.printStackTrace();
+            MyLogger.showLogWithLineNum(5,"更新失败"+e.toString());
             EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));
         }
     }
