@@ -186,7 +186,8 @@ public class AddWuZiActivity extends BaseActivity {
             @Override
             public void onSearchViewClosed() {
                 //Do some magic
-                initAdapter(wuZiTableList);
+//                initAdapter(wuZiTableList);
+                wuZiAdapter.updateListView(wuZiTableList);
             }
         });
     }

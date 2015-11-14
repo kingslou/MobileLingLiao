@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.cyt.ieasy.constans.Const;
@@ -20,11 +21,13 @@ import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.ieasy.dao.WuZi_Table;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.grantland.widget.AutofitTextView;
@@ -107,16 +110,16 @@ public class HistoryDetialAdapter extends BaseAdapter {
         MyWatcher myWatcher = new MyWatcher(viewHolder,wuZi_table);
         viewHolder.wzName.setText(wuZi_table.getLL_WZ_NAME());
         viewHolder.guige.setText(wuZi_table.getLL_WZ_GUIGE());
+        viewHolder.editNum.setText(Arith.getDecimalString(wuZi_table.getLL_NUM()));
+        viewHolder.editTzs.setText(wuZi_table.getLL_TZS()+"");
         if(LL_Status== Const.UpdateSuccess){
             viewHolder.editNum.setEnabled(false);
             viewHolder.editTzs.setEnabled(false);
-            viewHolder.editNum.setText(Arith.getDecimalString(2, wuZi_table.getLL_NUM()));
-            viewHolder.editTzs.setText(wuZi_table.getLL_TZS()+"");
         }else{
-            String numbertext = numberMap.get(wuZi_table.getLL_WZ_ID());
-            String tzstext = tzsMap.get(wuZi_table.getLL_WZ_ID());
-            viewHolder.editNum.setText(numbertext==null?"":numbertext);
-            viewHolder.editTzs.setText(tzstext==null?"":tzstext);
+//            String numbertext = numberMap.get(wuZi_table.getLL_WZ_ID());
+//            String tzstext = tzsMap.get(wuZi_table.getLL_WZ_ID());
+//            viewHolder.editNum.setText(numbertext==null?"":numbertext);
+//            viewHolder.editTzs.setText(tzstext==null?"":tzstext);
             viewHolder.editNum.setOnFocusChangeListener(new MyFouceChange(viewHolder, myWatcher));
             viewHolder.editTzs.setOnFocusChangeListener(new MyFouceChange(viewHolder,myWatcher));
         }

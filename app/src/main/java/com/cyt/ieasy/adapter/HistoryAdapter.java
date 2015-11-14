@@ -88,6 +88,7 @@ public class HistoryAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.putExtra("LL_CODE",ling_wuzi.getLL_CODE());
                 intent.putExtra("LL_STATUS","0");
+                intent.putExtra("LL_Name",ling_wuzi.getLL_NAME());
                 intent.setClass(context, HistoryContent.class);
                 context.startActivity(intent);
             }

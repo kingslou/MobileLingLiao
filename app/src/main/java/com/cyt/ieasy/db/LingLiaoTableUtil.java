@@ -3,6 +3,8 @@ package com.cyt.ieasy.db;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
+import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
@@ -74,8 +76,10 @@ public class LingLiaoTableUtil extends BaseTableUtil {
     public List<LING_WUZIDETIAL> getLingWuZiDetial(String lingCode){
         List<LING_WUZIDETIAL> ling_wuzidetials = new ArrayList<>();
         QueryBuilder queryBuilder = ling_wuzidetialDao.queryBuilder();
-        queryBuilder.where(LING_WUZIDETIALDao.Properties.LL_CODE.eq(lingCode));
-        return ling_wuzidetials;
+        if(!StringUtils.isBlank(lingCode)){
+            queryBuilder.where(LING_WUZIDETIALDao.Properties.LL_CODE.eq(lingCode));
+        }
+        return queryBuilder.list();
     }
 
     @Override
@@ -86,10 +90,12 @@ public class LingLiaoTableUtil extends BaseTableUtil {
     public void insertWuZi(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
         try{
             ling_wuzi.setADDTIME(new Date());
-            ling_wuzi.setLL_NAME(TimeUtils.getCurrentTimeInString()+"领料");
+            ling_wuzi.setLL_NAME(TimeUtils.getCurrentTimeInString() + "领料");
             LING_WUZIDETIAL[] ling_wuzidetials1 = new LING_WUZIDETIAL[ling_wuzidetials.size()];
+            MyLogger.showLogWithLineNum(5, ling_wuzidetials.size() + "条");
             for(int i=0;i<ling_wuzidetials.size();i++){
                 ling_wuzidetials1[i] = ling_wuzidetials.get(i);
+                MyLogger.showLogWithLineNum(5,"结果"+ling_wuzidetials1[i].getLL_WZ_NAME());
             }
             ling_wuziDao.insert(ling_wuzi);
             ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
@@ -113,14 +119,17 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             //然后跟传递进来的进行差异比较更新
             for(LING_WUZIDETIAL ling_wuzidetial : ling_wuzidetials){
                 for(int i=0;i<ling_wuzidetialList.size();i++){
-                    LING_WUZIDETIAL tempLing = ling_wuzidetials.get(i);
+                    LING_WUZIDETIAL tempLing = ling_wuzidetialList.get(i);
                     if(tempLing.getLL_WZ_ID().equals(ling_wuzidetial.getLL_WZ_ID())){
-                        entitys[i] = tempLing;
+                        entitys[i] = ling_wuzidetial;
+                        MyLogger.showLogWithLineNum(5, "更新" + entitys[i].getLL_WZ_NAME() + "数量" +
+                                entitys[i].getLL_NUM());
+
                         break;
                     }
                 }
             }
-            ling_wuzidetialDao.updateInTx(entitys);
+//            ling_wuzidetialDao.updateInTx(entitys);
         }catch(Exception e){
             e.printStackTrace();
             EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));

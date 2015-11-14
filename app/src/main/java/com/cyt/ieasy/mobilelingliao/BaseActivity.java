@@ -73,6 +73,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showIndeterminateProgressDialog(boolean horizontal,String content) {
+         dialog=null;
          dialog =  new MaterialDialog.Builder(this)
                 .title("加载中····")
                 .content(content)

@@ -45,6 +45,7 @@ public class HistoryContent extends BaseActivity {
     private HistoryDetialAdapter historyDetialAdapter;
     private String LL_CODE;//单据号
     private int    LL_STATUS;//单据状态
+    private String LL_Name;//本地名称
     private String DEPT_NAME;
     private String STOCK_NAME;
 
@@ -86,6 +87,7 @@ public class HistoryContent extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             ling_wuzidetialList = LingLiaoTableUtil.getLiaoTableUtil().getLingWuZiDetial(LL_CODE);
+            MyLogger.showLogWithLineNum(5,"全部"+ling_wuzidetialList.size()+"条");
             return null;
         }
 
@@ -119,7 +121,8 @@ public class HistoryContent extends BaseActivity {
     void initdata(){
         LL_CODE = getIntent().getExtras().getString("LL_CODE");
         LL_STATUS =Integer.parseInt(getIntent().getExtras().getString("LL_STATUS"));
-        setTitle(LL_CODE);
+        LL_Name = getIntent().getExtras().getString("LL_Name");
+        setTitle(LL_Name);
         initsearch();
         new LoadTask().execute();
     }
