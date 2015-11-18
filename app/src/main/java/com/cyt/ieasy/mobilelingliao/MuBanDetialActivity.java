@@ -86,17 +86,21 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         MB_ID = bundle.getString(Const.intent_mbid);
     }
 
+    void saveData(){
+        muBanDetialAdapter.readMaps();
+        LING_WUZI ling_wuzi = new LING_WUZI();
+        ling_wuzi.setLL_CODE(LL_CODE);
+        ling_wuzi.setLL_DEPT(DEPT_NAME);
+        ling_wuzi.setLL_STOCK(STOCK_NAME);
+        LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
+    }
+
     void initView() {
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                muBanDetialAdapter.readMaps();
-                LING_WUZI ling_wuzi = new LING_WUZI();
-                ling_wuzi.setLL_CODE(LL_CODE);
-                ling_wuzi.setLL_DEPT(DEPT_NAME);
-                ling_wuzi.setLL_STOCK(STOCK_NAME);
-                LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
+                saveData();
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -147,7 +151,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         } else if (event.message.equals(Const.SaveFailue)) {
             new MaterialDialog.Builder(context)
                     .title("保存")
-                    .content("保存失败")
+                    .content("保存失败,是否重试")
                     .positiveText(R.string.agree)
                     .negativeText(R.string.disagree)
                     .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -160,13 +164,12 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
                         @Override
                         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
                             materialDialog.dismiss();
-                            finish();
+                            saveData();
                         }
                     })
                     .show();
         } else {
             //// TODO: 2015.11.12 弹出框保存同步失败，重试
-
         }
     }
 
@@ -174,6 +177,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         muBanDetialAdapter = new MuBanDetialAdapter(MuBanDetialActivity.this, wuZi_tableList);
         listView.setAdapter(muBanDetialAdapter);
         initView();
+        muBanDetialAdapter.setLL_Code(LL_CODE);
     }
 
     void initsearch() {
