@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    android:descendantFocusability="afterDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp">
+
+    <LinearLayout
+        android:id="@+id/linertest"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="@color/bootstrap_thumbnail_background"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/mb_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="5dp" />
+
+        <me.grantland.widget.AutofitTextView
+            android:id="@+id/mbName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1.5"
+            android:text="模板名称"
+            android:textColor="#333"
+            android:maxLines="2"
+            autofit:minTextSize="@dimen/text_size_12"
+            android:textSize="@dimen/text_size_20" />
+    </LinearLayout>
+
+</LinearLayout>

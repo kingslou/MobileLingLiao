@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/errorview"
+    android:id="@+id/neterrorview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:visibility="invisible"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
         android:id="@+id/imageView" />
 
     <com.beardedhen.androidbootstrap.BootstrapLabel
-        android:id="@+id/btn_signup"
+        android:id="@+id/neterrorviewlable"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:text="没有网络了，点击重试"

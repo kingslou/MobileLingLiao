@@ -30,4 +30,7 @@ public class Const {
     public static final String dept_filter = "dept_filter";//部门勾选
     public static final String stock_filter = "stock_filter";//仓库勾选
 
+    public static final String intent_deptname = "intent_dept";
+    public static final String intent_ckname = "intent_ckname";
+    public static final String intent_time = "intent_time";
 }

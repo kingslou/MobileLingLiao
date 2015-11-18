@@ -13,13 +13,15 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cyt.ieasy.adapter.HistoryDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.interfaces.OnErrorViewListener;
+import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.MyLogger;
-import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -35,7 +37,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by jin on 2015.11.13.
  */
-public class HistoryContent extends BaseActivity {
+public class HistoryContent extends BaseActivity implements OnErrorViewListener {
 
     @Bind(R.id.hiscontentlist)
     ListView listView;
@@ -51,12 +53,18 @@ public class HistoryContent extends BaseActivity {
     private String DEPT_NAME;
     private String STOCK_NAME;
     private TextView footer;
+    private Switcher switcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_his_content);
         ButterKnife.bind(this);
+        switcher = new Switcher.Builder().withContentView(findViewById(R.id.content))
+                .withErrorView(findViewById(R.id.error_view))
+                .withErrorLabel((TextView)findViewById(R.id.error_label))
+                .withNetErrorView(findViewById(R.id.neterrorview))
+                .build();
         initToolbar(toolbar);
         initdata();
         footer = new TextView(context);
@@ -69,10 +77,12 @@ public class HistoryContent extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LING_WUZI ling_wuzi = new LING_WUZI();
-                ling_wuzi.setLL_CODE(LL_CODE);
-                //调用更新方法
-                LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
+                switcher.showNetErrorView();
+//                switcher.showErrorView("木有数据了，点击重试", HistoryContent.this);
+//                LING_WUZI ling_wuzi = new LING_WUZI();
+//                ling_wuzi.setLL_CODE(LL_CODE);
+//                //调用更新方法
+//                LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -99,7 +109,6 @@ public class HistoryContent extends BaseActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (visibleItemCount + firstVisibleItem == totalItemCount) {
                     Log.e("log", "滑到底部");
-
                 }
             }
         });
@@ -186,14 +195,7 @@ public class HistoryContent extends BaseActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
-                //// TODO: 2015.11.13  这个地方需要再后台写一个新的查询方法，LingWuZiDetial
-//                List<WuZi_Table> wuZi_tableList = WuZiTableUtil.getWuZiTableUtil().queryBystr(newText, 10);
-//                MyLogger.showLogWithLineNum(5, "返回" + wuZi_tableList.size() + "个");
-//                for (WuZi_Table wuZiTable : wuZi_tableList) {
-//                    MyLogger.showLogWithLineNum(5, "结果" + wuZiTable.getWZ_QUICK_CODE() + "名称" + wuZiTable.getWZ_NAME());
-//                }
-
-                //// TODO: 2015.11.16  暂时从内存中直接查
+                //// TODO: 2015.11.16  从内存中直接查
                 List<LING_WUZIDETIAL> FilterList = new ArrayList<LING_WUZIDETIAL>();
                 for(LING_WUZIDETIAL lingWuzidetial : ling_wuzidetialList){
                     Pattern pattern = Pattern.compile(newText,Pattern.CASE_INSENSITIVE);
@@ -265,5 +267,10 @@ public class HistoryContent extends BaseActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(HistoryContent.this);
+    }
+
+    @Override
+    public void onErrorViewClicked() {
+        Toast.makeText(HistoryContent.this,"点击了",Toast.LENGTH_SHORT).show();
     }
 }

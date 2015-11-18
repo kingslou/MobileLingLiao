@@ -56,6 +56,9 @@ public class MainActivity extends BaseActivity {
     private List<WUZI_STOCK> stockList;
     private List<String> deptlist;
     private View view;
+    private String CK_NAME;//选择的仓库名称
+    private String DEPT_NAME;//选择的部门名称
+    private String SELECT_TIME;//选择的领料时间
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +158,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onTimeSelect(Date date) {
                 MyLogger.showLogWithLineNum(5, "data" + date + "格式化后" + TimeUtils.getDateStr(date));
+                SELECT_TIME = TimeUtils.getDateStr(date);
                 String deptConfig = CommonTool.getGlobalSetting(MainActivity.this, Const.editBm);
                 if (!StringUtils.isBlank(deptConfig)) {
                     initDept();
@@ -200,6 +204,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onOptionsSelect(int i, int i1, int i2) {
                 MyLogger.showLogWithLineNum(5, nameList.get(i) + "打印");
+                DEPT_NAME = nameList.get(i);
                 optionsPopupWindow=null;
                 initStock();
                 optionsPopupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
@@ -234,7 +239,14 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onOptionsSelect(int i, int i1, int i2) {
                 String selectName = nameList.get(i);
-                startActivity(AddWuZiActivity.class,false);
+                CK_NAME = selectName;
+                Bundle bundle = new Bundle();
+                bundle.putString(Const.intent_ckname,CK_NAME);
+                bundle.putString(Const.intent_deptname,DEPT_NAME);
+                bundle.putString(Const.intent_time,SELECT_TIME);
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,MuBanActivity.class);
+                startActivity(intent,bundle);
             }
         });
     }

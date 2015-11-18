@@ -260,7 +260,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         error +=event.error+"\n";
         step+=event.step;
         if(StringUtils.isBlank(event.error)){
-            if(step==5){
+            if(step==7){
                 Message+="数据更新完毕"+"\n";
                 dialog.setContent(Message);
                 dialog.setProgress(100);

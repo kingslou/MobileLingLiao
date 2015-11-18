@@ -23,6 +23,7 @@ public class Switcher {
     private View neterrorView;
 
     private TextView errorLabel;
+    private TextView neterrorLabel;
     private TextView progressLabel;
 
     private Pair<Animations.FadeInListener, Animations.FadeOutListener> currentAnimators;
@@ -193,7 +194,7 @@ public class Switcher {
         View viewToHide = getCurrentlyVisibleView(neterrorView);
 
         if(neterrorView!=viewToHide && neterrorView.getVisibility()!=View.VISIBLE){
-            currentAnimators = Animations.crossfadeViews(viewToHide, errorView);
+            currentAnimators = Animations.crossfadeViews(viewToHide, neterrorView);
         }
     }
 
@@ -258,6 +259,17 @@ public class Switcher {
         showErrorView();
     }
 
+    public void showNetErrorView(final OnErrorViewListener listener){
+        neterrorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onErrorViewClicked();
+                contentView.setOnClickListener(null);
+            }
+        });
+        showNetErrorView();
+    }
+
     public void showErrorView(final OnErrorViewListener listener) {
         errorView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,6 +288,14 @@ public class Switcher {
 
         errorLabel.setText(errorMessage);
         showErrorView(listener);
+    }
+
+    public void showNetErrorView(String neterrorMessage,final OnErrorViewListener listener){
+        if(neterrorLabel ==null){
+            throw new NullPointerException("You have to build Switcher using withErrorLabel() method");
+        }
+        neterrorLabel.setText(neterrorMessage);
+        showNetErrorView(listener);
     }
 
     public void showProgressView(String errorMessage) {

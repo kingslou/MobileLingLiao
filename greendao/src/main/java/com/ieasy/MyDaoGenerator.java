@@ -20,9 +20,13 @@ public class MyDaoGenerator {
     //仓库表
     public static final String TAB_WUZI_STOCK = "WUZI_STOCK";
     //领料表
-    public static final String Tab_LING_WUZI = "LING_WUZI";
+    public static final String TAB_LING_WUZI = "LING_WUZI";
     //领料物质详细表
-    public static final String Tab_LING_WUZIDETIAL = "LING_WUZIDETIAL";
+    public static final String TAB_LING_WUZIDETIAL = "LING_WUZIDETIAL";
+    //领料模板表
+    public static final String TAB_LING_MB= "LING_MB";
+    //领料模板详细表
+    public static final String TAB_LING_MB_DETIAL = "LING_MB_DETIAL";
 
     public static void main(String[] args){
 
@@ -33,6 +37,8 @@ public class MyDaoGenerator {
         creatWuZiStock(schema);
         creatWuZiLingLiao(schema);
         creatWuZiLingLiaoDetial(schema);
+        creatMb(schema);
+        creatMb_Detial(schema);
         try{
             new DaoGenerator().generateAll(schema,DAO_PATH);
         }catch(Exception e){
@@ -40,8 +46,49 @@ public class MyDaoGenerator {
         }
     }
 
+    public static void creatMb(Schema schema){
+        Entity entity = schema.addEntity(TAB_LING_MB_DETIAL);
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("DJX_ID");
+        entity.addStringProperty("DJX_DJ_ID");
+        entity.addStringProperty("DJX_DJ_CODE");
+        entity.addStringProperty("DJX_WZ_ID");
+        entity.addStringProperty("DJX_WZ_NAME");
+        entity.addStringProperty("DJX_WZ_SP");
+        entity.addStringProperty("DJX_WZ_CODE");
+        entity.addStringProperty("DJX_WZ_QUICK_CODE");
+        entity.addStringProperty("DJX_WC_ID");
+        entity.addStringProperty("DJX_WC_NAME");
+        entity.addStringProperty("DJX_UNIT_ID");
+        entity.addStringProperty("DJX_UNIT_NAME");
+        entity.addStringProperty("DJX_MD_ID");
+        entity.addStringProperty("DJX_DISP_ORDER");
+        entity.addStringProperty("DJX_REMARK");
+    }
+
+    public static void creatMb_Detial(Schema schema){
+        Entity entity = schema.addEntity(TAB_LING_MB);
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("DJ_ID");
+        entity.addStringProperty("DJ_CODE");
+        entity.addStringProperty("DJ_NAME");
+        entity.addDateProperty("DJ_DATE");
+        entity.addStringProperty("DJ_DEALER");
+        entity.addStringProperty("DJ_REMARK");
+        entity.addStringProperty("DJ_MD_ID");
+        entity.addStringProperty("DJ_MD_NAME");
+        entity.addIntProperty("DJ_DISP_ORDER");
+        entity.addIntProperty("DJ_VERSION");
+        entity.addDateProperty("DJ_CRE_TIME");
+        entity.addStringProperty("DJ_CRE_ID");
+        entity.addStringProperty("DJ_CRE_NAME");
+        entity.addDateProperty("DJ_MOD_TIME");
+        entity.addStringProperty("DJ_MOD_ID");
+        entity.addStringProperty("DJ_MOD_NAME");
+    }
+
     public static void creatWuZiLingLiaoDetial(Schema schema){
-        Entity entity = schema.addEntity(Tab_LING_WUZIDETIAL);
+        Entity entity = schema.addEntity(TAB_LING_WUZIDETIAL);
         entity.addIdProperty().primaryKey().autoincrement();
         entity.addStringProperty("LL_CODE").notNull();//跟主表关联Code
         entity.addDoubleProperty("LL_NUM");//领料数量
@@ -58,7 +105,7 @@ public class MyDaoGenerator {
     }
 
     public static void creatWuZiLingLiao(Schema schema){
-        Entity entity = schema.addEntity(Tab_LING_WUZI);
+        Entity entity = schema.addEntity(TAB_LING_WUZI);
         entity.addIdProperty().primaryKey().autoincrement();
         entity.addStringProperty("LL_RETURNCODE");//服务器返回的领料Code
         entity.addStringProperty("LL_CODE").notNull();//主表唯一Code

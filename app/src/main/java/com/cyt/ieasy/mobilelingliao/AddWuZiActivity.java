@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,8 +58,7 @@ public class AddWuZiActivity extends BaseActivity {
         initsearch();
         LL_CODE = CommonTool.NewGuid();
         if(!CommonTool.isWifiOK(AddWuZiActivity.this)){
-            LayoutInflater inflater = getLayoutInflater();
-            EmportyUtils.netFailView(AddWuZiActivity.this);
+
         }else{
             new LoadTask().execute();
         }

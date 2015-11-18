@@ -6,6 +6,7 @@ import android.os.PowerManager;
 
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.DeptTableUtil;
+import com.cyt.ieasy.db.MuBanTableUtil;
 import com.cyt.ieasy.db.StockTableUtil;
 import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
@@ -60,6 +61,7 @@ public class DownLoadActivity {
         powerManager = (PowerManager)MyApplication.getContext().getSystemService(MyApplication.getContext().POWER_SERVICE);
         wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
     }
+
     public void cancleTask(){
 
     }
@@ -74,6 +76,7 @@ public class DownLoadActivity {
             new Load_WuZi_Catoge().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_Stock().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_Mb().executeOnExecutor(THREAD_POOL_EXECUTOR);
+            new Load_Mb_Detial().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }else{
             new SynServerTime().execute();
             new Load_WuZi().execute();
@@ -81,10 +84,12 @@ public class DownLoadActivity {
             new Load_WuZi_Catoge().execute();
             new Load_Stock().execute();
             new Load_Mb().execute();
+            new Load_Mb_Detial().execute();
         }
     }
 
     class SynServerTime extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
@@ -99,7 +104,8 @@ public class DownLoadActivity {
                     MyLogger.showLogWithLineNum(5,serverTime.toString());
                     CommonTool.saveGlobalSetting(MyApplication.getContext(),Const.updatetime,serverTime.toString().trim());
                 }else{
-                    ErrorMessage = "获取服务器时间失败";
+                    errormsg = "获取服务器时间失败";
+                    ErrorMessage = ErrorMessage+errormsg;
                     MyLogger.showLogWithLineNum(5,ErrorMessage);
                 }
             }catch(Exception e){
@@ -125,7 +131,7 @@ public class DownLoadActivity {
     }
 
     class Load_WuZi extends AsyncTask<Void,Void,Void>{
-
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
@@ -144,7 +150,8 @@ public class DownLoadActivity {
                     WuZiTableUtil.getWuZiTableUtil().addData(op);
                     MyLogger.showLogWithLineNum(5, "物料更新结束时间" + TimeUtils.getCurrentTimeInString());
                 }else{
-                    ErrorMessage+="获取物质失败";
+                    errormsg = "获取物质失败";
+                    ErrorMessage = ErrorMessage+errormsg;
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -160,7 +167,7 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(StringUtils.isBlank(ErrorMessage)){
+            if(StringUtils.isBlank(errormsg)){
                 EventBus.getDefault().postSticky(new MessageEvent("物料更新完毕","",1));
                 MyLogger.showLogWithLineNum(5,"物料共"+WuZiTableUtil.getWuZiTableUtil().getAlldata().size());
             }else{
@@ -175,6 +182,7 @@ public class DownLoadActivity {
     }
 
     class Load_WuZi_Catoge extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
@@ -190,7 +198,8 @@ public class DownLoadActivity {
                     WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().clearTable();
                     WuZiCATALOG_TableUtil.getWuZiCATALOG_tableUtil().addData(op);
                 }else{
-                    ErrorMessage += "物料类别更新失败";
+                    errormsg = "物料类别更新失败";
+                    ErrorMessage = ErrorMessage+errormsg;
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -216,6 +225,7 @@ public class DownLoadActivity {
     }
 
     class Load_Dept extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
@@ -231,7 +241,8 @@ public class DownLoadActivity {
                     DeptTableUtil.getDeptTableUtil().clearTable();
                     DeptTableUtil.getDeptTableUtil().addData(op);
                 }else{
-                    ErrorMessage+="部门更新失败";
+                    errormsg = "部门更新失败";
+                    ErrorMessage = ErrorMessage+errormsg;
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -247,7 +258,7 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(StringUtils.isBlank(ErrorMessage)){
+            if(StringUtils.isBlank(errormsg)){
                 EventBus.getDefault().postSticky(new MessageEvent("部门更新完毕","",1));
                 MyLogger.showLogWithLineNum(5,"部门数量"+DeptTableUtil.getDeptTableUtil().getAlldata().size());
             }else{
@@ -257,6 +268,7 @@ public class DownLoadActivity {
     }
 
     class Load_Stock extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
@@ -271,7 +283,8 @@ public class DownLoadActivity {
                     StockTableUtil.getStockTableUtil().clearTable();
                     StockTableUtil.getStockTableUtil().addData(op);
                 }else{
-                    ErrorMessage+="仓库更新失败";
+                    errormsg = "仓库更新失败";
+                    ErrorMessage = ErrorMessage+errormsg;
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -282,7 +295,7 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(StringUtils.isBlank(ErrorMessage)){
+            if(StringUtils.isBlank(errormsg)){
                 EventBus.getDefault().postSticky(new MessageEvent("仓库更新完毕","",1));
                 MyLogger.showLogWithLineNum(5,"仓库共"+ StockTableUtil.getStockTableUtil().getAlldata().size());
             }else{
@@ -297,9 +310,26 @@ public class DownLoadActivity {
     }
 
     class Load_Mb extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
         @Override
         protected Void doInBackground(Void... params) {
             try{
+                Object op =
+                        WebServiceTool
+                                .callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {"typeName",
+                                        "condition", "columns"}, new Object[] {"WL_TEMP_BILL", "", ""});
+                if(isCancelled()){
+                    ErrorMessage += "取消模板更新";
+                    return null;
+                }
+                if(null!=op){
+                    MyLogger.showLogWithLineNum(5,"模板"+op.toString());
+                    MuBanTableUtil.getMuBanTableUtil().clearTable();
+                    MuBanTableUtil.getMuBanTableUtil().addLing_MB_Data(op.toString());
+                }else{
+                    errormsg = "模板更新失败";
+                    ErrorMessage=ErrorMessage+errormsg;
+                }
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -315,11 +345,71 @@ public class DownLoadActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if(StringUtils.isBlank(errormsg)){
+                EventBus.getDefault().postSticky(new MessageEvent("模板更新完毕","",1));
+                MyLogger.showLogWithLineNum(5,"模板共"+MuBanTableUtil.getMuBanTableUtil().getLing_Mb().size());
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("模板更新",ErrorMessage,1));
+            }
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
+        }
+    }
+
+    class Load_Mb_Detial extends AsyncTask<Void,Void,Void>{
+        private String errormsg;
+        @Override
+        protected Void doInBackground(Void... params) {
+            try{
+                Object op =
+                        WebServiceTool
+                                .callWebservice(Scm_Service, "FindEntityJsonByCondition", new String[] {"typeName",
+                                        "condition", "columns"}, new Object[] {"WL_TEMP_BILL_DETAIL", "", ""});
+                if(isCancelled()){
+                    ErrorMessage += "取消模板内容更新";
+                    return null;
+                }
+                if(null!=op){
+                    MyLogger.showLogWithLineNum(5,"模板内容"+op.toString());
+                    MuBanTableUtil.getMuBanTableUtil().clearTableDetial();
+                    MuBanTableUtil.getMuBanTableUtil().addLing_MB_Detial(op.toString());
+                }else{
+                    errormsg = "模板内容更新失败";
+                    ErrorMessage = ErrorMessage+errormsg;
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(StringUtils.isBlank(ErrorMessage)){
+                EventBus.getDefault().postSticky(new MessageEvent("模板详细更新完毕","",1));
+                MyLogger.showLogWithLineNum(5,"模板内容"+ MuBanTableUtil.getMuBanTableUtil().getLing_MB_Detial(""));
+            }else{
+                EventBus.getDefault().postSticky(new MessageEvent("模板详细更新",ErrorMessage,1));
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            super.onCancelled(aVoid);
         }
     }
 }
