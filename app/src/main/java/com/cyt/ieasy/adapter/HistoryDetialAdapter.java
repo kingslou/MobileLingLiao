@@ -109,7 +109,7 @@ public class HistoryDetialAdapter extends BaseAdapter {
         LING_WUZIDETIAL wuZi_table = wuZi_tableList.get(position);
         MyWatcher myWatcher = new MyWatcher(viewHolder,wuZi_table);
         viewHolder.wzName.setText(wuZi_table.getLL_WZ_NAME());
-        viewHolder.guige.setText(wuZi_table.getLL_WZ_GUIGE()+wuZi_table.getId());
+        viewHolder.guige.setText(wuZi_table.getLL_WZ_GUIGE());
         viewHolder.editNum.setText(Arith.getDecimalString(wuZi_table.getLL_NUM()));
         viewHolder.editTzs.setText(wuZi_table.getLL_TZS()+"");
         if(LL_Status== Const.UpdateSuccess){

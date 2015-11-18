@@ -1,4 +1,4 @@
-package com.cyt.ieasy.widget;
+package com.cyt.ieasy.switcher;
 
 import android.content.res.Resources;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 
 /**
+ * 自定义View
  * Created by Jacek Kwiecień on 14.03.15.
  */
 public class Switcher {
@@ -192,7 +193,7 @@ public class Switcher {
         View viewToHide = getCurrentlyVisibleView(neterrorView);
 
         if(neterrorView!=viewToHide && neterrorView.getVisibility()!=View.VISIBLE){
-            currentAnimators = Animations.crossfadeViews(viewToHide,errorView);
+            currentAnimators = Animations.crossfadeViews(viewToHide, errorView);
         }
     }
 

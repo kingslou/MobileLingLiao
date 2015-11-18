@@ -12,6 +12,7 @@ public class Const {
     public static final String Failue = "失败";
     public static final String SaveSuccess = "保存成功";
     public static final String SaveFailue = "保存失败";
+    public static final String Finish = "关闭";
     public static final int UpdateSuccess = 1;
     public static final int UpdateFailue = 0;
 

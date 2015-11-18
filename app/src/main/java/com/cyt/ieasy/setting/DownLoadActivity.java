@@ -73,12 +73,14 @@ public class DownLoadActivity {
             new Load_Dept().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_WuZi_Catoge().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_Stock().executeOnExecutor(THREAD_POOL_EXECUTOR);
+            new Load_Mb().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }else{
             new SynServerTime().execute();
             new Load_WuZi().execute();
             new Load_Dept().execute();
             new Load_WuZi_Catoge().execute();
             new Load_Stock().execute();
+            new Load_Mb().execute();
         }
     }
 
@@ -291,6 +293,33 @@ public class DownLoadActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+        }
+    }
+
+    class Load_Mb extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            try{
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
         }
     }
 }

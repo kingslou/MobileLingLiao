@@ -128,12 +128,14 @@ public class LingLiaoTableUtil extends BaseTableUtil {
 //                        MyLogger.showLogWithLineNum(5, "更新" + entitys[i].getLL_WZ_NAME() + "数量" +
 //                                entitys[i].getLL_NUM() + "主键" + entitys[i].getId());
                         tempLing.setLL_NUM(ling_wuzidetial.getLL_NUM());
-                        ling_wuzidetialDao.update(tempLing);
+                        tempLing.setLL_TZS(ling_wuzidetial.getLL_TZS());
+                        entitys[i]=tempLing;
+//                        ling_wuzidetialDao.update(tempLing);
                         break;
                     }
                 }
             }
-//            ling_wuzidetialDao.updateInTx(entitys);
+            ling_wuzidetialDao.updateInTx(entitys);
             EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
         }catch(Exception e){
             e.printStackTrace();

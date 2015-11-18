@@ -1,30 +1,32 @@
 package com.cyt.ieasy.mobilelingliao;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.adapter.HistoryDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
-import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.tools.MyLogger;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
-import com.ieasy.dao.WuZi_Table;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +50,7 @@ public class HistoryContent extends BaseActivity {
     private String LL_Name;//本地名称
     private String DEPT_NAME;
     private String STOCK_NAME;
+    private TextView footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,9 @@ public class HistoryContent extends BaseActivity {
         ButterKnife.bind(this);
         initToolbar(toolbar);
         initdata();
-        MyLogger.showLogWithLineNum(5, "测试呵呵" + LL_CODE);
+        footer = new TextView(context);
+        footer.setText("没有更多数据了");
+        footer.setVisibility(View.GONE);
     }
 
     void initView(){
@@ -74,11 +79,28 @@ public class HistoryContent extends BaseActivity {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 historyDetialAdapter.clearEdFouce();
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    // 判断是否滚动到底部
+                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                        //加载更多功能的代码
+                    }
+                    if (isListViewReachBottomEdge(listView)) {
+                        if (footer.getVisibility() != View.VISIBLE) {
+                            footer.setVisibility(View.VISIBLE);
+                            LinearLayout footerParent = new LinearLayout(context);
+                            footerParent.addView(footer);
+                            listView.addFooterView(footerParent);
+                        }
+                    }
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount + firstVisibleItem == totalItemCount) {
+                    Log.e("log", "滑到底部");
 
+                }
             }
         });
     }
@@ -115,6 +137,25 @@ public class HistoryContent extends BaseActivity {
         }else if(event.message.equals(Const.Failue)){
             //// TODO: 2015.11.13 显示自定义错误界面
             //setContentView(EmportyUtils.netFailView(HistoryContent.this));
+        }else if(event.message.equals(Const.SaveSuccess)){
+            showIndeterminateProgressDialog(true,"保存成功");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(new MessageEvent(Const.Cancle));
+                }
+            },1000);
+        }else if(event.message.equals(Const.SaveFailue)){
+            showIndeterminateProgressDialog(true,"保存失败");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(new MessageEvent(Const.Cancle));
+                }
+            }, 1000);
+        }else if(event.message.equals(Const.Cancle)){
+            dismiss();
+            finish();
         }
     }
 
@@ -141,16 +182,31 @@ public class HistoryContent extends BaseActivity {
                 //Do some magic
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
                 //// TODO: 2015.11.13  这个地方需要再后台写一个新的查询方法，LingWuZiDetial
-                List<WuZi_Table> wuZi_tableList = WuZiTableUtil.getWuZiTableUtil().queryBystr(newText,10);
-                MyLogger.showLogWithLineNum(5, "返回" + wuZi_tableList.size() + "个");
-                for(WuZi_Table wuZiTable : wuZi_tableList){
-                    MyLogger.showLogWithLineNum(5,"结果"+wuZiTable.getWZ_QUICK_CODE()+"名称"+wuZiTable.getWZ_NAME());
+//                List<WuZi_Table> wuZi_tableList = WuZiTableUtil.getWuZiTableUtil().queryBystr(newText, 10);
+//                MyLogger.showLogWithLineNum(5, "返回" + wuZi_tableList.size() + "个");
+//                for (WuZi_Table wuZiTable : wuZi_tableList) {
+//                    MyLogger.showLogWithLineNum(5, "结果" + wuZiTable.getWZ_QUICK_CODE() + "名称" + wuZiTable.getWZ_NAME());
+//                }
+
+                //// TODO: 2015.11.16  暂时从内存中直接查
+                List<LING_WUZIDETIAL> FilterList = new ArrayList<LING_WUZIDETIAL>();
+                for(LING_WUZIDETIAL lingWuzidetial : ling_wuzidetialList){
+                    Pattern pattern = Pattern.compile(newText,Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(lingWuzidetial.getLL_WZ_NAME()+lingWuzidetial.getLL_WZ_QUICKCODE());
+                    if(matcher.find()){
+                        FilterList.add(lingWuzidetial);
+                        //每次只查20个 超过
+                        if(FilterList.size()>20){
+                            break;
+                        }
+                    }
                 }
-                historyDetialAdapter.updateListView(ling_wuzidetialList);
+                historyDetialAdapter.updateListView(FilterList);
                 return false;
             }
         });
@@ -169,14 +225,6 @@ public class HistoryContent extends BaseActivity {
         });
     }
 
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -189,25 +237,7 @@ public class HistoryContent extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        new MaterialDialog.Builder(context)
-                .title("退出")
-                .content("确定退出吗?")
-                .positiveText(R.string.agree)
-                .negativeText(R.string.disagree)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                        finish();
-                    }
-                })
-                .show();
+        showback();
         return true;
     }
 
@@ -221,25 +251,7 @@ public class HistoryContent extends BaseActivity {
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
         } else {
-            new MaterialDialog.Builder(context)
-                    .title("退出")
-                    .content("确定退出吗?")
-                    .positiveText(R.string.agree)
-                    .negativeText(R.string.disagree)
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            materialDialog.dismiss();
-                        }
-                    })
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                            materialDialog.dismiss();
-                            finish();
-                        }
-                    })
-                    .show();
+            showback();
         }
     }
 

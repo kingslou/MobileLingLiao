@@ -13,11 +13,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.tools.MyLogger;
-import com.cyt.ieasy.widget.Switcher;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -31,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 public class BaseActivity extends AppCompatActivity {
     MaterialDialog dialog =  null;
     Context context;
-    Switcher switcher;
     protected final int REQUEST_CODE_DEFAULT = 1234;
     private PowerManager powerManager = null;
     private PowerManager.WakeLock wakeLock = null;
@@ -48,14 +48,6 @@ public class BaseActivity extends AppCompatActivity {
         MyLogger.DEBUG = true;
         powerManager = (PowerManager)this.getSystemService(this.POWER_SERVICE);
         wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
-//        switcher = new Switcher.Builder()
-//                .withContentView(findViewById(R.id.content)) //ViewGroup holding your main content
-//                .withErrorView(findViewById(R.id.error_view)) //ViewGroup holding your error view
-//                .withProgressView(findViewById(R.id.progress_view)) //ViewGroup holding your progress view
-//                .withErrorLabel((TextView) findViewById(R.id.error_label)) // TextView within your error ViewGroup that you want to change
-//                .withProgressLabel((TextView) findViewById(R.id.progress_label)) // TextView within your progress ViewGroup that you want to change
-//                .withEmptyView(findViewById(R.id.empty_view)) //SOme empty placeholder we display on lists for example if there are no results
-//                .build();
     }
 
     public void initToolbar(Toolbar toolbar){
@@ -150,6 +142,28 @@ public class BaseActivity extends AppCompatActivity {
 //      EventBus.getDefault().unregister(this);
     }
 
+    public void showback(){
+        new MaterialDialog.Builder(context)
+                .title("退出")
+                .content("确定退出吗?")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        finish();
+                    }
+                })
+                .show();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -174,4 +188,22 @@ public class BaseActivity extends AppCompatActivity {
 //    public void onEvent(LL_Event event){
 //
 //    }
+
+    public boolean isListViewReachBottomEdge(final ListView listView) {
+        boolean result=false;
+        if (listView.getLastVisiblePosition() == (listView.getCount() - 1)) {
+            final View bottomChildView = listView.getChildAt(listView.getLastVisiblePosition() - listView.getFirstVisiblePosition());
+            result= (listView.getHeight()>=bottomChildView.getBottom());
+        };
+        return  result;
+    }
+
+    public boolean isListViewReachTopEdge(final ListView listView) {
+        boolean result=false;
+        if(listView.getFirstVisiblePosition()==0){
+            final View topChildView = listView.getChildAt(0);
+            result=topChildView.getTop()==0;
+        }
+        return result ;
+    }
 }

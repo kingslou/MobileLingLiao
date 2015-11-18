@@ -75,5 +75,6 @@ dependencies {
     //    compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
     //Optional for drag and drop
     //    compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
+    //自适应大小TextView
     compile 'me.grantland:autofittextview:0.2.1'
 }

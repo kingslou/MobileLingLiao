@@ -1,4 +1,4 @@
-package com.cyt.ieasy.widget;
+package com.cyt.ieasy.switcher;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

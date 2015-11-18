@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
+ * 历史记录
  * Created by jin on 2015.11.02.
  */
 public class HistoryActivity extends BaseActivity {
