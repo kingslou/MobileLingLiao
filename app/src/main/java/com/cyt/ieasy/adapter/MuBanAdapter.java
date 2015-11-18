@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.mobilelingliao.MuBanDetialActivity;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.ieasy.dao.LING_MB;
 
@@ -82,8 +84,9 @@ public class MuBanAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra("MB_ID",ling_mb.getDJ_ID());
-
+                intent.putExtra(Const.intent_mbid,ling_mb.getDJ_ID());
+                intent.setClass(context, MuBanDetialActivity.class);
+                context.startActivity(intent);
             }
         });
         return convertView;

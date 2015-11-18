@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity {
                 MyLogger.showLogWithLineNum(5, "data" + date + "格式化后" + TimeUtils.getDateStr(date));
                 SELECT_TIME = TimeUtils.getDateStr(date);
                 String deptConfig = CommonTool.getGlobalSetting(MainActivity.this, Const.editBm);
-                if (!StringUtils.isBlank(deptConfig)) {
+                if (!StringUtils.isBlank(deptConfig)&&deptConfig.equals("true")) {
                     initDept();
                 } else {
                     initStock();
@@ -245,8 +245,9 @@ public class MainActivity extends BaseActivity {
                 bundle.putString(Const.intent_deptname,DEPT_NAME);
                 bundle.putString(Const.intent_time,SELECT_TIME);
                 Intent intent = new Intent();
+                intent.putExtras(bundle);
                 intent.setClass(MainActivity.this,MuBanActivity.class);
-                startActivity(intent,bundle);
+                startActivity(intent);
             }
         });
     }

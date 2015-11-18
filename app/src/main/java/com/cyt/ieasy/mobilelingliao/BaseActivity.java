@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.MyLogger;
 
 import java.util.concurrent.BlockingQueue;
@@ -39,8 +40,9 @@ public class BaseActivity extends AppCompatActivity {
     private static final int maximumPoolSize = 30;
     private static final int keepAliveTime = 10;
     private static final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(maximumPoolSize);
-    private static final Executor threadPoolExecutor = new ThreadPoolExecutor(
+    public static final Executor threadPoolExecutor = new ThreadPoolExecutor(
             corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue);
+    public Switcher switcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

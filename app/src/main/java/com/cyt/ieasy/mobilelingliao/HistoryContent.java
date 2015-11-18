@@ -60,7 +60,7 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_his_content);
         ButterKnife.bind(this);
-        switcher = new Switcher.Builder().withContentView(findViewById(R.id.content))
+        switcher = new Switcher.Builder().withContentView(findViewById(R.id.main))
                 .withErrorView(findViewById(R.id.error_view))
                 .withErrorLabel((TextView)findViewById(R.id.error_label))
                 .withNetErrorView(findViewById(R.id.neterrorview))

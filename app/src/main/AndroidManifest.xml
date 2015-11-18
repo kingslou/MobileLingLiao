@@ -31,6 +31,7 @@
         <activity android:name=".HistoryActivity"></activity>
         <activity android:name=".HistoryContent"></activity>
         <activity android:name=".MuBanActivity"></activity>
+        <activity android:name=".MuBanDetialActivity"></activity>
     </application>
 
 </manifest>

@@ -33,4 +33,5 @@ public class Const {
     public static final String intent_deptname = "intent_dept";
     public static final String intent_ckname = "intent_ckname";
     public static final String intent_time = "intent_time";
+    public static final String intent_mbid = "intent_mbid";
 }
