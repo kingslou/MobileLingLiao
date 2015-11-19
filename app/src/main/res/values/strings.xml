@@ -24,6 +24,8 @@
     <string name="agree">确定</string>
     <string name="disagree">取消</string>
 
+    <string name="add">添加</string>
+
 
     <string name="customactivityoncrash_error_activity_error_occurred_explanation">程序发生未知错误已经关闭，为您带来不便深感歉意</string>
     <string name="customactivityoncrash_error_activity_unknown_exception">Unknown exception</string>
@@ -44,5 +46,12 @@
     <color name="primary_text">#212121</color>
     <color name="pre_lollipop_shadow_color">#40000000</color>
     <color name="divide_line">#ffdddddd</color>
+
+    <color name="backgroundColor">#E8E8E0</color>
+    <color name="backgroundColorPress">#DBDBD3</color>
+    <color name="red">#FF3B00</color>
+    <color name="red_press">#990000</color>
+    <color name="dark_gray">#4C535B</color>
+    <color name="dark_gray_press">#ff7e8a97</color>
 
 </resources>

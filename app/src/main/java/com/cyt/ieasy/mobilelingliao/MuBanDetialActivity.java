@@ -12,26 +12,28 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.alibaba.fastjson.JSON;
 import com.cyt.ieasy.adapter.MuBanDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
-import com.cyt.ieasy.db.MuBanTableUtil;
+import com.cyt.ieasy.db.MuBanDetialTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
+import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.CommonTool;
+import com.cyt.ieasy.tools.MyLogger;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_WUZI;
+import com.ieasy.dao.LING_WUZIDETIAL;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -55,6 +57,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     private String DEPT_NAME = "测试";
     private String STOCK_NAME = "测试";
     private String MB_ID = "";//模板ID
+    private HashMap<String,String[]> map = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +90,6 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     }
 
     void saveData(){
-        muBanDetialAdapter.readMaps();
         LING_WUZI ling_wuzi = new LING_WUZI();
         ling_wuzi.setLL_CODE(LL_CODE);
         ling_wuzi.setLL_DEPT(DEPT_NAME);
@@ -120,7 +122,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         @Override
         protected Void doInBackground(Void... params) {
             getIntentData();
-            ling_mb_detialList = MuBanTableUtil.getMuBanTableUtil().getLing_MB_Detial(MB_ID);
+            ling_mb_detialList = MuBanDetialTableUtil.getMuBanDetialTableUtil().getLing_MB_Detial(MB_ID);
             return null;
         }
 
@@ -144,7 +146,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     public void onEvent(MessageEvent event) {
         dismiss();
         if (event.message.equals(Const.Success)) {
-            initAdapter(ling_mb_detialList);
+            initAdapter(ling_mb_detialList,map);
         } else if (event.message.equals(Const.SaveSuccess)) {
             startActivity(HistoryActivity.class, false);
             finish();
@@ -173,8 +175,8 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         }
     }
 
-    void initAdapter(List<LING_MB_DETIAL> wuZi_tableList) {
-        muBanDetialAdapter = new MuBanDetialAdapter(MuBanDetialActivity.this, wuZi_tableList);
+    void initAdapter(List<LING_MB_DETIAL> wuZi_tableList,HashMap<String,String[]> map) {
+        muBanDetialAdapter = new MuBanDetialAdapter(MuBanDetialActivity.this, wuZi_tableList,map);
         listView.setAdapter(muBanDetialAdapter);
         initView();
         muBanDetialAdapter.setLL_Code(LL_CODE);
@@ -192,12 +194,12 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
                 List<LING_MB_DETIAL> filteList = new ArrayList<LING_MB_DETIAL>();
-                for(LING_MB_DETIAL ling_mb_detial : ling_mb_detialList){
-                    Pattern pattern = Pattern.compile(newText,Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(ling_mb_detial.getDJX_WZ_NAME()+ling_mb_detial.getDJX_WZ_QUICK_CODE());
-                    if(matcher.find()){
+                for (LING_MB_DETIAL ling_mb_detial : ling_mb_detialList) {
+                    Pattern pattern = Pattern.compile(newText, Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(ling_mb_detial.getDJX_WZ_NAME() + ling_mb_detial.getDJX_WZ_QUICK_CODE());
+                    if (matcher.find()) {
                         filteList.add(ling_mb_detial);
-                        if(filteList.size()>20){
+                        if (filteList.size() > 20) {
                             break;
                         }
                     }
@@ -216,7 +218,6 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             @Override
             public void onSearchViewClosed() {
                 //Do some magic
-//                initAdapter(wuZiTableList);
                 muBanDetialAdapter.updateListView(ling_mb_detialList);
             }
         });
@@ -225,14 +226,78 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==REQUEST_CODE_DEFAULT){
+            //// TODO: 2015.11.19  从全部物料中添加过来的物料
+            String intentwuzi = data.getExtras().getString("intentwuzi");
+            List<LING_WUZIDETIAL> ling_wuzidetialList =JSON.parseArray(intentwuzi,LING_WUZIDETIAL.class);
+            MyLogger.showLogWithLineNum(5,"fastJSON"+intentwuzi+"个数"+ling_wuzidetialList.size());
+            new Load_IntentData(intentwuzi).execute();
+        }
+    }
 
-        super.onActivityResult(requestCode, resultCode, data);
+    boolean isexist(String WZ_ID){
+        boolean result = false;
+        for(LING_MB_DETIAL ling_mb_detial : ling_mb_detialList){
+            if(ling_mb_detial.getDJX_WZ_ID().equals(WZ_ID)){
+                ling_mb_detialList.remove(ling_mb_detial);
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    class Load_IntentData extends AsyncTask<Void,Void,Void>{
+        private String intentdata;
+        private List<LING_WUZIDETIAL> ling_wuzidetialList;
+        private HashMap<String,String[]> mymap;
+        public Load_IntentData(String intentdata){
+            this.intentdata = intentdata;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            ling_wuzidetialList =JSON.parseArray(intentdata, LING_WUZIDETIAL.class);
+            mymap = muBanDetialAdapter.getMap();
+            for(LING_WUZIDETIAL ling_wuzidetial : ling_wuzidetialList){
+                LING_MB_DETIAL ling_mb_detial = new LING_MB_DETIAL();
+                ling_mb_detial.setDJX_WZ_ID(ling_wuzidetial.getLL_WZ_ID());
+                ling_mb_detial.setDJX_WZ_NAME(ling_wuzidetial.getLL_WZ_NAME());
+                ling_mb_detial.setDJX_WZ_SP(ling_wuzidetial.getLL_WZ_GUIGE());
+                ling_mb_detial.setDJX_WC_ID(ling_wuzidetial.getLL_WZ_CATEGORY_ID());
+                ling_mb_detial.setDJX_WZ_QUICK_CODE(ling_wuzidetial.getLL_WZ_QUICKCODE());
+                ling_mb_detial.setDJX_UNIT_NAME(ling_wuzidetial.getLL_WZ_UNITNAME());
+                ling_mb_detial.setDJX_UNIT_ID(ling_wuzidetial.getLL_WZ_UNITID());
+                ling_mb_detial.setDJX_REMARK(ling_wuzidetial.getLL_WZ_REMARK());
+                ling_mb_detial.setDJX_WZ_NUM(Arith.getDecimalString(ling_wuzidetial.getLL_NUM()));
+                ling_mb_detial.setDJX_WZ_TZS(ling_wuzidetial.getLL_TZS() == 0 ? "" : Arith.getDecimalString(ling_wuzidetial.getLL_TZS()));
+                isexist(ling_wuzidetial.getLL_WZ_ID());
+                ling_mb_detialList.add(ling_mb_detial);
+                String[] tempArray = new String[2];
+                tempArray[0] = ling_wuzidetial.getLL_NUM()+"";
+                tempArray[1] = ling_wuzidetial.getLL_TZS()+"";
+                mymap.put(ling_wuzidetial.getLL_WZ_ID(),tempArray);
+            }
+            MyLogger.showLogWithLineNum(5, "条目数" + ling_wuzidetialList.size());
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            muBanDetialAdapter.updateListView(ling_mb_detialList);
+            muBanDetialAdapter.updateMap(mymap);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_addwuzi, menu);
+        getMenuInflater().inflate(R.menu.menu_mbdetial, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
         return true;
@@ -241,25 +306,48 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        new MaterialDialog.Builder(context)
-                .title("退出")
-                .content("确定退出添加吗?")
-                .positiveText(R.string.agree)
-                .negativeText(R.string.disagree)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                        finish();
-                    }
-                })
-                .show();
+        if(item.getItemId()==R.id.menu_add){
+            new MaterialDialog.Builder(context)
+                    .title("添加物料")
+                    .content("确定添加其他物料吗?")
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                            startActivity(AddotherWuZiActivity.class, true);
+                        }
+                    })
+                    .show();
+        }else {
+            new MaterialDialog.Builder(context)
+                    .title("退出")
+                    .content("确定退出模板吗?")
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .show();
+        }
+
         return true;
     }
 

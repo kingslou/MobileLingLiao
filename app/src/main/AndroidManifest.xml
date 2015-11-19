@@ -32,6 +32,7 @@
         <activity android:name=".HistoryContent"></activity>
         <activity android:name=".MuBanActivity"></activity>
         <activity android:name=".MuBanDetialActivity"></activity>
+        <activity android:name=".AddotherWuZiActivity"></activity>
     </application>
 
 </manifest>

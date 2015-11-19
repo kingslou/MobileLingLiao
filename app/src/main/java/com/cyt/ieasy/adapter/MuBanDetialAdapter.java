@@ -41,13 +41,13 @@ public class MuBanDetialAdapter extends BaseAdapter {
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private String LL_Code;
-    public MuBanDetialAdapter(Context context,List<LING_MB_DETIAL> wuZi_tableList){
+    public MuBanDetialAdapter(Context context,List<LING_MB_DETIAL> wuZi_tableList,HashMap<String,String[]> map){
         this.context = context;
         currentFouce = new EditText(context);
         this.wuZi_tableList = wuZi_tableList;
         numberMap = new HashMap<String,String>();
         tzsMap = new HashMap<String,String>();
-        testMap = new HashMap<>();
+        testMap = map;
         mDrawableBuilder = TextDrawable.builder().round();
         layoutInflater = LayoutInflater.from(context);
     }
@@ -59,6 +59,14 @@ public class MuBanDetialAdapter extends BaseAdapter {
     public void updateListView(List<LING_MB_DETIAL> wuZi_tableList){
         this.wuZi_tableList = wuZi_tableList;
         notifyDataSetChanged();
+    }
+
+    public void updateMap(HashMap<String,String[]> map){
+        testMap = map;
+    }
+
+    public HashMap<String,String[]> getMap(){
+        return testMap;
     }
 
     public void clearEdFouce(){
@@ -106,10 +114,12 @@ public class MuBanDetialAdapter extends BaseAdapter {
         LING_MB_DETIAL ling_mb_detial = wuZi_tableList.get(position);
         MyWatcher myWatcher = new MyWatcher(viewHolder,ling_mb_detial);
         viewHolder.wzName.setText(ling_mb_detial.getDJX_WZ_NAME());
-        String numbertext = numberMap.get(ling_mb_detial.getDJX_WZ_ID());
-        String tzstext = tzsMap.get(ling_mb_detial.getDJX_WZ_ID());
+//        String numbertext = numberMap.get(ling_mb_detial.getDJX_WZ_ID());
+//        String tzstext = tzsMap.get(ling_mb_detial.getDJX_WZ_ID());
+        String numbertext = ling_mb_detial.getDJX_WZ_NUM();
+        String tzstext = ling_mb_detial.getDJX_WZ_TZS();
         viewHolder.editNum.setText(numbertext==null?"":numbertext);
-        viewHolder.editTzs.setText(tzstext==null?"":tzstext);
+        viewHolder.editTzs.setText(tzstext);
         viewHolder.guige.setText(ling_mb_detial.getDJX_WZ_SP());
         viewHolder.unitName.setText(ling_mb_detial.getDJX_UNIT_NAME());
         String charat;
@@ -179,12 +189,17 @@ public class MuBanDetialAdapter extends BaseAdapter {
                 testArray[0] = s.toString();
                 testArray[1] = viewHolder.editTzs.getText().toString();
                 testMap.put(ling_mb_detial.getDJX_WZ_ID(),testArray);
+                ling_mb_detial.setDJX_WZ_NUM(s.toString());
             }
             if(viewHolder.editTzs.hasFocus()){
                 tzsMap.put(ling_mb_detial.getDJX_WZ_ID(),s.toString());
                 testArray[0] = viewHolder.editNum.getText().toString();
                 testArray[1]=s.toString();
-                testMap.put(ling_mb_detial.getDJX_WZ_ID(),testArray);
+                testMap.put(ling_mb_detial.getDJX_WZ_ID(), testArray);
+                if(StringUtils.isBlank(s.toString())){
+                    ling_mb_detial.setDJX_WZ_TZS("");
+                }
+                ling_mb_detial.setDJX_WZ_TZS(s.toString());
             }
         }
 
@@ -230,6 +245,8 @@ public class MuBanDetialAdapter extends BaseAdapter {
                 ling_wuzidetial.setLL_WZ_GUIGE(wuZi_table.getWZ_SPECIFICATION());
                 ling_wuzidetial.setLL_WZ_NAME(wuZi_table.getWZ_NAME());
                 ling_wuzidetial.setLL_WZ_CATEGORY_ID(wuZi_table.getWZ_SZ_ID());
+                ling_wuzidetial.setLL_WZ_UNITNAME(wuZi_table.getWZ_UNIT_NAME());
+                ling_wuzidetial.setLL_WZ_UNITID(wuZi_table.getWZ_UNIT_ID());
                 ling_wuzidetials.add(ling_wuzidetial);
             }
             MyLogger.showLogWithLineNum(5,"测试"+mapkey+"记录"+myArray[0]+myArray[1]);

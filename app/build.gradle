@@ -77,4 +77,7 @@ dependencies {
     //    compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
     //自适应大小TextView
     compile 'me.grantland:autofittextview:0.2.1'
+    //swiplayout滑动
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile files('libs/fastjson-1.1.46.android.jar')
 }

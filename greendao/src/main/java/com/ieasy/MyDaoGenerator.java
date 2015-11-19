@@ -10,7 +10,7 @@ public class MyDaoGenerator {
     //包名
     public static final String PACKAGE_NAME="com.ieasy.dao";
     //数据库版本号
-    public static final int  VERSION_CODE = 1;
+    public static final int  VERSION_CODE = 2;
     //部门表
     public static final String TAB_DEPT = "Dept_Table";
     //物料表
@@ -27,6 +27,8 @@ public class MyDaoGenerator {
     public static final String TAB_LING_MB= "LING_MB";
     //领料模板详细表
     public static final String TAB_LING_MB_DETIAL = "LING_MB_DETIAL";
+    // 添加物料页面临时保存表
+    public static final String TAB_TEMP_ADDWUZI = "ADD_TEMP_WUZI";
 
     public static void main(String[] args){
 
@@ -46,7 +48,7 @@ public class MyDaoGenerator {
         }
     }
 
-    public static void creatMb(Schema schema){
+    public static void creatMb_Detial(Schema schema){
         Entity entity = schema.addEntity(TAB_LING_MB_DETIAL);
         entity.addIdProperty().primaryKey().autoincrement();
         entity.addStringProperty("DJX_ID");
@@ -64,9 +66,11 @@ public class MyDaoGenerator {
         entity.addStringProperty("DJX_MD_ID");
         entity.addStringProperty("DJX_DISP_ORDER");
         entity.addStringProperty("DJX_REMARK");
+        entity.addStringProperty("DJX_WZ_TZS");
+        entity.addStringProperty("DJX_WZ_NUM");
     }
 
-    public static void creatMb_Detial(Schema schema){
+    public static void creatMb(Schema schema){
         Entity entity = schema.addEntity(TAB_LING_MB);
         entity.addIdProperty().primaryKey().autoincrement();
         entity.addStringProperty("DJ_ID");
@@ -99,6 +103,9 @@ public class MyDaoGenerator {
         entity.addStringProperty("LL_WZ_CATEGORY_ID");//分类ID
         entity.addStringProperty("LL_WZ_GUIGE");//物料规格
         entity.addStringProperty("LL_WZ_QUICKCODE");//速查码
+        entity.addStringProperty("LL_WZ_UNITID");//单位ID
+        entity.addStringProperty("LL_WZ_UNITNAME");//单位Name
+        entity.addStringProperty("LL_WZ_REMARK");//备注字段
         entity.addStringProperty("BAK");//备用字段
         entity.addStringProperty("BAK1");
         entity.addStringProperty("BAK2");

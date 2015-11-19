@@ -6,6 +6,7 @@ import android.os.PowerManager;
 
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.DeptTableUtil;
+import com.cyt.ieasy.db.MuBanDetialTableUtil;
 import com.cyt.ieasy.db.MuBanTableUtil;
 import com.cyt.ieasy.db.StockTableUtil;
 import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
@@ -374,8 +375,8 @@ public class DownLoadActivity {
                 }
                 if(null!=op){
                     MyLogger.showLogWithLineNum(5,"模板内容"+op.toString());
-                    MuBanTableUtil.getMuBanTableUtil().clearTableDetial();
-                    MuBanTableUtil.getMuBanTableUtil().addLing_MB_Detial(op.toString());
+                    MuBanDetialTableUtil.getMuBanDetialTableUtil().clearTable();
+                    MuBanDetialTableUtil.getMuBanDetialTableUtil().addLing_MB_Detial(op);
                 }else{
                     errormsg = "模板内容更新失败";
                     ErrorMessage = ErrorMessage+errormsg;
@@ -396,7 +397,6 @@ public class DownLoadActivity {
             super.onPostExecute(aVoid);
             if(StringUtils.isBlank(ErrorMessage)){
                 EventBus.getDefault().postSticky(new MessageEvent("模板详细更新完毕","",1));
-                MyLogger.showLogWithLineNum(5,"模板内容"+ MuBanTableUtil.getMuBanTableUtil().getLing_MB_Detial(""));
             }else{
                 EventBus.getDefault().postSticky(new MessageEvent("模板详细更新",ErrorMessage,1));
             }

@@ -197,10 +197,8 @@ public class WuZiAdapter extends BaseAdapter {
         }
     }
 
-    public void saveLoacl(){
-        if(numberMap.size()!=0){
-
-        }
+    public HashMap<String,String[]> getMap(){
+        return testMap;
     }
 
     public List<LING_WUZIDETIAL> getLingWuZiDetial(){
@@ -234,6 +232,8 @@ public class WuZiAdapter extends BaseAdapter {
                 ling_wuzidetial.setLL_WZ_GUIGE(wuZi_table.getWZ_SPECIFICATION());
                 ling_wuzidetial.setLL_WZ_NAME(wuZi_table.getWZ_NAME());
                 ling_wuzidetial.setLL_WZ_CATEGORY_ID(wuZi_table.getWZ_SZ_ID());
+                ling_wuzidetial.setLL_WZ_UNITID(wuZi_table.getWZ_UNIT_ID());
+                ling_wuzidetial.setLL_WZ_UNITNAME(wuZi_table.getWZ_UNIT_NAME());
                 ling_wuzidetials.add(ling_wuzidetial);
             }
             MyLogger.showLogWithLineNum(5,"测试"+mapkey+"记录"+myArray[0]+myArray[1]);
