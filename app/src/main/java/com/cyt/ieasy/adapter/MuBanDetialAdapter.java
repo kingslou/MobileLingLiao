@@ -43,6 +43,7 @@ public class MuBanDetialAdapter extends BaseAdapter {
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private String LL_Code;
+    private SwipeLayout myswipeLayout;
     public MuBanDetialAdapter(Context context,List<LING_MB_DETIAL> wuZi_tableList,HashMap<String,String[]> map){
         this.context = context;
         currentFouce = new EditText(context);
@@ -119,6 +120,10 @@ public class MuBanDetialAdapter extends BaseAdapter {
                 @Override
                 public void onOpen(SwipeLayout swipeLayout) {
                     MyLogger.showLogWithLineNum(5,"状态"+"onOpen");
+                    if(myswipeLayout!=swipeLayout&&myswipeLayout.isShown()){
+                        myswipeLayout.close();
+                    }
+                    myswipeLayout = swipeLayout;
                 }
 
                 @Override
@@ -141,6 +146,7 @@ public class MuBanDetialAdapter extends BaseAdapter {
                     MyLogger.showLogWithLineNum(5,"状态"+"onHandRelease");
                 }
             });
+            myswipeLayout = viewHolder.swipeLayout;
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();

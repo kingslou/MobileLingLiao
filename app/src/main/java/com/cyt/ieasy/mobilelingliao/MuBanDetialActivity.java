@@ -161,7 +161,10 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         if (event.message.equals(Const.Success)) {
             initAdapter(ling_mb_detialList,map);
         } else if (event.message.equals(Const.SaveSuccess)) {
-            startActivity(HistoryActivity.class, false);
+            Intent intent = new Intent();
+            intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
         } else if (event.message.equals(Const.SaveFailue)) {
             new MaterialDialog.Builder(context)

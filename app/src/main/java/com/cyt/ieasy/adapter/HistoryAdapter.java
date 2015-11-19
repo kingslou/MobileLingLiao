@@ -31,7 +31,7 @@ public class HistoryAdapter extends BaseAdapter {
     private Context context;
     private List<LING_WUZI> ling_wuziList;
     private LayoutInflater layoutInflater;
-    private SwipeLayout swipeLayout;
+    private SwipeLayout myswipeLayout;
 
     public HistoryAdapter(Context context ,List<LING_WUZI> ling_wuziList){
         this.context = context;
@@ -67,7 +67,36 @@ public class HistoryAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(convertView);
             viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
             viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Bottom3"));
-            swipeLayout = viewHolder.swipeLayout;
+            viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout swipeLayout) {
+
+                }
+                @Override
+                public void onOpen(SwipeLayout swipeLayout) {
+                    if(myswipeLayout!=swipeLayout&&myswipeLayout.isShown()){
+                        myswipeLayout.close();
+                    }
+                    myswipeLayout = swipeLayout;
+                }
+                @Override
+                public void onStartClose(SwipeLayout swipeLayout) {
+
+                }
+                @Override
+                public void onClose(SwipeLayout swipeLayout) {
+
+                }
+                @Override
+                public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+
+                }
+                @Override
+                public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+
+                }
+            });
+            myswipeLayout = viewHolder.swipeLayout;
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
