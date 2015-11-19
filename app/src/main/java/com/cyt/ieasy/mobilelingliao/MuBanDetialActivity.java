@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
+import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
@@ -105,6 +107,17 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
                 saveData();
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SwipeLayout swipeLayout = (SwipeLayout)view.findViewById(R.id.swipe);
+                ((SwipeLayout) (listView.getChildAt(position - listView.getFirstVisiblePosition()))).close();
+
+            }
+        });
+
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

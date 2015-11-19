@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
+import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.ieasy.dao.WuZi_Table;
@@ -104,18 +106,48 @@ public class MuBanDetialAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         if(convertView==null){
-            convertView = layoutInflater.inflate(R.layout.layout_wz_item,parent,false);
+            convertView = layoutInflater.inflate(R.layout.item_mb_detial,parent,false);
             viewHolder = new ViewHolder(convertView);
+            viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+            viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Bottom3"));
+            viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout swipeLayout) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onStartOpen");
+                }
+
+                @Override
+                public void onOpen(SwipeLayout swipeLayout) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onOpen");
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout swipeLayout) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onStartClose");
+                }
+
+                @Override
+                public void onClose(SwipeLayout swipeLayout) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onClose");
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onUpdate");
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+                    MyLogger.showLogWithLineNum(5,"状态"+"onHandRelease");
+                }
+            });
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
-//        WuZi_Table wuZi_table = wuZi_tableList.get(position);
-        LING_MB_DETIAL ling_mb_detial = wuZi_tableList.get(position);
+        final LING_MB_DETIAL ling_mb_detial = wuZi_tableList.get(position);
         MyWatcher myWatcher = new MyWatcher(viewHolder,ling_mb_detial);
         viewHolder.wzName.setText(ling_mb_detial.getDJX_WZ_NAME());
-//        String numbertext = numberMap.get(ling_mb_detial.getDJX_WZ_ID());
-//        String tzstext = tzsMap.get(ling_mb_detial.getDJX_WZ_ID());
         String numbertext = ling_mb_detial.getDJX_WZ_NUM();
         String tzstext = ling_mb_detial.getDJX_WZ_TZS();
         viewHolder.editNum.setText(numbertext==null?"":numbertext);
@@ -133,6 +165,15 @@ public class MuBanDetialAdapter extends BaseAdapter {
         viewHolder.image.setImageDrawable(drawable);
         viewHolder.editNum.setOnFocusChangeListener(new MyFouceChange(viewHolder, myWatcher));
         viewHolder.editTzs.setOnFocusChangeListener(new MyFouceChange(viewHolder,myWatcher));
+        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testMap.remove(ling_mb_detial.getDJX_WZ_ID());
+                wuZi_tableList.remove(ling_mb_detial);
+                viewHolder.swipeLayout.close();
+                updateListView(wuZi_tableList);
+            }
+        });
         return convertView;
     }
 
@@ -278,6 +319,12 @@ public class MuBanDetialAdapter extends BaseAdapter {
         EditText editTzs;
         @Bind(R.id.txtsort)
         ImageView image;
+        @Bind(R.id.swipe)
+        SwipeLayout swipeLayout;
+        @Bind(R.id.trash)
+        ImageView trash;
+        @Bind(R.id.delete)
+        Button delete;
         public ViewHolder(View view){
             ButterKnife.bind(this, view);
         }

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.mobilelingliao.HistoryContent;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.TimeUtils;
+import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_WUZI;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class HistoryAdapter extends BaseAdapter {
     private Context context;
     private List<LING_WUZI> ling_wuziList;
     private LayoutInflater layoutInflater;
+    private SwipeLayout swipeLayout;
 
     public HistoryAdapter(Context context ,List<LING_WUZI> ling_wuziList){
         this.context = context;
@@ -61,6 +65,9 @@ public class HistoryAdapter extends BaseAdapter {
         if(convertView==null){
             convertView = layoutInflater.inflate(R.layout.layout_his_item,null);
             viewHolder = new ViewHolder(convertView);
+            viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+            viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Bottom3"));
+            swipeLayout = viewHolder.swipeLayout;
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
@@ -93,6 +100,14 @@ public class HistoryAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
+        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ling_wuziList.remove(ling_wuzi);
+                viewHolder.swipeLayout.close();
+                updateListView(ling_wuziList);
+            }
+        });
         return convertView;
     }
 
@@ -111,6 +126,12 @@ public class HistoryAdapter extends BaseAdapter {
         BootstrapButton btn_send;
         @Bind(R.id.clickitem)
         RelativeLayout clickitem;
+        @Bind(R.id.swipe)
+        SwipeLayout swipeLayout;
+        @Bind(R.id.trash)
+        ImageView trash;
+        @Bind(R.id.delete)
+        Button delete;
         public ViewHolder(View view){
             ButterKnife.bind(this,view);
         }
