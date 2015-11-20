@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
@@ -20,9 +19,11 @@ import com.cyt.ieasy.adapter.HistoryDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.event.UpdateEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.update.UpdateServer;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -53,18 +54,18 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
     private String LL_Name;//本地名称
     private String DEPT_NAME;
     private String STOCK_NAME;
-    private TextView footer;
     private Switcher switcher;
     @Bind(R.id.fabtoolbar)
     FooterLayout mFabToolbar;
     @Bind(R.id.fab)
     FloatingActionButton mFab;
     @Bind(R.id.updateserver)
-    TextView updateserver;
+    RelativeLayout updateserver;
     @Bind(R.id.savelocal)
-    TextView savelocal;
+    RelativeLayout savelocal;
     @Bind(R.id.cancle)
-    TextView cancle;
+    RelativeLayout cancle;
+    private View nowClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +84,41 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
 
     @OnClick(R.id.updateserver)
     void onupdateClick(){
+        iconAnim(updateserver);
+        nowClick = updateserver;
         updateServer();
     }
 
     @OnClick(R.id.savelocal)
     void saveClick(){
-        saveLoaclData();
+        iconAnim(savelocal);
+        nowClick = savelocal;
+        new MaterialDialog.Builder(context)
+                .title("保存")
+                .content("确定保存修改吗?")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        saveLoaclData();
+                    }
+                })
+                .show();
     }
 
     @OnClick(R.id.cancle)
     void cancleClick(){
-        mFabToolbar.expandFab();
+        iconAnim(cancle);
+        nowClick = cancle;
+        mFabToolbar.slideInFab();
     }
 
     void updateServer(){
@@ -112,72 +137,18 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
                         materialDialog.dismiss();
-                       //// TODO: 2015.11.20 同步到服务端代码
+                        //// TODO: 2015.11.20 同步到服务端代码
+                        saveLoaclData();
                     }
                 })
                 .show();
     }
 
     void saveLoaclData(){
-        new MaterialDialog.Builder(context)
-                .title("保存")
-                .content("确定保存吗")
-                .positiveText(R.string.agree)
-                .negativeText(R.string.disagree)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        materialDialog.dismiss();
-                        LING_WUZI ling_wuzi = new LING_WUZI();
-                        ling_wuzi.setLL_CODE(LL_CODE);
-                        //调用更新方法
-                        LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
-                    }
-                })
-                .show();
-    }
-
-    void initView(){
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFabToolbar.expandFab();
-            }
-        });
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                historyDetialAdapter.clearEdFouce();
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    // 判断是否滚动到底部
-                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                        //加载更多功能的代码
-                    }
-                    if (isListViewReachBottomEdge(listView)) {
-                        if (footer.getVisibility() != View.VISIBLE) {
-                            footer.setVisibility(View.VISIBLE);
-                            LinearLayout footerParent = new LinearLayout(context);
-                            footerParent.addView(footer);
-                            listView.addFooterView(footerParent);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (visibleItemCount + firstVisibleItem == totalItemCount) {
-                    Log.e("log", "滑到底部");
-                }
-            }
-        });
+        LING_WUZI ling_wuzi = new LING_WUZI();
+        ling_wuzi.setLL_CODE(LL_CODE);
+        //调用更新方法
+        LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
     }
 
     class LoadTask extends AsyncTask<Void,Void,Void> {
@@ -205,6 +176,27 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         }
     }
 
+    public void onEvent(UpdateEvent event){
+        if(event.result.equals(Const.UpdateServerSuccess)){
+            new MaterialDialog.Builder(this)
+                    .title("同步结果")
+                    .content("同步成功，即将跳转")
+                    .show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(new MessageEvent(Const.Cancle));
+                }
+            }, 800);
+        }else{
+            new MaterialDialog.Builder(this)
+                    .title("同步结果")
+                    .content("同步失败，请重试")
+                    .positiveText("关闭")
+                    .show();
+        }
+    }
+
     public void onEvent(MessageEvent event) {
         dismiss();
         if(event.message.equals(Const.Success)){
@@ -213,25 +205,55 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
             //// TODO: 2015.11.13 显示自定义错误界面
             //setContentView(EmportyUtils.netFailView(HistoryContent.this));
         }else if(event.message.equals(Const.SaveSuccess)){
-            showIndeterminateProgressDialog(true,"保存成功");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    EventBus.getDefault().post(new MessageEvent(Const.Cancle));
-                }
-            },1000);
+            if(nowClick!=null&&nowClick==updateserver){
+                //继续进行同步操作
+                UpdateServer.getUpdateServer().updateToServer(LL_CODE,context);
+            }else {
+                new MaterialDialog.Builder(this)
+                        .title("修改结果")
+                        .content("修改成功，即将关闭此页面")
+                        .show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventBus.getDefault().post(new MessageEvent(Const.Cancle));
+                    }
+                }, 800);
+            }
+
         }else if(event.message.equals(Const.SaveFailue)){
-            showIndeterminateProgressDialog(true,"保存失败");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    EventBus.getDefault().post(new MessageEvent(Const.Cancle));
-                }
-            }, 1000);
+            new MaterialDialog.Builder(this)
+                    .title("修改结果")
+                    .content("修改保存失败，请重试")
+                    .positiveText("关闭")
+                    .show();
         }else if(event.message.equals(Const.Cancle)){
             dismiss();
             finish();
         }
+    }
+
+    void initView(){
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFabToolbar.expandFab();
+            }
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                historyDetialAdapter.clearEdFouce();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount + firstVisibleItem == totalItemCount) {
+
+                }
+            }
+        });
     }
 
     void initdata(){

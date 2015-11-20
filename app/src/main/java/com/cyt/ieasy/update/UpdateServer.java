@@ -148,8 +148,8 @@ public class UpdateServer {
                 DJ_CRE_NAME = DJ_DEALER;
                 DJ_DATE = ling_wuzi.getLL_SELECT_TIME();
                 DJ_REMARK = ling_wuzi.getBAK()==null?"":ling_wuzi.getBAK();
-                billjson = DJ_CK_ID+","+DJ_CK_NAME+","+DJ_IN_CK_ID+","+DJ_IN_CK_NAME+","+DJ_DEALER+","
-                        +DJ_CRE_ID+","+DJ_CRE_NAME+","+DJ_DATE+","+DJ_REMARK;
+                billjson = DJ_CK_ID+"|"+DJ_CK_NAME+"|"+DJ_IN_CK_ID+"|"+DJ_IN_CK_NAME+"|"+DJ_DEALER+"|"
+                        +DJ_CRE_ID+"|"+DJ_CRE_NAME+"|"+DJ_DATE+"|"+DJ_REMARK;
                 MyLogger.showLogWithLineNum(5,"同步信息billJson"+billjson);
                 MyLogger.showLogWithLineNum(5,"同步信息sjson"+sjson);
                 Object op =
@@ -163,7 +163,11 @@ public class UpdateServer {
                         returnId = returnArray[0];
                         ling_wuzi.setLL_RETURNCODE(returnCode);
                         LingLiaoTableUtil.getLiaoTableUtil().update(ling_wuzi);
+                    }else{
+                        errorMessage = "同步失败返回"+op.toString();
                     }
+                }else{
+                    errorMessage="同步失败";
                 }
 
             }catch(Exception e){
@@ -200,7 +204,5 @@ public class UpdateServer {
         public String DJX_AMOUNT_PRICE;
         public String DJX_AMOUNT_TRUE;
         public String DJX_REMARK;
-
     }
-
 }

@@ -67,13 +67,12 @@
                     >
 
                     <RelativeLayout
-                        android:id="@+id/call"
+                        android:id="@+id/updateserver"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/updateserver"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -84,13 +83,12 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/email"
+                        android:id="@+id/savelocal"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/savelocal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -101,13 +99,12 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/forum"
+                        android:id="@+id/cancle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
                         <TextView
-                            android:id="@+id/cancle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
