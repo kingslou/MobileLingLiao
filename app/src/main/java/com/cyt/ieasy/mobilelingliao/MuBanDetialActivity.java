@@ -13,31 +13,38 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
+import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.cyt.ieasy.adapter.MuBanDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.db.MuBanDetialTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.event.UpdateEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
+import com.cyt.ieasy.update.UpdateServer;
 import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -59,7 +66,18 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     private String DEPT_NAME = "测试";
     private String STOCK_NAME = "测试";
     private String MB_ID = "";//模板ID
+    private String LL_SELECT_TIME;//选择的领料时间
     private HashMap<String,String[]> map = new HashMap<>();
+    @Bind(R.id.fabtoolbar)
+    FooterLayout mFabToolbar;
+    @Bind(R.id.fab)
+    FloatingActionButton mFab;
+    @Bind(R.id.updateserver)
+    TextView updateserver;
+    @Bind(R.id.savelocal)
+    TextView savelocal;
+    @Bind(R.id.cancle)
+    TextView cancle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +92,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         initToolbar(toolbar);
         setTitle("编辑领取物料");
         initsearch();
+        mFabToolbar.setFab(mFab);
         LL_CODE = CommonTool.NewGuid();
         if (!CommonTool.isWifiOK(MuBanDetialActivity.this)) {
             switcher.showNetErrorView(MuBanDetialActivity.this);
@@ -88,15 +107,87 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         bundle = intent.getExtras();
         DEPT_NAME = bundle.getString(Const.intent_deptname);
         STOCK_NAME = bundle.getString(Const.intent_ckname);
+        LL_SELECT_TIME = bundle.getString(Const.intent_time);
         MB_ID = bundle.getString(Const.intent_mbid);
     }
 
-    void saveData(){
+    @OnClick(R.id.updateserver)
+    void onupdateClick(){
+        updateServer();
+    }
+
+    @OnClick(R.id.savelocal)
+    void saveClick(){
+        saveLoaclData();
+    }
+
+    @OnClick(R.id.cancle)
+    void cancleClick(){
+        mFabToolbar.expandFab();
+    }
+
+    void updateServer(){
+        new MaterialDialog.Builder(context)
+                .title("同步")
+                .content("确定同步到服务端吗")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        //// TODO: 2015.11.20 同步到服务端代码
+                        saveData(1);
+                    }
+                })
+                .show();
+    }
+
+    void saveLoaclData(){
+        new MaterialDialog.Builder(context)
+                .title("保存")
+                .content("确定保存吗")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        saveData(0);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * type==0本地
+     * type==1 先保存本地后同步至网络
+     * @param type
+     */
+    void saveData(int type){
         LING_WUZI ling_wuzi = new LING_WUZI();
         ling_wuzi.setLL_CODE(LL_CODE);
         ling_wuzi.setLL_DEPT(DEPT_NAME);
         ling_wuzi.setLL_STOCK(STOCK_NAME);
-        LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
+        ling_wuzi.setLL_SELECT_TIME(LL_SELECT_TIME);
+        if(type==0){
+            LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
+        }else{
+            LingLiaoTableUtil.getLiaoTableUtil().insertWuZilocal(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
+        }
+
     }
 
     void initView() {
@@ -104,7 +195,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
+                mFabToolbar.expandFab();
             }
         });
 
@@ -156,6 +247,17 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         }
     }
 
+    public void onEvent(UpdateEvent event){
+        if(event.result.equals(Const.UpdateServerSuccess)){
+            Intent intent = new Intent();
+            intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }else{
+        }
+    }
+
     public void onEvent(MessageEvent event) {
         dismiss();
         if (event.message.equals(Const.Success)) {
@@ -166,7 +268,11 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        } else if (event.message.equals(Const.SaveFailue)) {
+        }else if(event.message.equals(Const.SaveSuccessUpdate)){
+            //todo 保存并更新
+            UpdateServer.getUpdateServer().updateToServer(LL_CODE);
+        }
+        else if (event.message.equals(Const.SaveFailue)) {
             new MaterialDialog.Builder(context)
                     .title("保存")
                     .content("保存失败,是否重试")
@@ -182,7 +288,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
                         @Override
                         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
                             materialDialog.dismiss();
-                            saveData();
+                            saveData(0);
                         }
                     })
                     .show();

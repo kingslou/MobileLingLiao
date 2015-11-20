@@ -47,6 +47,78 @@
         android:background="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:layout_below="@+id/aapp" />
+        <com.bowyer.app.fabtransitionlayout.FooterLayout
+            android:id="@+id/fabtoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:ft_container_gravity="center"
+            app:ft_color="@color/colorPrimary">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/call"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/updateserver"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="上传同步"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/email"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/savelocal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="保存本地"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/forum"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/cancle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="取消"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </com.bowyer.app.fabtransitionlayout.FooterLayout>
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton

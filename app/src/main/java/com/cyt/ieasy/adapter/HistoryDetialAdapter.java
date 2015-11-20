@@ -116,10 +116,6 @@ public class HistoryDetialAdapter extends BaseAdapter {
             viewHolder.editNum.setEnabled(false);
             viewHolder.editTzs.setEnabled(false);
         }else{
-//            String numbertext = numberMap.get(wuZi_table.getLL_WZ_ID());
-//            String tzstext = tzsMap.get(wuZi_table.getLL_WZ_ID());
-//            viewHolder.editNum.setText(numbertext==null?"":numbertext);
-//            viewHolder.editTzs.setText(tzstext==null?"":tzstext);
             viewHolder.editNum.setOnFocusChangeListener(new MyFouceChange(viewHolder, myWatcher));
             viewHolder.editTzs.setOnFocusChangeListener(new MyFouceChange(viewHolder,myWatcher));
         }

@@ -1,5 +1,4 @@
 package com.cyt.ieasy.mobilelingliao;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -60,15 +59,12 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
     FooterLayout mFabToolbar;
     @Bind(R.id.fab)
     FloatingActionButton mFab;
-
-    @Bind(R.id.ic_call)
-    ImageView mIcCall;
-
-    @Bind(R.id.ic_email)
-    ImageView mIcEmail;
-
-    @Bind(R.id.ic_forum)
-    ImageView mIcForum;
+    @Bind(R.id.updateserver)
+    TextView updateserver;
+    @Bind(R.id.savelocal)
+    TextView savelocal;
+    @Bind(R.id.cancle)
+    TextView cancle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +79,68 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         initToolbar(toolbar);
         initdata();
         mFabToolbar.setFab(mFab);
-        footer = new TextView(context);
-        footer.setText("没有更多数据了");
-        footer.setVisibility(View.GONE);
     }
 
-    void saveData(){
-        LING_WUZI ling_wuzi = new LING_WUZI();
-        ling_wuzi.setLL_CODE(LL_CODE);
-        //调用更新方法
-        LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
+    @OnClick(R.id.updateserver)
+    void onupdateClick(){
+        updateServer();
+    }
+
+    @OnClick(R.id.savelocal)
+    void saveClick(){
+        saveLoaclData();
+    }
+
+    @OnClick(R.id.cancle)
+    void cancleClick(){
+        mFabToolbar.expandFab();
+    }
+
+    void updateServer(){
+        new MaterialDialog.Builder(context)
+                .title("同步")
+                .content("确定同步到服务端吗")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                       //// TODO: 2015.11.20 同步到服务端代码
+                    }
+                })
+                .show();
+    }
+
+    void saveLoaclData(){
+        new MaterialDialog.Builder(context)
+                .title("保存")
+                .content("确定保存吗")
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        materialDialog.dismiss();
+                        LING_WUZI ling_wuzi = new LING_WUZI();
+                        ling_wuzi.setLL_CODE(LL_CODE);
+                        //调用更新方法
+                        LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
+                    }
+                })
+                .show();
     }
 
     void initView(){
@@ -100,26 +148,7 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MaterialDialog.Builder(context)
-                        .title("保存")
-                        .content("确定保存吗")
-                        .positiveText(R.string.agree)
-                        .negativeText(R.string.disagree)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                                materialDialog.dismiss();
-                            }
-                        })
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                                materialDialog.dismiss();
-                                mFabToolbar.expandFab();
-//                                saveData();
-                            }
-                        })
-                        .show();
+                mFabToolbar.expandFab();
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {

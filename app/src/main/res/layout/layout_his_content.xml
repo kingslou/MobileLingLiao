@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             app:ft_container_gravity="center"
-            app:ft_color="@color/primary">
+            app:ft_color="@color/colorPrimary">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -74,13 +74,15 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
-                        <ImageView
-                            android:id="@+id/ic_call"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="center"
-                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                        <TextView
+                            android:id="@+id/updateserver"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="上传同步"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -89,13 +91,15 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
-                        <ImageView
-                            android:id="@+id/ic_email"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="center"
-                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                        <TextView
+                            android:id="@+id/savelocal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="保存本地"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -104,13 +108,15 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
-                        <ImageView
-                            android:id="@+id/ic_forum"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="center"
-                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                        <TextView
+                            android:id="@+id/cancle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="取消"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="@color/ms_white"
+                            />
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>

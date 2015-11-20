@@ -1,5 +1,8 @@
 package com.cyt.ieasy.mobilelingliao;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -207,5 +210,13 @@ public class BaseActivity extends AppCompatActivity {
             result=topChildView.getTop()==0;
         }
         return result ;
+    }
+
+    public void iconAnim(View icon) {
+        Animator iconAnim = ObjectAnimator.ofPropertyValuesHolder(
+                icon,
+                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.5f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.5f, 1f));
+        iconAnim.start();
     }
 }

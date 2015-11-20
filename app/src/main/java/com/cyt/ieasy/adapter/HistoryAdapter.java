@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.mobilelingliao.HistoryContent;
 import com.cyt.ieasy.mobilelingliao.R;
+import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.TimeUtils;
 import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_WUZI;
@@ -112,18 +113,18 @@ public class HistoryAdapter extends BaseAdapter {
         }else{
             viewHolder.btn_send.setVisibility(View.GONE);
             viewHolder.status.setText("已同步");
+            viewHolder.histitle.setText(ling_wuzi.getLL_RETURNCODE());
         }
         viewHolder.clickitem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(StringUtils.isBlank(ling_wuzi.getLL_RETURNCODE())){
-//                    EventBus.getDefault().post(new LL_Event(ling_wuzi.getLL_CODE(), Const.UpdateFailue));
-//                }else{
-//                    EventBus.getDefault().post(new LL_Event(ling_wuzi.getLL_CODE(),Const.UpdateSuccess));
-//                }
                 Intent intent = new Intent();
                 intent.putExtra("LL_CODE",ling_wuzi.getLL_CODE());
-                intent.putExtra("LL_STATUS","0");
+                if(StringUtils.isBlank(ling_wuzi.getLL_RETURNCODE())){
+                    intent.putExtra("LL_STATUS","0");
+                }else{
+                    intent.putExtra("LL_STATUS","1");
+                }
                 intent.putExtra("LL_Name",ling_wuzi.getLL_NAME());
                 intent.setClass(context, HistoryContent.class);
                 context.startActivity(intent);

@@ -87,6 +87,30 @@ public class LingLiaoTableUtil extends BaseTableUtil {
 
     }
 
+    public long update(LING_WUZI ling_wuzi){
+       return ling_wuziDao.insertOrReplace(ling_wuzi);
+    }
+
+    public void insertWuZilocal(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
+        try{
+            ling_wuzi.setADDTIME(new Date());
+            ling_wuzi.setLL_NAME(TimeUtils.getCurrentTimeInString() + "领料");
+            LING_WUZIDETIAL[] ling_wuzidetials1 = new LING_WUZIDETIAL[ling_wuzidetials.size()];
+            MyLogger.showLogWithLineNum(5, ling_wuzidetials.size() + "条");
+            for(int i=0;i<ling_wuzidetials.size();i++){
+                ling_wuzidetials1[i] = ling_wuzidetials.get(i);
+                MyLogger.showLogWithLineNum(5,"结果"+ling_wuzidetials1[i].getLL_WZ_NAME());
+            }
+            ling_wuziDao.insert(ling_wuzi);
+            ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
+            EventBus.getDefault().post(new MessageEvent(Const.SaveSuccessUpdate));
+        }catch(Exception e){
+            e.printStackTrace();
+            EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));
+        }
+    }
+
+
     public void insertWuZi(LING_WUZI ling_wuzi,List<LING_WUZIDETIAL> ling_wuzidetials){
         try{
             ling_wuzi.setADDTIME(new Date());
@@ -146,6 +170,13 @@ public class LingLiaoTableUtil extends BaseTableUtil {
 
     @Override
     public LING_WUZI getEntity(String value) {
+        List<LING_WUZI> ling_wuziList = new ArrayList<>();
+        QueryBuilder queryBuilder = ling_wuziDao.queryBuilder();
+        queryBuilder.where(LING_WUZIDao.Properties.LL_CODE.eq(value));
+        ling_wuziList = queryBuilder.list();
+        if(ling_wuziList.size()!=0){
+            return ling_wuziList.get(0);
+        }
         return null;
     }
 }

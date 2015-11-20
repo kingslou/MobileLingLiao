@@ -10,7 +10,7 @@ public class MyDaoGenerator {
     //包名
     public static final String PACKAGE_NAME="com.ieasy.dao";
     //数据库版本号
-    public static final int  VERSION_CODE = 2;
+    public static final int  VERSION_CODE = 3;
     //部门表
     public static final String TAB_DEPT = "Dept_Table";
     //物料表
@@ -117,7 +117,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("LL_RETURNCODE");//服务器返回的领料Code
         entity.addStringProperty("LL_CODE").notNull();//主表唯一Code
         entity.addStringProperty("LL_NAME").notNull();//名称 由部门+时间构成
-        entity.addDateProperty("ADDTIME");
+        entity.addDateProperty("ADDTIME"); //新增时间
         entity.addDateProperty("UPDATETIME");//上传时间
         entity.addStringProperty("LL_OPERATOR");//操作人
         entity.addStringProperty("LL_OPERATOR_ID");
@@ -125,6 +125,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("LL_DEPT_ID");
         entity.addStringProperty("LL_STOCK");//仓库
         entity.addStringProperty("LL_STOCK_ID");
+        entity.addStringProperty("LL_SELECT_TIME");//领料选择时间
         entity.addStringProperty("BAK");//备用字段
         entity.addStringProperty("BAK1");
         entity.addStringProperty("BAK2");

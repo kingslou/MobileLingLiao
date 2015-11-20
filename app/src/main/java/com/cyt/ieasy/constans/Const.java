@@ -12,6 +12,7 @@ public class Const {
     public static final String Failue = "失败";
     public static final String SaveSuccess = "保存成功";
     public static final String SaveFailue = "保存失败";
+    public static final String SaveSuccessUpdate="保存成功然后更新";
     public static final String Finish = "关闭";
     public static final int UpdateSuccess = 1;
     public static final int UpdateFailue = 0;
@@ -24,6 +25,7 @@ public class Const {
     public static final String savepwd = "savepwd";
     public static final String cachuser = "cachuser";
     public static final String cachpwd = "cachpwd";
+    public static final String cachuserid = "cachuserid";
     public static final String updatetime = "updatetime";
     public static final String DB_NAME = "ZXY_CYT";
 
@@ -34,4 +36,7 @@ public class Const {
     public static final String intent_ckname = "intent_ckname";
     public static final String intent_time = "intent_time";
     public static final String intent_mbid = "intent_mbid";
+
+    public static final String UpdateServerSuccess = "同步成功";//同步成功
+    public static final String UpdateServerFailue= "同步失败";
 }
