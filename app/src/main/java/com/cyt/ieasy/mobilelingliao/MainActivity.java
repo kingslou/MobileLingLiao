@@ -46,6 +46,10 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.mygrildlist) MyGridLayout grildlayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.loginName)
+    TextView loginname;
+    @Bind(R.id.loginDept)
+    TextView logindept;
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private static boolean isExit = false;
@@ -71,6 +75,8 @@ public class MainActivity extends BaseActivity {
     }
 
     void initMenu() {
+        loginname.setText(CommonTool.getGlobalSetting(context,Const.cachuser));
+        logindept.setText(CommonTool.getGlobalSetting(context,Const.cachuserdept));
         grildlayout = (MyGridLayout) findViewById(R.id.mygrildlist);
         Resources res = getResources();
         final String[] menuItems = res.getStringArray(R.array.MenuItem);

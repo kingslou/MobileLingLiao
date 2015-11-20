@@ -147,14 +147,9 @@ public class LingLiaoTableUtil extends BaseTableUtil {
                     LING_WUZIDETIAL tempLing = ling_wuzidetialList.get(i);
                     MyLogger.showLogWithLineNum(5,"从数据库中查的主键"+tempLing.getLL_WZ_NAME()+tempLing.getId());
                     if(tempLing.getLL_WZ_ID().equals(ling_wuzidetial.getLL_WZ_ID())){
-//                        entitys[i] = ling_wuzidetial;
-//                        entitys[i].setId(tempLing.getId());
-//                        MyLogger.showLogWithLineNum(5, "更新" + entitys[i].getLL_WZ_NAME() + "数量" +
-//                                entitys[i].getLL_NUM() + "主键" + entitys[i].getId());
                         tempLing.setLL_NUM(ling_wuzidetial.getLL_NUM());
                         tempLing.setLL_TZS(ling_wuzidetial.getLL_TZS());
                         entitys[i]=tempLing;
-//                        ling_wuzidetialDao.update(tempLing);
                         break;
                     }
                 }
@@ -163,7 +158,7 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
         }catch(Exception e){
             e.printStackTrace();
-            MyLogger.showLogWithLineNum(5,"更新失败"+e.toString());
+            MyLogger.showLogWithLineNum(5, "更新失败" + e.toString());
             EventBus.getDefault().post(new MessageEvent(Const.SaveFailue));
         }
     }
@@ -178,5 +173,19 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             return ling_wuziList.get(0);
         }
         return null;
+    }
+
+    public void deleteLingWuZi(LING_WUZI ling_wuzi){
+        ling_wuziDao.delete(ling_wuzi);
+        QueryBuilder queryBuilder = ling_wuzidetialDao.queryBuilder();
+        queryBuilder.where(LING_WUZIDETIALDao.Properties.LL_CODE.eq(ling_wuzi.getLL_CODE()));
+        List<LING_WUZIDETIAL> ling_wuzidetialList = queryBuilder.list();
+        if(ling_wuzidetialList.size()!=0){
+            LING_WUZIDETIAL[] ling_wuzidetials = new LING_WUZIDETIAL[ling_wuzidetialList.size()];
+           for(int i=0;i<ling_wuzidetialList.size();i++){
+               ling_wuzidetials[i] = ling_wuzidetialList.get(i);
+           }
+            ling_wuzidetialDao.deleteInTx(ling_wuzidetials);
+        }
     }
 }

@@ -27,13 +27,17 @@ import android.widget.EditText;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.db.DeptTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.model.Operator;
 import com.cyt.ieasy.setting.ChangeLogDialog;
 import com.cyt.ieasy.setting.SettingActivity;
 import com.cyt.ieasy.tools.CommonTool;
+import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.SystemUtils;
 import com.cyt.ieasy.tools.WebServiceTool;
+import com.ieasy.dao.Dept_Table;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.util.concurrent.Executor;
@@ -70,6 +74,9 @@ public class LoginActivity extends BaseActivity {
     private final int droidGreen = Color.parseColor("#0275d8");
     public static final Executor THREAD_POOL_EXECUTOR = Executors
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);
+    private String  Base_Service;
+    private String  Scm_Service;
+    private String  IP_Config;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,10 +107,10 @@ public class LoginActivity extends BaseActivity {
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    CommonTool.saveGlobalSetting(context,Const.savepwd,true);
-                }else{
-                    CommonTool.saveGlobalSetting(context,Const.savepwd,false);
+                if (isChecked) {
+                    CommonTool.saveGlobalSetting(context, Const.savepwd, true);
+                } else {
+                    CommonTool.saveGlobalSetting(context, Const.savepwd, false);
                 }
             }
         });
@@ -116,20 +123,57 @@ public class LoginActivity extends BaseActivity {
         if (!validatePassword()) {
             return;
         }
+        loadIpConfig();
+        String name = inputName.getText().toString();
+        String pwd = inputPwd.getText().toString();
         //如果版本号大于10,按照多线程模式执行，由系统自动分配线程池大小
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            new LoginTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
+            new LoginTask(name,pwd).executeOnExecutor(THREAD_POOL_EXECUTOR);
         }else{
-            new LoginTask().execute();
+
+            new LoginTask(name,pwd).execute();
         }
     }
 
+    private void loadIpConfig(){
+        IP_Config = "http://"+ CommonTool.getGlobalSetting(MyApplication.getContext(), Const.ipconfig)
+                +":"+CommonTool.getGlobalSetting(MyApplication.getContext(),Const.portconfig);
+        Base_Service = IP_Config + "/webserver/WebService/BaseService.asmx";
+        Scm_Service  = IP_Config+"/webserver/WebService/ScmService.asmx";
+
+    }
+
     class LoginTask extends AsyncTask<Void,Void,Void> {
+        private String name;
+        private String pwd;
+        private Operator operator;
+        private String errorMsg;
+        public LoginTask(String name,String pwd){
+            this.name = name;
+            this.pwd = pwd;
+        }
         @Override
         protected Void doInBackground(Void... params) {
             try{
-                Thread.sleep(3000);
+                Object op = WebServiceTool.callWebservice(
+                                        Base_Service, "GetOperatorByPwd",
+                                        new String[] {"operator_code", "operator_password"},
+                                        new Object[] {name, CommonTool.MD5(pwd)});
+                if(null!=op){
+                    operator = (Operator)WebServiceTool.toObject(op,Operator.class);
 
+                    CommonTool.saveGlobalSetting(context,Const.cachuser,operator.Operator_Name);
+                    CommonTool.saveGlobalSetting(context,Const.cachuserid,operator.Operator_ID);
+                    CommonTool.saveGlobalSetting(context,Const.cachuserdeptid,operator.CP_ID);
+                    MyLogger.showLogWithLineNum(5,"部门信息"+operator.CP_ID+"部门");
+                    Dept_Table dept_table = DeptTableUtil.getDeptTableUtil().getDeptByID(operator.CP_ID);
+                    if(null!=dept_table){
+                        CommonTool.saveGlobalSetting(context,Const.cachuserdept,dept_table.getDEPTNAME());
+                    }else{
+                        errorMsg = "未找到该登陆人部门信息";
+                    }
+                    MyLogger.showLogWithLineNum(5, "登陆信息" + operator.Operator_Name+dept_table.getDEPTNAME());
+                }
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -139,15 +183,18 @@ public class LoginActivity extends BaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            rotateLoading.setBackgroundColor(droidGreen);
-//            rotateLoading.start();
             showIndeterminateProgressDialog(false,"登陆中····");
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            EventBus.getDefault().post(new MessageEvent(Const.Success));
+            if(null!=operator){
+                EventBus.getDefault().post(new MessageEvent(Const.Success));
+            }else{
+                EventBus.getDefault().post(new MessageEvent(Const.Failue));
+            }
+
         }
 
         @Override
@@ -219,6 +266,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onEvent(MessageEvent event){
+        dismiss();
         if(event.message.equals(Const.Success)){
 //            rotateLoading.stop();
             if(checkbox.isChecked()){
@@ -226,11 +274,16 @@ public class LoginActivity extends BaseActivity {
             }else{
                 clearCachUser();
             }
-            dismiss();
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
+        }else if(event.message.equals(Const.Failue)){
+            new MaterialDialog.Builder(this)
+                    .title("登陆信息")
+                    .content("登陆失败，请重试")
+                    .positiveText("确定")
+                    .show();
         }
     }
 

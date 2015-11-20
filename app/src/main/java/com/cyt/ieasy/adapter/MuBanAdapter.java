@@ -1,7 +1,6 @@
 package com.cyt.ieasy.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.cyt.ieasy.constans.Const;
-import com.cyt.ieasy.mobilelingliao.MuBanDetialActivity;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.ieasy.dao.LING_MB;
 
@@ -27,7 +24,7 @@ import butterknife.ButterKnife;
  */
 public class MuBanAdapter extends BaseAdapter {
     private Context context;
-    private List<LING_MB> ling_mbList;
+    public List<LING_MB> ling_mbList;
     private LayoutInflater layoutInflater;
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
@@ -80,15 +77,6 @@ public class MuBanAdapter extends BaseAdapter {
         }
         TextDrawable drawable = mDrawableBuilder.build(charat,mColorGenerator.getColor(charat));
         viewHolder.imageView.setImageDrawable(drawable);
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra(Const.intent_mbid,ling_mb.getDJ_ID());
-                intent.setClass(context, MuBanDetialActivity.class);
-                context.startActivity(intent);
-            }
-        });
         return convertView;
     }
 

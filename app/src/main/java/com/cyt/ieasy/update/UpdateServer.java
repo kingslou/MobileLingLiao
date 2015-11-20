@@ -1,9 +1,11 @@
 package com.cyt.ieasy.update;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.PowerManager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.fastjson.JSON;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.DeptTableUtil;
@@ -44,6 +46,8 @@ public class UpdateServer {
     private LING_WUZI ling_wuzi;
     private List<LING_WUZIDETIAL> ling_wuzidetialList;
     private String LL_CODE;
+    private MaterialDialog dialog;
+    private Context context;
 
     private static UpdateServer updateServer;
     private UpdateServer(){
@@ -68,9 +72,17 @@ public class UpdateServer {
         wakeLock = this.powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK , "My Lock");
     }
 
-    public void updateToServer(String LL_CODE){
+    public void updateToServer(String LL_CODE,Context context){
         loadIpConfig();
         this.LL_CODE = LL_CODE;
+        this.context = context;
+        dialog =  new MaterialDialog.Builder(context)
+                .title("同步中····")
+                .content("正在同步数据")
+                .progress(true, 0)
+                .cancelable(false)
+                .progressIndeterminateStyle(false)
+                .show();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             new Update().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }else{
@@ -110,7 +122,7 @@ public class UpdateServer {
                 billjson = "";
                 ling_wuzidetialList = LingLiaoTableUtil.getLiaoTableUtil().getLingWuZiDetial(LL_CODE);
                 ling_wuzi = LingLiaoTableUtil.getLiaoTableUtil().getEntity(LL_CODE);
-                sjson = createJson(ling_wuzidetialList);
+                sjson = "{"+"Items:"+createJson(ling_wuzidetialList)+"}";
                 String DJ_CK_ID = "";//仓库ID
                 String DJ_CK_NAME = "";
                 String DJ_IN_CK_ID = "";//部门ID
@@ -120,18 +132,26 @@ public class UpdateServer {
                 String DJ_CRE_NAME = "";//登录人
                 String DJ_DATE = "";//制单日期
                 String DJ_REMARK = "";//备注
-
+                String editbm = CommonTool.getGlobalSetting(context,Const.editBm);
+                if(StringUtils.isBlank(editbm)){
+                    DJ_IN_CK_ID = CommonTool.getGlobalSetting(context,Const.cachuserdeptid);
+                    DJ_IN_CK_NAME = CommonTool.getGlobalSetting(context,Const.cachuserdept);
+                }else{
+                    DJ_IN_CK_NAME = ling_wuzi.getLL_DEPT();
+                    MyLogger.showLogWithLineNum(5,"当前选择的部门名称"+DJ_IN_CK_NAME);
+                    DJ_IN_CK_ID = DeptTableUtil.getDeptTableUtil().getEntity(DJ_IN_CK_NAME).getINNERID();
+                }
                 DJ_CK_NAME = ling_wuzi.getLL_STOCK();
                 DJ_CK_ID = StockTableUtil.getStockTableUtil().getEntity(DJ_CK_NAME).getCK_ID();
-                DJ_IN_CK_NAME = ling_wuzi.getLL_DEPT();
-                DJ_IN_CK_ID = DeptTableUtil.getDeptTableUtil().getEntity(DJ_IN_CK_NAME).getINNERID();
-                DJ_DEALER = CommonTool.getGlobalSetting(MyApplication.getContext(),Const.cachuser);
-                DJ_CRE_ID = CommonTool.getGlobalSetting(MyApplication.getContext(),Const.cachuserid);
+                DJ_DEALER = CommonTool.getGlobalSetting(context, Const.cachuser);
+                DJ_CRE_ID = CommonTool.getGlobalSetting(context, Const.cachuserid);
                 DJ_CRE_NAME = DJ_DEALER;
                 DJ_DATE = ling_wuzi.getLL_SELECT_TIME();
-                DJ_REMARK = ling_wuzi.getBAK();
+                DJ_REMARK = ling_wuzi.getBAK()==null?"":ling_wuzi.getBAK();
                 billjson = DJ_CK_ID+","+DJ_CK_NAME+","+DJ_IN_CK_ID+","+DJ_IN_CK_NAME+","+DJ_DEALER+","
                         +DJ_CRE_ID+","+DJ_CRE_NAME+","+DJ_DATE+","+DJ_REMARK;
+                MyLogger.showLogWithLineNum(5,"同步信息billJson"+billjson);
+                MyLogger.showLogWithLineNum(5,"同步信息sjson"+sjson);
                 Object op =
                         WebServiceTool.callWebservice(Scm_Service, "MobileLingLiao", new String[]{"billJson",
                                 "wuziJson"}, new Object[]{billjson, sjson});
@@ -160,6 +180,7 @@ public class UpdateServer {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            dialog.dismiss();
             if(StringUtils.isBlank(errorMessage)){
                 //// TODO: 2015.11.20 如果同步成功，更新本地存储表字段，表示已经同步
                 EventBus.getDefault().post(new UpdateEvent(Const.UpdateServerSuccess));

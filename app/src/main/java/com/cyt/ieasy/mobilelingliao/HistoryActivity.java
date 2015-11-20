@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.cyt.ieasy.adapter.HistoryAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.event.UpdateEvent;
 import com.ieasy.dao.LING_WUZI;
 
 import java.util.List;
@@ -75,6 +77,17 @@ public class HistoryActivity extends BaseActivity {
         }
     }
 
+    public void onEvent(UpdateEvent event){
+        if(event.result.equals(Const.UpdateServerSuccess)){
+            initAdapter();
+        }else{
+            new MaterialDialog.Builder(this)
+                    .title("同步信息")
+                    .content("同步失败，请重试")
+                    .positiveText("确定")
+                    .show();
+        }
+    }
     public void onEvent(MessageEvent event) {
         dismiss();
         if(event.message.equals(Const.Success)){

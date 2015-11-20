@@ -12,10 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.mobilelingliao.HistoryContent;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.TimeUtils;
+import com.cyt.ieasy.update.UpdateServer;
 import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_WUZI;
 
@@ -134,8 +136,16 @@ public class HistoryAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 ling_wuziList.remove(ling_wuzi);
+                LingLiaoTableUtil.getLiaoTableUtil().deleteLingWuZi(ling_wuzi);
                 viewHolder.swipeLayout.close();
                 updateListView(ling_wuziList);
+            }
+        });
+
+        viewHolder.btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateServer.getUpdateServer().updateToServer(ling_wuzi.getLL_CODE(),context);
             }
         });
         return convertView;

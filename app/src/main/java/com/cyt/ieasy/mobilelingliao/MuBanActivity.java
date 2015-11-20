@@ -1,10 +1,15 @@
 package com.cyt.ieasy.mobilelingliao;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.cyt.ieasy.adapter.MuBanAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.MuBanTableUtil;
@@ -14,8 +19,10 @@ import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.CommonTool;
 import com.ieasy.dao.LING_MB;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -35,6 +42,7 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
     private Switcher switcher;
     private MuBanAdapter muBanAdapter;
     private List<LING_MB> ling_mbList;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +61,28 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
         }else{
             switcher.showNetErrorView(MuBanActivity.this);
         }
+        getData();
     }
 
     void getData(){
-
+        Intent intent = getIntent();
+        bundle = intent.getExtras();
     }
 
     void initAdapter(){
         muBanAdapter = new MuBanAdapter(MuBanActivity.this,ling_mbList);
         listView.setAdapter(muBanAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LING_MB ling_mb = muBanAdapter.ling_mbList.get(position);
+                Intent intent = new Intent();
+                bundle.putString(Const.intent_mbid,ling_mb.getDJ_ID());
+                intent.putExtras(bundle);
+                intent.setClass(MuBanActivity.this,MuBanDetialActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     class Load_MB extends AsyncTask<Void,Void,Void>{

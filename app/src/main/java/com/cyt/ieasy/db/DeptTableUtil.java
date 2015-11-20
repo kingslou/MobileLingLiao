@@ -1,12 +1,13 @@
 package com.cyt.ieasy.db;
 
 import com.cyt.ieasy.mobilelingliao.MyApplication;
-import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.TimeUtils;
 import com.ieasy.dao.Dept_Table;
 import com.ieasy.dao.Dept_TableDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,17 @@ public class DeptTableUtil extends BaseTableUtil {
         return deptTableUtil;
     }
 
+    public Dept_Table getDeptByID(String deptId){
+        List<Dept_Table> list = new ArrayList<>();
+        QueryBuilder queryBuilder = deptTableDao.queryBuilder();
+        queryBuilder.where(Dept_TableDao.Properties.INNERID.eq(deptId));
+        list = queryBuilder.list();
+        if(list.size()!=0){
+            return list.get(0);
+        }
+        return null;
+    }
+
     @Override
     public Dept_Table getEntity(String value) {
         List<Dept_Table> list = new ArrayList<>();
@@ -59,7 +71,6 @@ public class DeptTableUtil extends BaseTableUtil {
     public void addData(Object object) {
         try{
             JSONArray items = new JSONArray(object.toString());
-            MyLogger.showLogWithLineNum(5,"执行时间"+TimeUtils.getCurrentTimeInString());
             for(int i=0;i<items.length();i++){
                 JSONObject item = items.getJSONObject(i);
                 Dept_Table dept_table = new Dept_Table();
@@ -79,7 +90,6 @@ public class DeptTableUtil extends BaseTableUtil {
                 dept_table.setPREFIX(item.getString("PREFIX"));
                 deptTableDao.insert(dept_table);
             }
-            MyLogger.showLogWithLineNum(5,"结束时间"+TimeUtils.getCurrentTimeInString());
 
         }catch(Exception e){
             e.printStackTrace();

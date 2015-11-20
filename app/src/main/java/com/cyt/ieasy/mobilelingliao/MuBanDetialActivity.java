@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.update.UpdateServer;
-import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
@@ -63,8 +61,8 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     private EditText currentFouce;
     private List<LING_MB_DETIAL> ling_mb_detialList;
     private String LL_CODE;
-    private String DEPT_NAME = "测试";
-    private String STOCK_NAME = "测试";
+    private String DEPT_NAME = "";
+    private String STOCK_NAME = "";
     private String MB_ID = "";//模板ID
     private String LL_SELECT_TIME;//选择的领料时间
     private HashMap<String,String[]> map = new HashMap<>();
@@ -181,6 +179,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         ling_wuzi.setLL_CODE(LL_CODE);
         ling_wuzi.setLL_DEPT(DEPT_NAME);
         ling_wuzi.setLL_STOCK(STOCK_NAME);
+        ling_wuzi.setLL_OPERATOR(CommonTool.getGlobalSetting(context,Const.cachuser));
         ling_wuzi.setLL_SELECT_TIME(LL_SELECT_TIME);
         if(type==0){
             LingLiaoTableUtil.getLiaoTableUtil().insertWuZi(ling_wuzi, muBanDetialAdapter.getLingWuZiDetial());
@@ -196,16 +195,6 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             @Override
             public void onClick(View view) {
                 mFabToolbar.expandFab();
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                SwipeLayout swipeLayout = (SwipeLayout)view.findViewById(R.id.swipe);
-                ((SwipeLayout) (listView.getChildAt(position - listView.getFirstVisiblePosition()))).close();
-
             }
         });
 
@@ -270,7 +259,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             finish();
         }else if(event.message.equals(Const.SaveSuccessUpdate)){
             //todo 保存并更新
-            UpdateServer.getUpdateServer().updateToServer(LL_CODE);
+            UpdateServer.getUpdateServer().updateToServer(LL_CODE,context);
         }
         else if (event.message.equals(Const.SaveFailue)) {
             new MaterialDialog.Builder(context)

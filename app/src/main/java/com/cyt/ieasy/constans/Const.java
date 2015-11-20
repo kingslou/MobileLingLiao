@@ -26,6 +26,8 @@ public class Const {
     public static final String cachuser = "cachuser";
     public static final String cachpwd = "cachpwd";
     public static final String cachuserid = "cachuserid";
+    public static final String cachuserdept = "cachuserdept";//登陆人的部门
+    public static final String cachuserdeptid = "cachuserdeptid";//登陆人部门ID
     public static final String updatetime = "updatetime";
     public static final String DB_NAME = "ZXY_CYT";
 
