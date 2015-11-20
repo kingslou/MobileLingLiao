@@ -1,1 +1,1 @@
-include ':app', ':library', ':greendao'
+include ':app', ':library', ':greendao', ':fabtransitionlayout'

@@ -186,8 +186,6 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
                         }
                     })
                     .show();
-        } else {
-            //// TODO: 2015.11.12 弹出框保存同步失败，重试
         }
     }
 

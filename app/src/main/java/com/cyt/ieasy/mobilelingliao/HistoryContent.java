@@ -10,11 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.cyt.ieasy.adapter.HistoryDetialAdapter;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
@@ -22,14 +25,13 @@ import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.MyLogger;
+import com.ieasy.dao.LING_WUZI;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -54,6 +56,19 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
     private String STOCK_NAME;
     private TextView footer;
     private Switcher switcher;
+    @Bind(R.id.fabtoolbar)
+    FooterLayout mFabToolbar;
+    @Bind(R.id.fab)
+    FloatingActionButton mFab;
+
+    @Bind(R.id.ic_call)
+    ImageView mIcCall;
+
+    @Bind(R.id.ic_email)
+    ImageView mIcEmail;
+
+    @Bind(R.id.ic_forum)
+    ImageView mIcForum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +82,17 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
                 .build();
         initToolbar(toolbar);
         initdata();
+        mFabToolbar.setFab(mFab);
         footer = new TextView(context);
         footer.setText("没有更多数据了");
         footer.setVisibility(View.GONE);
+    }
+
+    void saveData(){
+        LING_WUZI ling_wuzi = new LING_WUZI();
+        ling_wuzi.setLL_CODE(LL_CODE);
+        //调用更新方法
+        LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
     }
 
     void initView(){
@@ -77,12 +100,26 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switcher.showNetErrorView();
-//                switcher.showErrorView("木有数据了，点击重试", HistoryContent.this);
-//                LING_WUZI ling_wuzi = new LING_WUZI();
-//                ling_wuzi.setLL_CODE(LL_CODE);
-//                //调用更新方法
-//                LingLiaoTableUtil.getLiaoTableUtil().updateWuZi(ling_wuzi, historyDetialAdapter.getLingWuZiDetial());
+                new MaterialDialog.Builder(context)
+                        .title("保存")
+                        .content("确定保存吗")
+                        .positiveText(R.string.agree)
+                        .negativeText(R.string.disagree)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                materialDialog.dismiss();
+                            }
+                        })
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                materialDialog.dismiss();
+                                mFabToolbar.expandFab();
+//                                saveData();
+                            }
+                        })
+                        .show();
             }
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {

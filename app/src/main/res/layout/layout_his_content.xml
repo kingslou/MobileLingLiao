@@ -48,7 +48,76 @@
         android:background="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:layout_below="@+id/aapp" />
+
+        <com.bowyer.app.fabtransitionlayout.FooterLayout
+            android:id="@+id/fabtoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:ft_container_gravity="center"
+            app:ft_color="@color/primary">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/call"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ic_call"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="center"
+                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/email"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ic_email"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="center"
+                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/forum"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ic_forum"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="center"
+                            android:src="@drawable/abc_ic_menu_copy_mtrl_am_alpha"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </com.bowyer.app.fabtransitionlayout.FooterLayout>
+
     </FrameLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
