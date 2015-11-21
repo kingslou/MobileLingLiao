@@ -1,6 +1,5 @@
 package com.cyt.ieasy.mobilelingliao;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -309,21 +307,7 @@ public class MainActivity extends BaseActivity {
         if (id == R.id.action_settings) {
             return true;
         } else {
-            new AlertDialogWrapper.Builder(this)
-                    .setTitle("退出")
-                    .setMessage("确定退出吗")
-                    .setNeutralButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
+            showback();
         }
         return super.onOptionsItemSelected(item);
     }

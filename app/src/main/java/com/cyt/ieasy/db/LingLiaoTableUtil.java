@@ -108,13 +108,13 @@ public class LingLiaoTableUtil extends BaseTableUtil {
             ling_wuzi.setADDTIME(new Date());
             ling_wuzi.setLL_NAME(TimeUtils.getCurrentTimeInString() + "领料");
             LING_WUZIDETIAL[] ling_wuzidetials1 = new LING_WUZIDETIAL[ling_wuzidetials.size()];
-            MyLogger.showLogWithLineNum(5, ling_wuzidetials.size() + "条");
             for(int i=0;i<ling_wuzidetials.size();i++){
                 ling_wuzidetials1[i] = ling_wuzidetials.get(i);
-                MyLogger.showLogWithLineNum(5,"结果"+ling_wuzidetials1[i].getLL_WZ_NAME());
             }
-            ling_wuziDao.insert(ling_wuzi);
-            ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
+//            ling_wuziDao.insert(ling_wuzi);
+//            ling_wuzidetialDao.insertInTx(ling_wuzidetials1);
+            ling_wuziDao.insertOrReplace(ling_wuzi);
+            ling_wuzidetialDao.insertOrReplaceInTx(ling_wuzidetials1);
             EventBus.getDefault().post(new MessageEvent(Const.SaveSuccess));
         }catch(Exception e){
             e.printStackTrace();

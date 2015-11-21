@@ -16,6 +16,7 @@ import com.cyt.ieasy.db.MuBanTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
+import com.cyt.ieasy.tools.ActivityManager;
 import com.cyt.ieasy.tools.CommonTool;
 import com.ieasy.dao.LING_MB;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -54,6 +55,7 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
                 .withErrorLabel((TextView)findViewById(R.id.error_label))
                 .withNetErrorView(findViewById(R.id.neterrorview))
                 .build();
+        ActivityManager.getActivityManager().pushActivity2Stack(this);
         initToolbar(toolbar);
         setTitle("选择领料模板");
         if(CommonTool.isWifiOK(MuBanActivity.this)){

@@ -26,6 +26,7 @@ import com.cyt.ieasy.event.MessageEvent;
 import com.cyt.ieasy.event.UpdateEvent;
 import com.cyt.ieasy.interfaces.OnErrorViewListener;
 import com.cyt.ieasy.switcher.Switcher;
+import com.cyt.ieasy.tools.ActivityManager;
 import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
@@ -60,7 +61,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     ListView listView;
     private MuBanDetialAdapter muBanDetialAdapter;
     private EditText currentFouce;
-    private List<LING_MB_DETIAL> ling_mb_detialList;
+    private List<LING_MB_DETIAL> ling_mb_detialList = new ArrayList<>();
     private String LL_CODE;
     private String DEPT_NAME = "";
     private String STOCK_NAME = "";
@@ -219,7 +220,9 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         @Override
         protected Void doInBackground(Void... params) {
             getIntentData();
+            ling_mb_detialList = new ArrayList<>();
             ling_mb_detialList = MuBanDetialTableUtil.getMuBanDetialTableUtil().getLing_MB_Detial(MB_ID);
+            MyLogger.showLogWithLineNum(5,"模板详细"+JSON.toJSONString(ling_mb_detialList));
             return null;
         }
 
@@ -244,16 +247,44 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
         if(event.result.equals(Const.UpdateServerSuccess)){
             Intent intent = new Intent();
             intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         }else{
-            new MaterialDialog.Builder(this)
+            //// TODO: 2015.11.21 当同步失败的时候，弹出一个框，保存本地或者重试，不允许再操作当前界面
+            new MaterialDialog.Builder(context)
                     .title("同步结果")
-                    .content("同步失败，请重试")
-                    .positiveText("关闭")
+                    .content("同步失败，请重试或者先把订单保存至本地")
+                    .positiveText(R.string.retry)
+                    .negativeText(R.string.savelocal)
+                    .cancelable(false)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            materialDialog.dismiss();
+                            toHistory();
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            saveData();
+                        }
+                    })
                     .show();
         }
+    }
+
+    /**
+     * 跳转到历史记录
+     */
+    private void toHistory(){
+        ActivityManager.getActivityManager().popAllActivityFromStack();
+        Intent intent = new Intent();
+        intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     public void onEvent(MessageEvent event) {
@@ -264,11 +295,7 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
             if(nowClick!=null&&nowClick==updateserver){
                 UpdateServer.getUpdateServer().updateToServer(LL_CODE,context);
             }else if(nowClick!=null&&nowClick==savelocal){
-                Intent intent = new Intent();
-                intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                toHistory();
             }
         } else if (event.message.equals(Const.SaveFailue)) {
             new MaterialDialog.Builder(context)
@@ -506,6 +533,13 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(MuBanDetialActivity.this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        muBanDetialAdapter.getMap().clear();
+        muBanDetialAdapter.updateListView(new ArrayList<LING_MB_DETIAL>());
     }
 
     @Override

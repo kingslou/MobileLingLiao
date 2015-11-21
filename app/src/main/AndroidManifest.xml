@@ -30,7 +30,8 @@
         <activity android:name=".AddWuZiActivity"></activity>
         <activity android:name=".HistoryActivity"></activity>
         <activity android:name=".HistoryContent"></activity>
-        <activity android:name=".MuBanActivity"></activity>
+        <activity android:name=".MuBanActivity"
+                  android:launchMode="singleTop"></activity>
         <activity android:name=".MuBanDetialActivity"></activity>
         <activity android:name=".AddotherWuZiActivity"></activity>
     </application>

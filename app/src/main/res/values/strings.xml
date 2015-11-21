@@ -24,6 +24,9 @@
     <string name="agree">确定</string>
     <string name="disagree">取消</string>
 
+    <string name="retry">重试</string>
+    <string name="savelocal">保存本地</string>
+
     <string name="add">添加</string>
 
 
