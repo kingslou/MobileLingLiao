@@ -167,6 +167,10 @@ public class LingLiaoTableUtil extends BaseTableUtil {
         return null;
     }
 
+    public void deleteLingWuZiDetial(LING_WUZIDETIAL ling_wuzidetial){
+        ling_wuzidetialDao.delete(ling_wuzidetial);
+    }
+
     public void deleteLingWuZi(LING_WUZI ling_wuzi){
         ling_wuziDao.delete(ling_wuzi);
         QueryBuilder queryBuilder = ling_wuzidetialDao.queryBuilder();

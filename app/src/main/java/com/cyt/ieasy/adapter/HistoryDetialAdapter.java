@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.cyt.ieasy.constans.Const;
+import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.Arith;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
+import com.daimajia.swipe.SwipeLayout;
 import com.ieasy.dao.LING_WUZIDETIAL;
 import com.ieasy.dao.WuZi_Table;
 
@@ -49,6 +52,7 @@ public class HistoryDetialAdapter extends BaseAdapter {
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private int LL_Status;
     private String LL_CODE;
+    private SwipeLayout myswipeLayout;
     public HistoryDetialAdapter(Context context,List<LING_WUZIDETIAL> wuZi_tableList){
         this.context = context;
         currentFouce = new EditText(context);
@@ -100,13 +104,45 @@ public class HistoryDetialAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         if(convertView==null){
-            convertView = layoutInflater.inflate(R.layout.layout_wz_item,parent,false);
+            convertView = layoutInflater.inflate(R.layout.item_his_content,parent,false);
             viewHolder = new ViewHolder(convertView);
+            viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+            viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Bottom3"));
+            viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout swipeLayout) {
+                }
+
+                @Override
+                public void onOpen(SwipeLayout swipeLayout) {
+                    if(myswipeLayout!=swipeLayout&&myswipeLayout.isShown()){
+                        myswipeLayout.close();
+                    }
+                    myswipeLayout = swipeLayout;
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout swipeLayout) {
+                }
+
+                @Override
+                public void onClose(SwipeLayout swipeLayout) {
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+                }
+            });
+            myswipeLayout = viewHolder.swipeLayout;
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        LING_WUZIDETIAL wuZi_table = wuZi_tableList.get(position);
+        final LING_WUZIDETIAL wuZi_table = wuZi_tableList.get(position);
         MyWatcher myWatcher = new MyWatcher(viewHolder,wuZi_table);
         viewHolder.wzName.setText(wuZi_table.getLL_WZ_NAME());
         viewHolder.guige.setText(wuZi_table.getLL_WZ_GUIGE());
@@ -130,6 +166,16 @@ public class HistoryDetialAdapter extends BaseAdapter {
         }
         TextDrawable drawable = mDrawableBuilder.build(charat,mColorGenerator.getColor(charat));
         viewHolder.image.setImageDrawable(drawable);
+        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testMap.remove(wuZi_table.getLL_WZ_ID());
+                wuZi_tableList.remove(wuZi_table);
+                LingLiaoTableUtil.getLiaoTableUtil().deleteLingWuZiDetial(wuZi_table);
+                viewHolder.swipeLayout.close();
+                updateListView(wuZi_tableList);
+            }
+        });
         return convertView;
     }
 
@@ -249,6 +295,12 @@ public class HistoryDetialAdapter extends BaseAdapter {
         EditText editTzs;
         @Bind(R.id.txtsort)
         ImageView image;
+        @Bind(R.id.swipe)
+        SwipeLayout swipeLayout;
+        @Bind(R.id.trash)
+        ImageView trash;
+        @Bind(R.id.delete)
+        Button delete;
         public ViewHolder(View view){
             ButterKnife.bind(this,view);
         }
