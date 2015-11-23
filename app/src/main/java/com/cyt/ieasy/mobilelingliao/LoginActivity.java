@@ -29,14 +29,17 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.DeptTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.event.UpdateEvent;
 import com.cyt.ieasy.model.Operator;
 import com.cyt.ieasy.setting.ChangeLogDialog;
+import com.cyt.ieasy.setting.DownLoadActivity;
 import com.cyt.ieasy.setting.SettingActivity;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
 import com.cyt.ieasy.tools.SystemUtils;
 import com.cyt.ieasy.tools.WebServiceTool;
+import com.cyt.ieasy.update.CheckUpdate;
 import com.ieasy.dao.Dept_Table;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -77,6 +80,9 @@ public class LoginActivity extends BaseActivity {
     private String  Base_Service;
     private String  Scm_Service;
     private String  IP_Config;
+    private String Message;
+    private String error;
+    private int step=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,7 @@ public class LoginActivity extends BaseActivity {
         getSupportActionBar().setTitle("");
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPwd.addTextChangedListener(new MyTextWatcher(inputPwd));
-        String signpwd = CommonTool.getGlobalSetting(context,Const.savepwd);
+        String signpwd = CommonTool.getGlobalSetting(context, Const.savepwd);
         if(!StringUtils.isBlank(signpwd)){
             if(Boolean.parseBoolean(signpwd)){
                 checkbox.setChecked(true);
@@ -120,19 +126,17 @@ public class LoginActivity extends BaseActivity {
         if (!validateName()) {
             return;
         }
-        if (!validatePassword()) {
+        if (!validatePassword()){
             return;
         }
         loadIpConfig();
-        String name = inputName.getText().toString();
-        String pwd = inputPwd.getText().toString();
-        //如果版本号大于10,按照多线程模式执行，由系统自动分配线程池大小
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            new LoginTask(name,pwd).executeOnExecutor(THREAD_POOL_EXECUTOR);
-        }else{
-
-            new LoginTask(name,pwd).execute();
-        }
+        //首先检查更新
+        showIndeterminateProgressDialog(false,"检查更新中····");
+        Message = "";
+        error = "";
+        step = 0;
+        CheckUpdate checkUpdate = new CheckUpdate();
+        checkUpdate.isUpdata();
     }
 
     private void loadIpConfig(){
@@ -265,10 +269,20 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    private void login(){
+        String name = inputName.getText().toString();
+        String pwd = inputPwd.getText().toString();
+        //如果版本号大于10,按照多线程模式执行，由系统自动分配线程池大小
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            new LoginTask(name,pwd).executeOnExecutor(THREAD_POOL_EXECUTOR);
+        }else{
+            new LoginTask(name,pwd).execute();
+        }
+    }
+
     public void onEvent(MessageEvent event){
         dismiss();
         if(event.message.equals(Const.Success)){
-//            rotateLoading.stop();
             if(checkbox.isChecked()){
                 saveInputUser();
             }else{
@@ -284,10 +298,41 @@ public class LoginActivity extends BaseActivity {
                     .content("登陆失败，请重试")
                     .positiveText("确定")
                     .show();
-//            Intent intent = new Intent();
-//            intent.setClass(LoginActivity.this,MainActivity.class);
-//            startActivity(intent);
-//            finish();
+        }else{
+            Message +=event.message+"\n";
+            error +=event.error+"\n";
+            step+=event.step;
+            if(StringUtils.isBlank(event.error)){
+                if(step==7){
+                    dismiss();
+                    login();
+                }
+            }else{
+                dismiss();
+                Message+="数据更新失败"+"\n";
+                new MaterialDialog.Builder(this)
+                        .title("检查更新")
+                        .content(Message+"请重试")
+                        .positiveText("确定")
+                        .show();
+            }
+        }
+    }
+
+    private void setproValue(int min,int max){
+        for(int i=min;i<max;i++){
+            dialog.incrementProgress(1);
+        }
+    }
+
+    public void onEvent(UpdateEvent event){
+        dismiss();
+        MyLogger.showLogWithLineNum(5,"检查更新"+event.result);
+        if(event.result.equals(Const.isUpdate)){
+            showIndeterminateProgressDialog(true,"更新数据");
+            DownLoadActivity.getInstance().loadWuZi();
+        }else if(event.result.equals(Const.noUpdate)){
+            login();
         }
     }
 
@@ -350,7 +395,6 @@ public class LoginActivity extends BaseActivity {
             dialogStandardFragment.show(ft, "changelogdemo_dialog");
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

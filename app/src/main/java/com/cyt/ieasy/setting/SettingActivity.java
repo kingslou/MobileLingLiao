@@ -14,9 +14,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.cyt.ieasy.constans.Const;
-import com.cyt.ieasy.model.UpdateStatus;
 import com.cyt.ieasy.event.MessageEvent;
-import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.R;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
@@ -140,22 +138,8 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
         step = 0;
         error = "";
         showProgress();
-        //常规做法
-        DownLoadActivity.getInstance(new Callback<UpdateStatus>() {
-            @Override
-            public void invoke() {
-            }
-            @Override
-            public void invole(UpdateStatus arg) {
-                dismissProgress();
-                if (arg.getSuccess()) {
-                    //更新成功
-                } else {
-                    //更新失败
-                    MyLogger.showLogWithLineNum(5, "失败原因" + arg.getMessage());
-                }
-            }
-        }).loadWuZi();
+        //使用EventBus通知更新情况
+        DownLoadActivity.getInstance().loadWuZi();
     }
 
     @Override

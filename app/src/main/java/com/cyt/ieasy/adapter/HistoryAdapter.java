@@ -109,7 +109,7 @@ public class HistoryAdapter extends BaseAdapter {
         viewHolder.histime.setText(TimeUtils.getDateStr(ling_wuzi.getADDTIME()) + "");
         viewHolder.operatordept.setText(ling_wuzi.getLL_DEPT());
         viewHolder.operator.setText(ling_wuzi.getLL_OPERATOR());
-        viewHolder.ckname.setText(ling_wuzi.getLL_STOCK());
+        viewHolder.ckname.setText(ling_wuzi.getLL_STOCK()+"");
         if(null==ling_wuzi.getLL_RETURNCODE()){
             viewHolder.status.setText("未同步");
             viewHolder.btn_send.setVisibility(View.VISIBLE);
@@ -175,7 +175,7 @@ public class HistoryAdapter extends BaseAdapter {
         @Bind(R.id.delete)
         Button delete;
         @Bind(R.id.ckname)
-        Button ckname;
+        TextView ckname;
         public ViewHolder(View view){
             ButterKnife.bind(this,view);
         }

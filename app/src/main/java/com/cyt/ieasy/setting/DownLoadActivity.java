@@ -11,9 +11,7 @@ import com.cyt.ieasy.db.MuBanTableUtil;
 import com.cyt.ieasy.db.StockTableUtil;
 import com.cyt.ieasy.db.WuZiCATALOG_TableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
-import com.cyt.ieasy.model.UpdateStatus;
 import com.cyt.ieasy.event.MessageEvent;
-import com.cyt.ieasy.interfaces.Callback;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
@@ -44,12 +42,12 @@ public class DownLoadActivity {
     public static final Executor THREAD_POOL_EXECUTOR = Executors
             .newFixedThreadPool(SystemUtils.DEFAULT_THREAD_POOL_SIZE);
 
-    private DownLoadActivity(Callback<UpdateStatus> callback){
+    private DownLoadActivity(){
 
     }
-    public static DownLoadActivity getInstance(Callback<UpdateStatus> callback){
+    public static DownLoadActivity getInstance(){
         if(null==instance){
-            instance = new DownLoadActivity(callback);
+            instance = new DownLoadActivity();
         }
         return instance;
     }

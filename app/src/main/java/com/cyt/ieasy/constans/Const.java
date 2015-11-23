@@ -5,7 +5,6 @@ package com.cyt.ieasy.constans;
  */
 public class Const {
 
-
     public static final int TIME_OUT = 25;
     public static final String Success = "完成";
     public static final String Cancle  = "取消";
@@ -28,7 +27,7 @@ public class Const {
     public static final String cachuserid = "cachuserid";
     public static final String cachuserdept = "cachuserdept";//登陆人的部门
     public static final String cachuserdeptid = "cachuserdeptid";//登陆人部门ID
-    public static final String updatetime = "updatetime";
+    public static final String updatetime = "updatetime"; //更新时间
     public static final String DB_NAME = "ZXY_CYT";
 
     public static final String dept_filter = "dept_filter";//部门勾选
@@ -41,4 +40,8 @@ public class Const {
 
     public static final String UpdateServerSuccess = "同步成功";//同步成功
     public static final String UpdateServerFailue= "同步失败";
+
+    public static final String isUpdate = "基础资料有更新";
+    public static final String noUpdate = "基础资料没有更新";
+
 }
