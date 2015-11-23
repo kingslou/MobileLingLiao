@@ -120,6 +120,15 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         nowClick = cancle;
         mFabToolbar.slideInFab();
     }
+    @OnClick(R.id.fab)
+    void fabOnClick(){
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFabToolbar.expandFab();
+            }
+        });
+    }
 
     void updateServer(){
         new MaterialDialog.Builder(context)
@@ -156,6 +165,7 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         protected Void doInBackground(Void... params) {
             ling_wuzidetialList = LingLiaoTableUtil.getLiaoTableUtil().getLingWuZiDetial(LL_CODE);
             MyLogger.showLogWithLineNum(5,"全部"+ling_wuzidetialList.size()+"条");
+
             return null;
         }
 
@@ -234,13 +244,6 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
     }
 
     void initView(){
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFabToolbar.expandFab();
-            }
-        });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -260,6 +263,9 @@ public class HistoryContent extends BaseActivity implements OnErrorViewListener 
         LL_CODE = getIntent().getExtras().getString("LL_CODE");
         LL_STATUS =Integer.parseInt(getIntent().getExtras().getString("LL_STATUS"));
         LL_Name = getIntent().getExtras().getString("LL_Name");
+        if(LL_STATUS==1){
+            mFab.setVisibility(View.INVISIBLE);
+        }
         setTitle(LL_Name);
         initsearch();
         new LoadTask().execute();

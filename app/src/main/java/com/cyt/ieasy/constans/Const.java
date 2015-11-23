@@ -6,7 +6,7 @@ package com.cyt.ieasy.constans;
 public class Const {
 
 
-    public static final int TIME_OUT = 5;
+    public static final int TIME_OUT = 25;
     public static final String Success = "完成";
     public static final String Cancle  = "取消";
     public static final String Failue = "失败";

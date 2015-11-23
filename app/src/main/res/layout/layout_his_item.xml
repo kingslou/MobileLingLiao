@@ -60,14 +60,26 @@
 
         <TextView
             android:id="@+id/histitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginBottom="@dimen/space_15"
+            android:layout_marginLeft="@dimen/space_12"
+            android:layout_marginRight="@dimen/space_12"
             android:layout_marginTop="@dimen/space_15"
             android:text="Medium Text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_20" />
+
+        <TextView
+            android:id="@+id/ckname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/space_15"
+            android:layout_toLeftOf="@+id/histitle"
+            android:layout_marginRight="@dimen/space_12"
+            android:textSize="@dimen/text_size_18"
+            android:text="仓库"
+            />
 
         <ImageView
             android:id="@+id/icon"
@@ -87,7 +99,7 @@
             android:layout_marginBottom="1dp"
             android:layout_marginRight="@dimen/space_15"
             android:layout_toRightOf="@+id/icon"
-            android:text="chenchao" />
+            android:text="部门" />
 
         <TextView
             android:id="@+id/operator"
@@ -96,7 +108,7 @@
             android:layout_alignBottom="@+id/icon"
             android:layout_marginBottom="1dp"
             android:layout_toRightOf="@+id/operatprdept"
-            android:text="Small Text" />
+            android:text="员工" />
 
         <TextView
             android:id="@+id/histime"

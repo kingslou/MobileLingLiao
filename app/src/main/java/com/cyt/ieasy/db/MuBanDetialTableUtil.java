@@ -1,5 +1,6 @@
 package com.cyt.ieasy.db;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
+import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_MB_DETIALDao;
@@ -76,9 +77,12 @@ public class MuBanDetialTableUtil extends BaseTableUtil {
                 ling_mb_detial.setDJX_UNIT_NAME(item.getString("DJX_UNIT_NAME"));
                 ling_mb_detial.setDJX_WC_ID(item.getString("DJX_WC_ID"));
                 ling_mb_detial.setDJX_WC_NAME(item.getString("DJX_WC_NAME"));
-                ling_mb_detial.setDJX_WZ_ID(item.getString("DJX_WZ_ID"));
+                String WZ_ID = item.getString("DJX_WZ_ID");
+                ling_mb_detial.setDJX_WZ_ID(WZ_ID);
                 ling_mb_detial.setDJX_WZ_NAME(item.getString("DJX_WZ_NAME"));
-                //ling_mb_detial.setDJX_WZ_QUICK_CODE(item.getString("DJX_WZ_QUICK_CODE"));
+                String DJX_WZ_QUICK_CODE = WuZiTableUtil.getWuZiTableUtil().getEntity(WZ_ID).getWZ_QUICK_CODE();
+                ling_mb_detial.setDJX_WZ_QUICK_CODE(DJX_WZ_QUICK_CODE);
+                MyLogger.showLogWithLineNum(5,"速查码"+DJX_WZ_QUICK_CODE);
                 ling_mb_detial.setDJX_WZ_SP(item.getString("DJX_WZ_SP"));
                 lingMbDetials[i] = ling_mb_detial;
             }

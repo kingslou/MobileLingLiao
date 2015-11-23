@@ -151,6 +151,7 @@ public class HistoryDetialAdapter extends BaseAdapter {
         if(LL_Status== Const.UpdateSuccess){
             viewHolder.editNum.setEnabled(false);
             viewHolder.editTzs.setEnabled(false);
+            viewHolder.swipeLayout.setSwipeEnabled(false);
         }else{
             viewHolder.editNum.setOnFocusChangeListener(new MyFouceChange(viewHolder, myWatcher));
             viewHolder.editTzs.setOnFocusChangeListener(new MyFouceChange(viewHolder,myWatcher));

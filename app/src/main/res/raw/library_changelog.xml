@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
-    <changelogversion versionName="1.0" changeDate="01/11/2015">
+    <changelogversion versionName="0.1" changeDate="01/11/2015">
         <changelogtext>第一版</changelogtext>
         <changelogtext>数据下载测试</changelogtext>
         <changelogtext>研发测试</changelogtext>
+    </changelogversion>
+    <changelogversion versionName="0.2" changeDate="23/11/2015">
+        <changelogtext>测试版</changelogtext>
+        <changelogtext>未同步订单右滑动删除</changelogtext>
+        <changelogtext>模板中物料右滑动删除</changelogtext>
     </changelogversion>
 </changelog>

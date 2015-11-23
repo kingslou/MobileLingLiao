@@ -279,15 +279,15 @@ public class LoginActivity extends BaseActivity {
             startActivity(intent);
             finish();
         }else if(event.message.equals(Const.Failue)){
-//            new MaterialDialog.Builder(this)
-//                    .title("登陆信息")
-//                    .content("登陆失败，请重试")
-//                    .positiveText("确定")
-//                    .show();
-            Intent intent = new Intent();
-            intent.setClass(LoginActivity.this,MainActivity.class);
-            startActivity(intent);
-            finish();
+            new MaterialDialog.Builder(this)
+                    .title("登陆信息")
+                    .content("登陆失败，请重试")
+                    .positiveText("确定")
+                    .show();
+//            Intent intent = new Intent();
+//            intent.setClass(LoginActivity.this,MainActivity.class);
+//            startActivity(intent);
+//            finish();
         }
     }
 

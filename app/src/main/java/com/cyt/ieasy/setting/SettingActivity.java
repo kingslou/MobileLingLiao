@@ -155,7 +155,7 @@ public class SettingActivity extends MaterialSettingsActivity implements SampleD
                     MyLogger.showLogWithLineNum(5, "失败原因" + arg.getMessage());
                 }
             }
-        }).loadData();
+        }).loadWuZi();
     }
 
     @Override

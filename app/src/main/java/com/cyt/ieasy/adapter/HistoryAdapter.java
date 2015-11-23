@@ -109,6 +109,7 @@ public class HistoryAdapter extends BaseAdapter {
         viewHolder.histime.setText(TimeUtils.getDateStr(ling_wuzi.getADDTIME()) + "");
         viewHolder.operatordept.setText(ling_wuzi.getLL_DEPT());
         viewHolder.operator.setText(ling_wuzi.getLL_OPERATOR());
+        viewHolder.ckname.setText(ling_wuzi.getLL_STOCK());
         if(null==ling_wuzi.getLL_RETURNCODE()){
             viewHolder.status.setText("未同步");
             viewHolder.btn_send.setVisibility(View.VISIBLE);
@@ -124,10 +125,11 @@ public class HistoryAdapter extends BaseAdapter {
                 intent.putExtra("LL_CODE",ling_wuzi.getLL_CODE());
                 if(StringUtils.isBlank(ling_wuzi.getLL_RETURNCODE())){
                     intent.putExtra("LL_STATUS","0");
+                    intent.putExtra("LL_Name",ling_wuzi.getLL_NAME());
                 }else{
                     intent.putExtra("LL_STATUS","1");
+                    intent.putExtra("LL_Name",ling_wuzi.getLL_RETURNCODE());
                 }
-                intent.putExtra("LL_Name",ling_wuzi.getLL_NAME());
                 intent.setClass(context, HistoryContent.class);
                 context.startActivity(intent);
             }
@@ -172,6 +174,8 @@ public class HistoryAdapter extends BaseAdapter {
         ImageView trash;
         @Bind(R.id.delete)
         Button delete;
+        @Bind(R.id.ckname)
+        Button ckname;
         public ViewHolder(View view){
             ButterKnife.bind(this,view);
         }

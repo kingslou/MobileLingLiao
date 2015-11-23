@@ -67,12 +67,18 @@ public class DownLoadActivity {
 
     }
 
+    public void loadWuZi(){
+        loadIpConfig();
+        ErrorMessage = "";
+        new Load_WuZi().execute();
+    }
+
     public void loadData(){
         loadIpConfig();
         ErrorMessage = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             new SynServerTime().executeOnExecutor(THREAD_POOL_EXECUTOR);
-            new Load_WuZi().executeOnExecutor(THREAD_POOL_EXECUTOR);
+            //new Load_WuZi().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_Dept().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_WuZi_Catoge().executeOnExecutor(THREAD_POOL_EXECUTOR);
             new Load_Stock().executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -80,7 +86,7 @@ public class DownLoadActivity {
             new Load_Mb_Detial().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }else{
             new SynServerTime().execute();
-            new Load_WuZi().execute();
+            //new Load_WuZi().execute();
             new Load_Dept().execute();
             new Load_WuZi_Catoge().execute();
             new Load_Stock().execute();
@@ -170,7 +176,8 @@ public class DownLoadActivity {
             super.onPostExecute(aVoid);
             if(StringUtils.isBlank(errormsg)){
                 EventBus.getDefault().postSticky(new MessageEvent("物料更新完毕","",1));
-                MyLogger.showLogWithLineNum(5,"物料共"+WuZiTableUtil.getWuZiTableUtil().getAlldata().size());
+                MyLogger.showLogWithLineNum(5, "物料共" + WuZiTableUtil.getWuZiTableUtil().getAlldata().size());
+                loadData();
             }else{
                 EventBus.getDefault().postSticky(new MessageEvent("物料更新",ErrorMessage,1));
             }
