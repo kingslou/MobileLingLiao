@@ -1,13 +1,15 @@
 package com.cyt.ieasy.db;
 import com.cyt.ieasy.mobilelingliao.MyApplication;
-import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.tools.StringUtils;
 import com.ieasy.dao.LING_MB_DETIAL;
 import com.ieasy.dao.LING_MB_DETIALDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import de.greenrobot.dao.query.QueryBuilder;
 
 /**
@@ -41,6 +43,8 @@ public class MuBanDetialTableUtil extends BaseTableUtil {
      */
     public List<LING_MB_DETIAL> getLing_MB_Detial(String MB_ID){
         List<LING_MB_DETIAL> ling_mb_detialList = new ArrayList<>();
+        daoSession.clear();//查询时候第一次查询会放到内存中，以后每次查询如果内存中有的话不会
+        //再去数据库中查询，这样如果有更改的话就取不到最新的值了，解决办法，daoSession.clear()方法
         QueryBuilder queryBuilder = ling_mb_detialDao.queryBuilder();
         if(!StringUtils.isBlank(MB_ID)){
             queryBuilder.where(LING_MB_DETIALDao.Properties.DJX_DJ_ID.eq(MB_ID));
@@ -49,10 +53,20 @@ public class MuBanDetialTableUtil extends BaseTableUtil {
         return ling_mb_detialList;
     }
 
+    public List<LING_MB_DETIAL> getAllLing(){
+        List<LING_MB_DETIAL> ling_mb_detialList = new ArrayList<>();
+        QueryBuilder queryBuilder = ling_mb_detialDao.queryBuilder();
+        ling_mb_detialList = queryBuilder.list();
+        return ling_mb_detialList;
+    }
 
     @Override
     public ArrayList getAlldata() {
-        return null;
+
+        List<LING_MB_DETIAL> ling_mb_detialList = new ArrayList<>();
+        QueryBuilder queryBuilder = ling_mb_detialDao.queryBuilder();
+        ling_mb_detialList = queryBuilder.list();
+        return (ArrayList)ling_mb_detialList;
     }
 
     @Override
@@ -82,7 +96,6 @@ public class MuBanDetialTableUtil extends BaseTableUtil {
                 ling_mb_detial.setDJX_WZ_NAME(item.getString("DJX_WZ_NAME"));
                 String DJX_WZ_QUICK_CODE = WuZiTableUtil.getWuZiTableUtil().getEntity(WZ_ID).getWZ_QUICK_CODE();
                 ling_mb_detial.setDJX_WZ_QUICK_CODE(DJX_WZ_QUICK_CODE);
-                MyLogger.showLogWithLineNum(5,"速查码"+DJX_WZ_QUICK_CODE);
                 ling_mb_detial.setDJX_WZ_SP(item.getString("DJX_WZ_SP"));
                 lingMbDetials[i] = ling_mb_detial;
             }

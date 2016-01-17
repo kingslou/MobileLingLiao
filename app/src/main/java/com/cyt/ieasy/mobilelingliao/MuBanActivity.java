@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,13 +20,13 @@ import com.cyt.ieasy.switcher.Switcher;
 import com.cyt.ieasy.tools.ActivityManager;
 import com.cyt.ieasy.tools.CommonTool;
 import com.ieasy.dao.LING_MB;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -36,10 +37,10 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.search_view)
-    MaterialSearchView searchView;
     @Bind(R.id.listmuban)
     ListView listView;
+    @Bind(R.id.btn_addwz)
+    Button addwz;
     private Switcher switcher;
     private MuBanAdapter muBanAdapter;
     private List<LING_MB> ling_mbList;
@@ -71,6 +72,14 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
         bundle = intent.getExtras();
     }
 
+    @OnClick(R.id.btn_addwz)
+    void addWz_Click() {
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        intent.setClass(MuBanActivity.this,AddWuZiActivity.class);
+        startActivity(intent);
+    }
+
     void initAdapter(){
         muBanAdapter = new MuBanAdapter(MuBanActivity.this,ling_mbList);
         listView.setAdapter(muBanAdapter);
@@ -79,9 +88,9 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LING_MB ling_mb = muBanAdapter.ling_mbList.get(position);
                 Intent intent = new Intent();
-                bundle.putString(Const.intent_mbid,ling_mb.getDJ_ID());
+                bundle.putString(Const.intent_mbid, ling_mb.getDJ_ID());
                 intent.putExtras(bundle);
-                intent.setClass(MuBanActivity.this,MuBanDetialActivity.class);
+                intent.setClass(MuBanActivity.this, MuBanDetialActivity.class);
                 startActivity(intent);
             }
         });
@@ -121,7 +130,9 @@ public class MuBanActivity extends BaseActivity implements OnErrorViewListener {
         if(event.message.equals(Const.Success)){
             initAdapter();
         }else if(event.message.equals(Const.Failue)){
-            switcher.showErrorView("没有获取到数据",MuBanActivity.this);
+            //switcher.showErrorView("没有获取到数据",MuBanActivity.this);
+            listView.setVisibility(View.GONE);
+            addwz.setVisibility(View.VISIBLE);
         }
     }
 

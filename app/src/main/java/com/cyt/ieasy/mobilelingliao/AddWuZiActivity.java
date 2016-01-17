@@ -18,6 +18,7 @@ import com.cyt.ieasy.constans.Const;
 import com.cyt.ieasy.db.LingLiaoTableUtil;
 import com.cyt.ieasy.db.WuZiTableUtil;
 import com.cyt.ieasy.event.MessageEvent;
+import com.cyt.ieasy.tools.ActivityManager;
 import com.cyt.ieasy.tools.CommonTool;
 import com.cyt.ieasy.tools.MyLogger;
 import com.cyt.ieasy.widget.EmportyUtils;
@@ -32,6 +33,7 @@ import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
+ * 当没有领料模板的时候，可以从全部物料中选择
  * Created by jin on 2015.11.09.
  */
 public class AddWuZiActivity extends BaseActivity {
@@ -46,8 +48,9 @@ public class AddWuZiActivity extends BaseActivity {
     private EditText currentFouce;
     private List<WuZi_Table> wuZiTableList;
     private String LL_CODE;
-    private String DEPT_NAME="测试";
-    private String STOCK_NAME="测试";
+    private String DEPT_NAME="";
+    private String STOCK_NAME="";
+    private String LL_SELECT_TIME;//选择的领料时间
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +60,21 @@ public class AddWuZiActivity extends BaseActivity {
         setTitle("添加物料");
         initsearch();
         LL_CODE = CommonTool.NewGuid();
+        getIntentData();
         if(!CommonTool.isWifiOK(AddWuZiActivity.this)){
 
         }else{
             new LoadTask().execute();
         }
+    }
+
+    void getIntentData(){
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle = intent.getExtras();
+        DEPT_NAME = bundle.getString(Const.intent_deptname);
+        STOCK_NAME = bundle.getString(Const.intent_ckname);
+        LL_SELECT_TIME = bundle.getString(Const.intent_time);
     }
 
     void initView(){
@@ -119,7 +132,8 @@ public class AddWuZiActivity extends BaseActivity {
         if(event.message.equals(Const.Success)){
             initAdapter(wuZiTableList);
         }else if(event.message.equals(Const.SaveSuccess)){
-            startActivity(HistoryActivity.class,false);
+            ActivityManager.getActivityManager().popAllActivityFromStack();
+            startActivity(HistoryActivity.class, false);
             finish();
         }else if(event.message.equals(Const.SaveFailue)){
             new MaterialDialog.Builder(context)

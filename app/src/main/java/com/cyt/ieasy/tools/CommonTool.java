@@ -16,9 +16,7 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-
 import com.cyt.ieasy.mobilelingliao.R;
-
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
@@ -599,5 +597,13 @@ public class CommonTool {
     public static boolean removeGlobalSetting(Context ctx, String key) {
         SharedPreferences setting = ctx.getSharedPreferences(ctx.getPackageName(), 0);
         return setting.edit().remove(key).commit();
+    }
+
+    public static boolean checkObj(Object object){
+        boolean result = false;
+        if(null!=object&&!object.toString().equals("anyType{}")){
+            result = true;
+        }
+        return result;
     }
 }

@@ -46,6 +46,7 @@ public class WuZiAdapter extends BaseAdapter {
     private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private String LL_Code;
+    private TextView select_text;
     public WuZiAdapter(Context context,List<WuZi_Table> wuZi_tableList){
         this.context = context;
         currentFouce = new EditText(context);
@@ -55,6 +56,10 @@ public class WuZiAdapter extends BaseAdapter {
         testMap = new HashMap<>();
         mDrawableBuilder = TextDrawable.builder().round();
         layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setSelectText(TextView textView){
+        this.select_text = textView;
     }
 
     public void setLL_Code(String LL_Code){
@@ -164,7 +169,6 @@ public class WuZiAdapter extends BaseAdapter {
     class MyWatcher implements TextWatcher{
         ViewHolder viewHolder;
         WuZi_Table wuZi_table;
-        EditText editText;
         String[] testArray = new String[2];
         public MyWatcher(ViewHolder viewHolder,WuZi_Table wuZi_table){
             this.viewHolder = viewHolder;
@@ -194,6 +198,15 @@ public class WuZiAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(Editable s) {
+            MyLogger.showLogWithLineNum(5,"after滑动");
+            if(null!=select_text){
+                if(null!=testMap){
+                    select_text.setVisibility(View.VISIBLE);
+                    select_text.setText("已选择"+testMap.size()+"条");
+                }
+            }else{
+                MyLogger.showLogWithLineNum(5,"textviewnull");
+            }
         }
     }
 

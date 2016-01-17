@@ -245,11 +245,8 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
 
     public void onEvent(UpdateEvent event){
         if(event.result.equals(Const.UpdateServerSuccess)){
-            Intent intent = new Intent();
-            intent.setClass(MuBanDetialActivity.this, HistoryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+
+           toHistory();
         }else{
             //// TODO: 2015.11.21 当同步失败的时候，弹出一个框，保存本地或者重试，不允许再操作当前界面
             new MaterialDialog.Builder(context)
@@ -538,7 +535,8 @@ public class MuBanDetialActivity extends BaseActivity implements OnErrorViewList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        muBanDetialAdapter.getMap().clear();
+        HashMap<String,String[]> map = new HashMap<>();
+        muBanDetialAdapter.updateMap(map);
         muBanDetialAdapter.updateListView(new ArrayList<LING_MB_DETIAL>());
     }
 

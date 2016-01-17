@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -44,6 +45,8 @@ public class AddotherWuZiActivity extends BaseActivity {
     MaterialSearchView searchView;
     @Bind(R.id.listViewuzi)
     ListView listView;
+    @Bind(R.id.select_text)
+    TextView select_text;
     private WuZiAdapter wuZiAdapter;
     private EditText currentFouce;
     private List<WuZi_Table> wuZiTableList;
@@ -75,11 +78,11 @@ public class AddotherWuZiActivity extends BaseActivity {
                 List<LING_WUZIDETIAL> ling_wuzidetials = new ArrayList<>();
                 ling_wuzidetials = wuZiAdapter.getLingWuZiDetial();
                 String intentwuzi = JSON.toJSONString(ling_wuzidetials);
-                final SerializableMap myMap=new SerializableMap();
+                final SerializableMap myMap = new SerializableMap();
                 myMap.setMap(wuZiAdapter.getMap());
                 Bundle bundle = new Bundle();
                 Intent intent = new Intent();
-                bundle.putString("intentwuzi",intentwuzi);
+                bundle.putString("intentwuzi", intentwuzi);
                 intent.putExtras(bundle);
                 setResult(REQUEST_CODE_DEFAULT, intent);
                 finish();
@@ -158,6 +161,7 @@ public class AddotherWuZiActivity extends BaseActivity {
 
     void initAdapter(List<WuZi_Table> wuZi_tableList){
         wuZiAdapter = new WuZiAdapter(AddotherWuZiActivity.this,wuZi_tableList);
+        wuZiAdapter.setSelectText(select_text);
         listView.setAdapter(wuZiAdapter);
         initView();
         wuZiAdapter.setLL_Code(LL_CODE);
