@@ -176,6 +176,10 @@ public class MainActivity extends BaseActivity {
 
     void initDept(){
         dept_tableList = DeptTableUtil.getDeptTableUtil().getAlldata();
+        if(dept_tableList.isEmpty()){
+            
+            return;
+        }
         optionsPopupWindow = new OptionsPopupWindow(MainActivity.this);
         final ArrayList<String> nameList = new ArrayList<>();
         String deptConfig = CommonTool.getGlobalSetting(MainActivity.this,Const.editBm);

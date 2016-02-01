@@ -20,7 +20,7 @@ viewPager used to set three different fragment based on Tab.
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="-16dp"
+        android:layout_marginLeft="-26dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/myThemeForToolbar"

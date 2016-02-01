@@ -1,6 +1,7 @@
 package com.cyt.ieasy.mobilelingliao;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -91,6 +93,9 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         WebServiceTool.init();
+        Configuration config = getResources().getConfiguration();
+        int smallestScreenWidth = config.smallestScreenWidthDp;
+        Toast.makeText(context,smallestScreenWidth+"高度",Toast.LENGTH_SHORT).show();
     }
 
     void initView(){

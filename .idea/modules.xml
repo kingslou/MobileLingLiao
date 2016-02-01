@@ -4,8 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileLingLiao.iml" filepath="$PROJECT_DIR$/MobileLingLiao.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/appyanhuo/appyanhuo.iml" filepath="$PROJECT_DIR$/appyanhuo/appyanhuo.iml" />
       <module fileurl="file://$PROJECT_DIR$/fabtransitionlayout/fabtransitionlayout.iml" filepath="$PROJECT_DIR$/fabtransitionlayout/fabtransitionlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/greendao/greendao.iml" filepath="$PROJECT_DIR$/greendao/greendao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/greendaoyh/greendaoyh.iml" filepath="$PROJECT_DIR$/greendaoyh/greendaoyh.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
